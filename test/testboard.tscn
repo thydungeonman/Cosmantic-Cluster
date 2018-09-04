@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=1]
+
+[ext_resource path="res://test/testboard.gd" type="Script" id=1]
+[ext_resource path="res://test/sprites/poortaste.png" type="Texture" id=2]
+[ext_resource path="res://test/scenes/launcher.tscn" type="PackedScene" id=3]
+[ext_resource path="res://test/scenes/wall.tscn" type="PackedScene" id=4]
+[ext_resource path="res://test/scenes/roof.tscn" type="PackedScene" id=5]
+
+[node name="testboard" type="Node2D"]
+
+script/script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+
+texture = ExtResource( 2 )
+centered = false
+
+[node name="launcher" parent="." instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 864.188, 899.09 )
+
+[node name="wall" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 11.3604, 561.204 )
+
+[node name="wall 2" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1919.91, 577.108 )
+
+[node name="roof" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 828.413, -6.68076 )
+
+
