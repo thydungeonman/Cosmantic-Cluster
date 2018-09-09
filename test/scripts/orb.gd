@@ -4,6 +4,8 @@ export(Vector2) var trajectory = Vector2(0,0)
 export(bool) var ismoving = false
 var incannon = false #if an orb is neither in the cannon nor moving then it is on the board
 onready var width = 0
+onready var ray = get_node("RayCast2D")
+var matchingorbs = []
 
 
 #neighboring orbs  Kinematic bodies
@@ -60,14 +62,6 @@ func Move(delta):
 				print(dotproductnorth)
 				print(dotproductwest)
 				
-#				(dotproductnorth <= 1 and dotproductnorth >.33) #top
-#				(dotproductnorth <= .33 and dotproductnorth > -.33) #middle 
-#				(dotproductnorth <= -.33 and dotproductnorth >= -1) #bottom
-#				
-#				((dotproductwest <= 1 and dotproductwest > 0.66) or (dotproductwest >= -1 and dotproductwest < -0.66)) #far left and right for y middle
-#				(dotproductwest <= .66 and dotproductwest > 0) #left
-#				(dotproductwest <= 0 and dotproductwest >= -.66) #right
-				
 				if((dotproductnorth <= -.33 and dotproductnorth >= -1) and (dotproductwest <= 1 and dotproductwest > 0)): #collided on bottomleft
 					set_pos(collider.bottomleftspot)
 					collider.bottomleft = self 
@@ -86,36 +80,13 @@ func Move(delta):
 				elif((dotproductnorth <= 1 and dotproductnorth >.33) and (dotproductwest <= 0 and dotproductwest >= -1)):#topright
 					set_pos(collider.toprightspot)
 					collider.topright = self
-#					else:
-#						if(collider.bottomright != null):
-#							set_pos(collider.bottomleftspot)
-#							collider.bottomleft = self
-#						else:
-#							set_pos(collider.bottomrightspot)
-#							collider.bottomright = self
-#				elif(dotproduct >= -0.34 and dotproduct < 0.34): #collided on middle
-#					if(abs(trajectory.x) / trajectory.x == 1): #collided on left side
-#						set_pos(collider.leftspot)
-#						collider.left = self
-#					elif(abs(trajectory.x) / trajectory.x == -1): #collided on right side
-#						set_pos(collider.rightspot)
-#						collider.right = self
-#				else:                                           #collided on top
-#					if(abs(trajectory.x) / trajectory.x == 1): #collided on left side
-#						set_pos(collider.topleftspot)
-#						collider.topleft = self
-#					elif(abs(trajectory.x) / trajectory.x == -1): #collided on right side
-#						set_pos(collider.toprightspot)
-#						collider.topright = self
-#					else:
-#						if(collider.topright != null):
-#							set_pos(collider.topleftspot)
-#							collider.topleft = self
-#						else:
-#							set_pos(collider.toprightspot)
-#							collider.topright = self
 				GetNeighboringPositions()
-				
+				GetNeihbors()
+				#var match = CheckMatch(matchingorbs)
+				#if(match):
+					#ColorPower()
+					#foreach(orb in matchingorbs):
+						#orb.kill
 
 func click():
 	var mousepos = get_viewport().get_mouse_pos()
@@ -125,4 +96,33 @@ func click():
 	var dotproductwest = positiondifference.dot(Vector2(-1,0))
 	print(dotproductnorth)
 	print(dotproductwest)
+
+func GetNeihbors():
+	ray.set_cast_to(topleftspot)
+	topleft = ray.get_collider()
 	
+	ray.set_cast_to(toprightspot)
+	rightleft = ray.get_collider()
+	
+	ray.set_cast_to(topspot)
+	left = ray.get_collider()
+	
+	ray.set_cast_to(rightspot)
+	right = ray.get_collider()
+	
+	ray.set_cast_to(botttomleftspot)
+	bottomleft = ray.get_collider()
+	
+	ray.set_cast_to(bottomrightspot)
+	bottomright = ray.get_collider()
+
+func CheckMatch(matchingorbs): #accepts array of kinematic bodies2d
+	#var match = false
+	#Add self to array
+	#goes through neihbors
+	#if neighbor is correct color
+		#if neighbor is not in array
+			#neighbor.CheckMatch(array)
+	#if array.length >= orbs:
+		#match = true
+	#return match
