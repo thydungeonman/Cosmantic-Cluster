@@ -102,15 +102,15 @@ func GetNeihbors():
 	topleft = ray.get_collider()
 	
 	ray.set_cast_to(toprightspot)
-	rightleft = ray.get_collider()
+	topright = ray.get_collider()
 	
-	ray.set_cast_to(topspot)
+	ray.set_cast_to(leftspot)
 	left = ray.get_collider()
 	
 	ray.set_cast_to(rightspot)
 	right = ray.get_collider()
 	
-	ray.set_cast_to(botttomleftspot)
+	ray.set_cast_to(bottomleftspot)
 	bottomleft = ray.get_collider()
 	
 	ray.set_cast_to(bottomrightspot)
