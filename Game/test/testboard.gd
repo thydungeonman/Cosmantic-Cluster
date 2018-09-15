@@ -1,8 +1,6 @@
 extends Node2D
 
-# class member variables go here, for example:
-# var a = 2
-# var b = "textvar"
+var fallcheckarray = []
 
 func _ready():
 	GenerateBoard()
@@ -15,3 +13,13 @@ func GenerateBoard():
 		orb.set_pos(Vector2(80 + 80*i, 40))
 		orb.GetNeighboringPositions()
 		print(orb.get_global_pos())
+
+func CheckFall(): #will most likely take one or more kinematic bodies that are the neighboring orbs of the ones that were just matched and killed
+	pass
+	#do the following for each orb
+	#if orb.LookForTop(fallcheckarray) == false
+		#foreach orb in fallcheck array:
+			#orb.fall()
+	#else:
+		#fallcheckarray = []
+	

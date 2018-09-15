@@ -126,3 +126,18 @@ func CheckMatch(matchingorbs): #accepts array of kinematic bodies2d
 	#if array.length >= orbs:
 		#match = true
 	#return match
+	pass
+
+
+#the topmost orbs will neighbor an area that is in the group "top"
+func LookForTop(var array): #will most likely take an array and return a boolean
+	pass
+	#var foundtop = false
+	#array.add(self)
+	#starting with the topmost neighbors 
+	#if neighbor is not in group "top" and is not null and not in array
+		#foundtop = neighbor.LookForTop(array)
+		#if foundtop:
+			#return foundtop
+	#elif neighbor is in group 'top":
+		#return true
