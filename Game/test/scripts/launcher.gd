@@ -34,7 +34,7 @@ func GetControls(delta):
 		#print(x)
 	if(Input.is_action_pressed("fire")):
 		if(firing == false):
-			var orb = preload("res://test/scenes/orb.tscn").instance()
+			var orb = preload("res://test/scenes/yelloworb.tscn").instance()
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())
 			Fire(orb)
