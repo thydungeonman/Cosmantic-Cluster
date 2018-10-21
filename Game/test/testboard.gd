@@ -8,6 +8,8 @@ var orbsonboard = []
 var s = false
 var t  = 0.0
 
+#test
+
 func _ready():
 	GenerateBoard()
 	set_fixed_process(true)
