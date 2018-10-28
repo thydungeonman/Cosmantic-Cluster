@@ -7,8 +7,13 @@ var inlauncher = false #if an orb is neither in the launcher nor moving then it 
 onready var width = get_node("Sprite").get_texture().get_width() * get_node("Sprite").get_scale().x #maybe should be renamed to diameter
 onready var ray = get_node("RayCast2D")
 var matchingorbs = []
+var leftoverorbs = [] #these orbs are the ones that were touching the orbs that were just matched 
+var crossreforbs = [] # these orbs are the ones that were found while looking for the top
+# they will be cross referenced with the leftover orbs so that no orb is looked through twice to find the top
 onready var pos = get_pos()
 onready var inversescale = 1/get_scale().x
+
+var falling = false
 
 var colour = COLOUR.RED
 #neighboring orbs  Kinematic bodies
@@ -35,6 +40,7 @@ onready var lbottomrightspot = Vector2(width,width) * Vector2(1.07337749,1.84177
 
 func _ready():
 	set_fixed_process(true)
+	get_node("Label").set_text(str(get_name()))
 
 func _fixed_process(delta):
 	if(ismoving):
@@ -92,11 +98,40 @@ func Move(delta):
 					collider.topright = self
 				GetNeighboringPositions()
 				GetNeighbors()
-				print(CountNeighbors())
-				if(CheckMatch(matchingorbs)):
+				#print(CountNeighbors())
+				if(CheckMatch(matchingorbs, leftoverorbs)):
 					ActivateAbility()
 					for orb in matchingorbs:
+						print(orb)
+						orb.Unhook()
+					for i in leftoverorbs:
+						print(i.get_name())
+						i.set_opacity(1)
+						if i != null:
+							print("start")
+							var s = i.LookForTop(crossreforbs)
+							print("end")
+							if s == false:
+								for i in crossreforbs:
+									i.Unhook()
+									i.queue_free()
+						crossreforbs.clear()
+					for orb in matchingorbs:
+						#print(orb)
+						orb.Unhook()
 						orb.queue_free()
+					print("unhooked")
+						#if(crossreforbs.has(i)): # if we have already checked this orb
+							#continue
+						#print(i)
+						
+						
+						
+#					for i in crossreforbs:
+#						if(i.falling == true):
+#							i.Unhook()
+#							i.queue_free()
+
 
 func click():
 	var mousepos = get_viewport().get_mouse_pos()
@@ -107,83 +142,126 @@ func click():
 	#var dotproductnorth = positiondifference.dot(Vector2(0,-1))
 	#var dotproductwest = positiondifference.dot(Vector2(-1,0))
 
+func Unhook(): #unhooks an orbs neighbors from itself and then frees the orb
+	if(topleft != null and topleft.is_in_group("orb")):
+		topleft.bottomright = null
+	if(topright != null and topright.is_in_group("orb")):
+		topright.bottomleft = null
+	if(left != null and left.is_in_group("orb")):
+		left.right = null
+	if(right != null and right.is_in_group("orb")):
+		right.left = null
+	if(bottomleft != null and bottomleft.is_in_group("orb")):
+		bottomleft.topright = null
+	if(bottomright != null and bottomright.is_in_group("orb")):
+		bottomright.topleft = null
+	topleft = null
+	topright = null
+	left = null
+	right = null
+	bottomleft = null
+	bottomright = null
+
 func GetNeighbors():
 	ray.set_cast_to(ltopleftspot)
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self):
 		topleft = ray.get_collider()
-		ray.get_collider().bottomright = self
-		ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().bottomright = self
+			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
 	
 	ray.set_cast_to(ltoprightspot)
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self):
 		topright = ray.get_collider()
-		ray.get_collider().bottomleft = self
-		ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().bottomleft = self
+			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
 	
 	ray.set_cast_to(lleftspot)
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self):
 		left = ray.get_collider()
-		ray.get_collider().right = self
-		ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().right = self
+			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
 	
 	
 	ray.set_cast_to(lbottomleftspot)
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self):
 		bottomleft = ray.get_collider()
-		ray.get_collider().topright = self
-		ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().topright = self
+			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
 	
 	ray.set_cast_to(lbottomrightspot)
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self):
 		bottomright = ray.get_collider()
-		ray.get_collider().topleft = self
-		ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().topleft = self
+			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
 	
 	ray.set_cast_to(lrightspot)
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self):
 		right = ray.get_collider()
-		ray.get_collider().left = self
-		ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().left = self
+			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
 	
 
-func CheckMatch(matchingorbs): #accepts array of kinematic bodies2d
+func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2d
 	#this function checks all neighbors to see if any of them are the same colour
 	#matching neighbors will check their neighbors and so on until there are no more matches
 	#returns true if their are more than three orbs touching with the same colour
 	
 	var match = false
 	matchingorbs.push_front(self)
-	if(topleft != null):
+	if(topleft != null and topleft.is_in_group("orb")):
 		if(topleft.colour == self.colour):
 			if(!matchingorbs.has(topleft)):
-				topleft.CheckMatch(matchingorbs)
-	if(topright != null):
+				topleft.CheckMatch(matchingorbs, leftoverorbs)
+		else:
+			if(!leftoverorbs.has(topleft)):
+				leftoverorbs.push_back(topleft)
+	if(topright != null and topright.is_in_group("orb")):
 			if(topright.colour == self.colour):
 				if(!matchingorbs.has(topright)):
-					topright.CheckMatch(matchingorbs)
-	if(left != null):
+					topright.CheckMatch(matchingorbs, leftoverorbs)
+			else:
+				if(!leftoverorbs.has(topright)):
+					leftoverorbs.push_back(topright)
+	if(left != null and left.is_in_group("orb")):
 		if(left.colour == self.colour):
 			if(!matchingorbs.has(left)):
-				left.CheckMatch(matchingorbs)
-	if(right != null):
+				left.CheckMatch(matchingorbs, leftoverorbs)
+		else:
+			if(!leftoverorbs.has(left)):
+				leftoverorbs.push_back(left)
+	if(right != null and right.is_in_group("orb")):
 		if(right.colour == self.colour):
 			if(!matchingorbs.has(right)):
-				right.CheckMatch(matchingorbs)
-	if(bottomleft != null):
+				right.CheckMatch(matchingorbs, leftoverorbs)
+		else:
+			if(!leftoverorbs.has(right)):
+				leftoverorbs.push_back(right)
+	if(bottomleft != null and bottomleft.is_in_group("orb")):
 		if(bottomleft.colour == self.colour):
 			if(!matchingorbs.has(bottomleft)):
-				bottomleft.CheckMatch(matchingorbs)
-	if(bottomright != null):
+				bottomleft.CheckMatch(matchingorbs, leftoverorbs)
+		else:
+			if(!leftoverorbs.has(bottomleft)):
+				leftoverorbs.push_back(bottomleft)
+	if(bottomright != null and bottomright.is_in_group("orb")):
 		if(bottomright.colour == self.colour):
 			if(!matchingorbs.has(bottomright)):
-				bottomright.CheckMatch(matchingorbs)
-				
+				bottomright.CheckMatch(matchingorbs, leftoverorbs)
+		else:
+			if(!leftoverorbs.has(bottomright)):
+				leftoverorbs.push_back(bottomright)
 	if(matchingorbs.size() >= 3):
 		match = true
 	return match
@@ -191,17 +269,51 @@ func CheckMatch(matchingorbs): #accepts array of kinematic bodies2d
 
 
 #the topmost orbs will neighbor an area that is in the group "top"
-func LookForTop(var array): #will most likely take an array and return a boolean
-	pass
-	#var foundtop = false
-	#array.add(self)
-	#starting with the topmost neighbors 
-	#if neighbor is not in group "top" and is not null and not in array
-		#foundtop = neighbor.LookForTop(array)
-		#if foundtop:
-			#return foundtop
-	#elif neighbor is in group 'top":
-		#return true
+func LookForTop(crossreforbs): 
+	#this function takes an array or orbs that have already been checked and then checks to see if it has the top as itn neighbor
+	#if its neighbor is not the top, that neighbor will then check if it neighbors the top and so on
+	crossreforbs.push_back(self)
+	if(topleft != null):
+		print("topleft")
+		if(!crossreforbs.has(topleft)):
+			if(topleft.is_in_group("top") or (!topleft.is_in_group("top") and topleft.LookForTop(crossreforbs))):
+				print(str(get_name()) + " found top on topleft")
+				return true
+	if(topright != null):
+		print("topright")
+		if(!crossreforbs.has(topright)):
+			if(topright.is_in_group("top") or (!topright.is_in_group("top") and topright.LookForTop(crossreforbs))):
+				print(str(get_name()) + " found top on topright")
+				return true
+	if(left != null):
+		print("left")
+		if(!crossreforbs.has(left)):
+			if(left.is_in_group("top") or (!left.is_in_group("top") and left.LookForTop(crossreforbs))):
+				print(str(get_name()) + " found top on left")
+				return true
+	if(right != null):
+		print("right")
+		if(!crossreforbs.has(right)):
+			if(right.is_in_group("top") or (!right.is_in_group("top") and right.LookForTop(crossreforbs))):
+				print(str(get_name()) + " found top on right")
+				return true
+	if(bottomleft != null):
+		print("bottomleft")
+		if(!crossreforbs.has(bottomleft)):
+			if(bottomleft.is_in_group("top") or (!bottomleft.is_in_group("top") and bottomleft.LookForTop(crossreforbs))):
+				print(str(get_name()) + " found top on bottomleft")
+				return true
+	if(bottomright != null):
+		print("bottomright")
+		if(!crossreforbs.has(bottomright)):
+			if(bottomright.is_in_group("top") or (!bottomright.is_in_group("top") and bottomright.LookForTop(crossreforbs))):
+				print(str(get_name()) + " found top on bottomright")
+				return true
+				
+	falling = true
+	print(str(get_name()) + " did not find top")
+	return false
+
 
 func ActivateAbility():
 	pass
