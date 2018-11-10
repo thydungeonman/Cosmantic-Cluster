@@ -11,7 +11,9 @@ var s = false
 var t  = 0.0
 
 var leftoverorbs = []
-
+var crossreforbs = []
+var orb;
+var dd = false;
 #test
 
 func _ready():
@@ -22,7 +24,7 @@ func _ready():
 func _fixed_process(delta):
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
 	#so we will wait for one second for them to find their neighbors
-	if(t > 1 and s == false):
+	if(t > .5 and s == false):
 		for i in orbsonboard:
 			i.GetNeighboringPositions()
 			i.GetNeighbors()
@@ -52,14 +54,25 @@ func GenerateBoardP1():
 	
 
 func CheckFall(): #will most likely take one or more kinematic bodies that are the neighboring orbs of the ones that were just matched and killed
-	pass
-	#do the following for each orb
-	#if orb.LookForTop(fallcheckarray) == false
-		#foreach orb in fallcheck array:
-			#orb.fall()
-	#else:
-		#fallcheckarray = []
-
+	
+	for i in leftoverorbs:
+		print(i.get_name())
+		i.set_opacity(1)
+		if i != null:
+			print("start")
+			var s = i.LookForTop(crossreforbs)
+			print("end")
+			if s == false:
+				for badorb in crossreforbs:
+					var x = orbsonboard.find(badorb)
+					if(x != -1):
+						orbsonboard.remove(x)
+					badorb.get_node("AnimationPlayer").play("shrink")
+			crossreforbs.clear()
+#	for i in orbsonboard:
+#		if(i.falling):
+#			i.get_node("AnimationPlayer").play("shrink")
+	
 
 func GenerateOddRow(xoffset, yoffset, width):
 	for i in range(numthatfit):

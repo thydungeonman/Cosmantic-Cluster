@@ -33,6 +33,6 @@ transform/pos = Vector2( 974.01, 540 )
 
 [node name="top" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 976.024, -25.1341 )
+transform/pos = Vector2( 975.121, -35.0616 )
 
 

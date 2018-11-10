@@ -1,5 +1,13 @@
 extends KinematicBody2D
 
+#TODO fix very specific bug where if an orb hits the right side of an orb that at the
+#very top of the screen, the one that was hit will consider both its
+#right and top right neighbor to be the same orb
+#might be fixed
+
+#TODO overhaul the match and falling orb code so that each orb is responsible for its self
+#they can't all depend of the one orb that you shot
+
 enum COLOUR {BLACK,BLUE,GREEN,GREY,ORANGE,PURPLE,RED,WHITE,YELLOW}
 export(Vector2) var trajectory = Vector2(0,0)
 export(bool) var ismoving = false
@@ -81,49 +89,50 @@ func Move(delta):
 				if((dotproductnorth <= -.33 and dotproductnorth >= -1) and (dotproductwest <= 1 and dotproductwest > 0)): #collided on bottomleft
 					set_pos(collider.bottomleftspot)
 					collider.bottomleft = self 
+					print("hit top right")
 				elif((dotproductnorth <= -.33 and dotproductnorth >= -1) and (dotproductwest <= 0 and dotproductwest >= -1)): #collided on bottom right side
 					set_pos(collider.bottomrightspot)
 					collider.bottomright = self
+					print("hit top left")
 				elif((dotproductnorth <= .33 and dotproductnorth > -.33) and (dotproductwest <= 1 and dotproductwest > 0)):#left
 					set_pos(collider.leftspot)
-					collider.topleft = self
+					collider.left = self
+					print("hit right")
 				elif((dotproductnorth <= .33 and dotproductnorth > -.33) and (dotproductwest <= 0 and dotproductwest >= -1)):#right
 					set_pos(collider.rightspot)
-					collider.topright = self
+					collider.right = self
+					print("hit left")
 				elif((dotproductnorth <= 1 and dotproductnorth >.33) and (dotproductwest <= 1 and dotproductwest > 0)):#topleft
 					set_pos(collider.topleftspot)
 					collider.topleft = self
+					print("hit bottom right")
 				elif((dotproductnorth <= 1 and dotproductnorth >.33) and (dotproductwest <= 0 and dotproductwest >= -1)):#topright
 					set_pos(collider.toprightspot)
 					collider.topright = self
+					print("hit bottom left")
 				GetNeighboringPositions()
 				GetNeighbors()
 				#print(CountNeighbors())
-				if(CheckMatch(matchingorbs, leftoverorbs)):
+				var foundmatch = CheckMatch(matchingorbs,leftoverorbs);
+				if(foundmatch):
+					for i in matchingorbs:
+						i.Unhook()
+						get_parent().orbsonboard.remove(get_parent().orbsonboard.find(i))
+					get_parent().leftoverorbs = leftoverorbs
+					get_parent().CheckFall()
 					ActivateAbility()
 					for orb in matchingorbs:
-						print(orb)
-						orb.Unhook()
-					for i in leftoverorbs:
-						print(i.get_name())
-						i.set_opacity(1)
-						if i != null:
-							print("start")
-							var s = i.LookForTop(crossreforbs)
-							print("end")
-							if s == false:
-								for i in crossreforbs:
-									i.Unhook()
-									i.queue_free()
-						crossreforbs.clear()
-					for orb in matchingorbs:
-						#print(orb)
-						orb.Unhook()
-						orb.queue_free()
-					print("unhooked")
-						#if(crossreforbs.has(i)): # if we have already checked this orb
-							#continue
-						#print(i)
+						print(orb.get_name())
+						orb.get_node("AnimationPlayer").play("blink")
+#					for orb in matchingorbs:
+#						print(orb)
+#						orb.Die()
+				else:
+					matchingorbs.clear()
+					leftoverorbs.clear()
+#						#if(crossreforbs.has(i)): # if we have already checked this orb
+#							#continue
+#						#print(i)
 						
 						
 						
@@ -162,6 +171,10 @@ func Unhook(): #unhooks an orbs neighbors from itself and then frees the orb
 	bottomleft = null
 	bottomright = null
 
+func Die():
+	self.Unhook()
+	self.queue_free()
+
 func GetNeighbors():
 	ray.set_cast_to(ltopleftspot)
 	ray.force_raycast_update()
@@ -169,15 +182,8 @@ func GetNeighbors():
 		topleft = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().bottomright = self
-			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
-	ray.set_cast_to(ltoprightspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		topright = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().bottomleft = self
-			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
 	
 	ray.set_cast_to(lleftspot)
 	ray.force_raycast_update()
@@ -185,16 +191,7 @@ func GetNeighbors():
 		left = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().right = self
-			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
-	
-	
-	ray.set_cast_to(lbottomleftspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		bottomleft = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().topright = self
-			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
 	ray.set_cast_to(lbottomrightspot)
 	ray.force_raycast_update()
@@ -202,7 +199,7 @@ func GetNeighbors():
 		bottomright = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().topleft = self
-			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
 	ray.set_cast_to(lrightspot)
 	ray.force_raycast_update()
@@ -210,8 +207,26 @@ func GetNeighbors():
 		right = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().left = self
-			ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .10)
-	
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+			
+	ray.set_cast_to(ltoprightspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self):
+		topright = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().bottomleft = self
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+			
+	ray.set_cast_to(lbottomleftspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self):
+		bottomleft = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().topright = self
+			print("found bottom left neighbor")
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+			
+
 
 func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2d
 	#this function checks all neighbors to see if any of them are the same colour
@@ -219,49 +234,56 @@ func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2
 	#returns true if their are more than three orbs touching with the same colour
 	
 	var match = false
+	
 	matchingorbs.push_front(self)
-	if(topleft != null and topleft.is_in_group("orb")):
-		if(topleft.colour == self.colour):
-			if(!matchingorbs.has(topleft)):
-				topleft.CheckMatch(matchingorbs, leftoverorbs)
-		else:
-			if(!leftoverorbs.has(topleft)):
-				leftoverorbs.push_back(topleft)
-	if(topright != null and topright.is_in_group("orb")):
+	if(topleft != null):
+		if(topleft.is_in_group("orb")):
+			if(topleft.colour == self.colour):
+				if(!matchingorbs.has(topleft)):
+					topleft.CheckMatch(matchingorbs, leftoverorbs)
+			else:
+				if(!leftoverorbs.has(topleft)):
+					leftoverorbs.push_back(topleft)
+	if(topright != null):
+		if(topright.is_in_group("orb")):
 			if(topright.colour == self.colour):
 				if(!matchingorbs.has(topright)):
 					topright.CheckMatch(matchingorbs, leftoverorbs)
 			else:
 				if(!leftoverorbs.has(topright)):
 					leftoverorbs.push_back(topright)
-	if(left != null and left.is_in_group("orb")):
-		if(left.colour == self.colour):
-			if(!matchingorbs.has(left)):
-				left.CheckMatch(matchingorbs, leftoverorbs)
-		else:
-			if(!leftoverorbs.has(left)):
-				leftoverorbs.push_back(left)
-	if(right != null and right.is_in_group("orb")):
-		if(right.colour == self.colour):
-			if(!matchingorbs.has(right)):
-				right.CheckMatch(matchingorbs, leftoverorbs)
-		else:
-			if(!leftoverorbs.has(right)):
-				leftoverorbs.push_back(right)
-	if(bottomleft != null and bottomleft.is_in_group("orb")):
-		if(bottomleft.colour == self.colour):
-			if(!matchingorbs.has(bottomleft)):
-				bottomleft.CheckMatch(matchingorbs, leftoverorbs)
-		else:
-			if(!leftoverorbs.has(bottomleft)):
-				leftoverorbs.push_back(bottomleft)
-	if(bottomright != null and bottomright.is_in_group("orb")):
-		if(bottomright.colour == self.colour):
-			if(!matchingorbs.has(bottomright)):
-				bottomright.CheckMatch(matchingorbs, leftoverorbs)
-		else:
-			if(!leftoverorbs.has(bottomright)):
-				leftoverorbs.push_back(bottomright)
+	if(left != null):
+		if(left.is_in_group("orb")):
+			if(left.colour == self.colour):
+				if(!matchingorbs.has(left)):
+					left.CheckMatch(matchingorbs, leftoverorbs)
+			else:
+				if(!leftoverorbs.has(left)):
+					leftoverorbs.push_back(left)
+	if(right != null):
+		if(right.is_in_group("orb")):
+			if(right.colour == self.colour):
+				if(!matchingorbs.has(right)):
+					right.CheckMatch(matchingorbs, leftoverorbs)
+			else:
+				if(!leftoverorbs.has(right)):
+					leftoverorbs.push_back(right)
+	if(bottomleft != null):
+		if(bottomleft.is_in_group("orb")):
+			if(bottomleft.colour == self.colour):
+				if(!matchingorbs.has(bottomleft)):
+					bottomleft.CheckMatch(matchingorbs, leftoverorbs)
+			else:
+				if(!leftoverorbs.has(bottomleft)):
+					leftoverorbs.push_back(bottomleft)
+	if(bottomright != null):
+		if(bottomright.is_in_group("orb")):
+			if(bottomright.colour == self.colour):
+				if(!matchingorbs.has(bottomright)):
+					bottomright.CheckMatch(matchingorbs, leftoverorbs)
+			else:
+				if(!leftoverorbs.has(bottomright)):
+					leftoverorbs.push_back(bottomright)
 	if(matchingorbs.size() >= 3):
 		match = true
 	return match

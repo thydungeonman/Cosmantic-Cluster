@@ -35,6 +35,7 @@ func _fixed_process(delta):
 				orb = preload(NONE).instance()
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())
+			get_parent().orbsonboard.push_front(orb)
 			loaded = true
 		else:
 			GetFireControls(delta,orb)
@@ -45,12 +46,12 @@ func _fixed_process(delta):
 func GetAimControls(delta):
 	
 	if(Input.is_action_pressed("p1_aim_left")):
-		x -= PI/170
+		x -= PI/500#170
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(x)
 	elif(Input.is_action_pressed("p1_aim_right")):
-		x += PI/170
+		x += PI/500#170
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(x)
