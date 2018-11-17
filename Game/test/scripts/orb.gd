@@ -89,26 +89,32 @@ func Move(delta):
 				if((dotproductnorth <= -.33 and dotproductnorth >= -1) and (dotproductwest <= 1 and dotproductwest > 0)): #collided on bottomleft
 					set_pos(collider.bottomleftspot)
 					collider.bottomleft = self 
+					topright = collider
 					print("hit top right")
 				elif((dotproductnorth <= -.33 and dotproductnorth >= -1) and (dotproductwest <= 0 and dotproductwest >= -1)): #collided on bottom right side
 					set_pos(collider.bottomrightspot)
 					collider.bottomright = self
+					topleft = collider
 					print("hit top left")
 				elif((dotproductnorth <= .33 and dotproductnorth > -.33) and (dotproductwest <= 1 and dotproductwest > 0)):#left
 					set_pos(collider.leftspot)
 					collider.left = self
+					right = collider
 					print("hit right")
 				elif((dotproductnorth <= .33 and dotproductnorth > -.33) and (dotproductwest <= 0 and dotproductwest >= -1)):#right
 					set_pos(collider.rightspot)
 					collider.right = self
+					left = collider
 					print("hit left")
 				elif((dotproductnorth <= 1 and dotproductnorth >.33) and (dotproductwest <= 1 and dotproductwest > 0)):#topleft
 					set_pos(collider.topleftspot)
 					collider.topleft = self
+					bottomright = collider
 					print("hit bottom right")
 				elif((dotproductnorth <= 1 and dotproductnorth >.33) and (dotproductwest <= 0 and dotproductwest >= -1)):#topright
 					set_pos(collider.toprightspot)
 					collider.topright = self
+					bottomleft = collider
 					print("hit bottom left")
 					
 				GetNeighboringPositions()
@@ -281,7 +287,7 @@ func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2
 
 
 
-#the topmost orbs will neighbor an area that is in the group "top"
+#the topmost orbs neighbor an area that is in the group "top"
 func LookForTop(crossreforbs): 
 	#this function takes an array or orbs that have already been checked and then checks to see if it has the top as itn neighbor
 	#if its neighbor is not the top, that neighbor will then check if it neighbors the top and so on
@@ -345,4 +351,5 @@ func CountNeighbors():
 		count+=1
 	if(bottomright != null):
 		count+=1
+	get_node("count").set_text(str(count))
 	return count

@@ -37,6 +37,9 @@ func _fixed_process(delta):
 			i.GetNeighbors()
 		s = true
 	t += delta
+	if(Input.is_action_pressed("ui_select")):
+		for orb in orbsonboard:
+			orb.CountNeighbors()
 
 func GenerateBoardP1():
 	#generate board based off of the width of the screen and the width of an orb
