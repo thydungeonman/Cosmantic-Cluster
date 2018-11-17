@@ -8,7 +8,7 @@ extends KinematicBody2D
 #TODO overhaul the match and falling orb code so that each orb is responsible for its self
 #they can't all depend of the one orb that you shot
 
-enum COLOUR {BLACK,BLUE,GREEN,GREY,ORANGE,PURPLE,RED,WHITE,YELLOW}
+enum COLOUR {NONE,BLACK,BLUE,GREEN,GREY,ORANGE,PURPLE,RED,WHITE,YELLOW}
 export(Vector2) var trajectory = Vector2(0,0)
 export(bool) var ismoving = false
 var inlauncher = false #if an orb is neither in the launcher nor moving then it is on the board
@@ -23,7 +23,7 @@ onready var inversescale = 1/get_scale().x
 
 var falling = false
 
-var colour = COLOUR.RED
+var colour = COLOUR.NONE
 #neighboring orbs  Kinematic bodies
 var topleft
 var topright
@@ -110,36 +110,27 @@ func Move(delta):
 					set_pos(collider.toprightspot)
 					collider.topright = self
 					print("hit bottom left")
+					
 				GetNeighboringPositions()
 				GetNeighbors()
 				#print(CountNeighbors())
 				var foundmatch = CheckMatch(matchingorbs,leftoverorbs);
+				
 				if(foundmatch):
 					for i in matchingorbs:
 						i.Unhook()
 						get_parent().orbsonboard.remove(get_parent().orbsonboard.find(i))
 					get_parent().leftoverorbs = leftoverorbs
 					get_parent().CheckFall()
+					
 					ActivateAbility()
+					
 					for orb in matchingorbs:
 						print(orb.get_name())
 						orb.get_node("AnimationPlayer").play("blink")
-#					for orb in matchingorbs:
-#						print(orb)
-#						orb.Die()
 				else:
 					matchingorbs.clear()
 					leftoverorbs.clear()
-#						#if(crossreforbs.has(i)): # if we have already checked this orb
-#							#continue
-#						#print(i)
-						
-						
-						
-#					for i in crossreforbs:
-#						if(i.falling == true):
-#							i.Unhook()
-#							i.queue_free()
 
 
 func click():

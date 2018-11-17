@@ -1,7 +1,14 @@
 extends Node2D
 
-const YELLOW = "res://test/scenes/yelloworb.tscn"
 const NONE = "res://test/scenes/orb.tscn"
+const YELLOW = "res://test/scenes/yelloworb.tscn"
+const BLUE = "res://test/scenes/blueorb.tscn"
+const ORANGE = "res://test/scenes/orangeorb.tscn"
+const PURPLE = "res://test/scenes/purpleorb.tscn"
+const BLACK = "res://test/scenes/blackorb.tscn"
+const GREEN = "res://test/scenes/greenorb.tscn"
+const WHITE = "res://test/scenes/whiteorb.tscn"
+const RED = "res://test/scenes/redorb.tscn"
 
 var player = 1
 
@@ -29,10 +36,23 @@ func _fixed_process(delta):
 	if(shottimer > .5):
 		if(loaded == false):
 			randomize()
-			if(randi() % 2 == 0):
+			var result = randi() % 8
+			if(result == 0):
 				orb = preload(YELLOW).instance()
-			else:
-				orb = preload(NONE).instance()
+			elif(result == 1):
+				orb = preload(BLUE).instance()
+			elif(result == 2):
+				orb = preload(RED).instance()
+			elif(result == 3):
+				orb = preload(ORANGE).instance()
+			elif(result == 4):
+				orb = preload(PURPLE).instance()
+			elif(result == 5):
+				orb = preload(GREEN).instance()
+			elif(result == 6):
+				orb = preload(BLACK).instance()
+			elif(result == 7):
+				orb = preload(WHITE).instance()
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())
 			get_parent().orbsonboard.push_front(orb)
