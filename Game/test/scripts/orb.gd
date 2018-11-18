@@ -220,7 +220,6 @@ func GetNeighbors():
 		bottomleft = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().topright = self
-			print("found bottom left neighbor")
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 			
 

@@ -10,6 +10,7 @@ const GREEN = "res://test/scenes/greenorb.tscn"
 const WHITE = "res://test/scenes/whiteorb.tscn"
 const RED = "res://test/scenes/redorb.tscn"
 
+
 var player = 1
 
 var trajectory = Vector2(-1500,-1500)
@@ -25,7 +26,11 @@ var shottimer = 0.0 #goes up to half a second then loads another orb into the la
 var firing = false
 var loaded = false
 var orb
+var storing = false
+var swapping = false
+
 onready var aim = get_node("Particles2D")
+onready var container = get_node("container")
 
 func _ready():
 	set_fixed_process(true)
@@ -57,8 +62,9 @@ func _fixed_process(delta):
 			orb.set_pos(get_global_pos())
 			get_parent().orbsonboard.push_front(orb)
 			loaded = true
+			print("loaded new orb")
 		else:
-			GetFireControls(delta,orb)
+			GetFireControls(delta)
 		
 	GetAimControls(delta)
 
@@ -76,17 +82,43 @@ func GetAimControls(delta):
 		aim.set_param(0,270 - rad2deg(x))
 		#print(x)
 
-func GetFireControls(delta,orb):
+func GetFireControls(delta):
 	if(Input.is_action_pressed("p1_fire") and loaded == true): #if the key is pressed and the launcher is loaded
 		if(firing == false):
-			Fire(orb)
+			Fire()
 			firing = true
 			loaded = false
 			shottimer = 0.0
 	else:
 		firing = false
+	if(Input.is_action_pressed("p1_store") and !container.IsFull()):
+		if(storing == false):
+			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+			get_parent().remove_child(orb)
+			get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			container.TakeOrb(orb)
+			loaded = false
+			storing = true
+	else:
+		storing = false
+	
+	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty()):
+		if(swapping == false):
+			print(str(orb))
+			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+			get_parent().remove_child(orb)
+			get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			orb = container.Swap(orb)
+			get_parent().add_child(orb)
+			orb.set_pos(get_global_pos())
+			get_parent().orbsonboard.push_front(orb)
+			swapping = true
+			print(str(orb))
+	else:
+		swapping = false
 
-func Fire(orb):
+func Fire():
+	print(str(orb))
 	orb.trajectory.x = trajectory.x * cos(x)
 	orb.trajectory.y = trajectory.y * sin(x)
 	orb.ismoving = true

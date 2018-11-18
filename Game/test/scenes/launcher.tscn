@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=1]
+[gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://test/scripts/launcher.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://test/scenes/container.tscn" type="PackedScene" id=3]
 
 [node name="launcher" type="Node2D"]
 
@@ -33,5 +34,9 @@ color/color = Color( 0, 0, 0, 1 )
 [node name="Sprite" type="Sprite" parent="."]
 
 texture = ExtResource( 2 )
+
+[node name="container" parent="." instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 299.9, -85.9174 )
 
 
