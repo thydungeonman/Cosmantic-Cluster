@@ -24,7 +24,9 @@ var dd = false;
 #test
 
 func _ready():
+	GenerateP2Launcher()
 	GenerateBoardP1()
+	GenerateBoardP2()
 	set_fixed_process(true)
 	
 
@@ -44,7 +46,7 @@ func _fixed_process(delta):
 func GenerateBoardP1():
 	#generate board based off of the width of the screen and the width of an orb
 	var startorb = preload("res://test/scenes/orb.tscn").instance()
-	var xoffset = 52
+	var xoffset = 35 + 10
 	var yoffset = 40
 	add_child(startorb)
 	startorb.set_pos(Vector2(70 + 70,100))
@@ -54,14 +56,29 @@ func GenerateBoardP1():
 	
 	for i in range (1,5) : #lets say we want four rows
 		if(i%2 == 1):
-			GenerateOddRow(xoffset, yoffset, orbwidth) #always start with an odd row
+			GenerateOddRow(xoffset, yoffset, orbwidth,1) #always start with an odd row
 		elif(i%2 == 0):
-			GenerateEvenRow(xoffset, yoffset, orbwidth)
+			GenerateEvenRow(xoffset, yoffset, orbwidth,1)
 		yoffset += orbwidth * Vector2(1.07337749,1.8417709).normalized().y;
-		
+
+func GenerateBoardP2():
+	#generate board based off of the width of the screen and the width of an orb
+	var startorb = preload("res://test/scenes/orb.tscn").instance()
+	var xoffset = 960 + 70 + 5
+	var yoffset = 40
+	add_child(startorb)
+	startorb.set_pos(Vector2(70 + 70,100))
+	var orbwidth = startorb.width
 	
+	startorb.queue_free() #this is kind of cheap but whatever
 	
-	
+	for i in range (1,5) : #lets say we want four rows
+		if(i%2 == 1):
+			GenerateOddRow(xoffset, yoffset, orbwidth,2) #always start with an odd row
+		elif(i%2 == 0):
+			GenerateEvenRow(xoffset, yoffset, orbwidth,2)
+		yoffset += orbwidth * Vector2(1.07337749,1.8417709).normalized().y;
+
 
 func CheckFall(): #will most likely take one or more kinematic bodies that are the neighboring orbs of the ones that were just matched and killed
 	
@@ -84,7 +101,7 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 #			i.get_node("AnimationPlayer").play("shrink")
 	
 
-func GenerateOddRow(xoffset, yoffset, width):
+func GenerateOddRow(xoffset, yoffset, width, player):
 	for i in range(numthatfit):
 		var orb
 		randomize()
@@ -108,11 +125,15 @@ func GenerateOddRow(xoffset, yoffset, width):
 		
 		add_child(orb)
 		orb.set_pos(Vector2(xoffset + width*i, yoffset))
+		if(player == 1):
+			orb.player = orb.PLAYER.PLAYER1
+		elif(player == 2):
+			orb.player = orb.PLAYER.PLAYER2
 		orbsonboard.push_front(orb)
 
-func GenerateEvenRow(xoffset, yoffset, width):
+func GenerateEvenRow(xoffset, yoffset, width, player):
 	xoffset += 35
-	for i in range(numthatfit):
+	for i in range(numthatfit - 1):
 		var orb
 		randomize()
 		var result = randi() % 8
@@ -135,4 +156,16 @@ func GenerateEvenRow(xoffset, yoffset, width):
 		
 		add_child(orb)
 		orb.set_pos(Vector2(xoffset + width*i, yoffset))
+		if(player == 1):
+			orb.player = orb.PLAYER.PLAYER1
+		elif(player == 2):
+			orb.player = orb.PLAYER.PLAYER2
 		orbsonboard.push_front(orb)
+
+func GenerateP2Launcher():
+	var launcher = preload("res://test/scenes/launcher.tscn").instance()
+	add_child(launcher)
+	launcher.player = launcher.PLAYER.PLAYER2
+	launcher.set_pos(Vector2(1440,1030))
+
+

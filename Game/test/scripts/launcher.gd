@@ -1,5 +1,7 @@
 extends Node2D
 
+enum PLAYER {PLAYER1,PLAYER2,AI}
+
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
 const BLUE = "res://test/scenes/blueorb.tscn"
@@ -10,8 +12,7 @@ const GREEN = "res://test/scenes/greenorb.tscn"
 const WHITE = "res://test/scenes/whiteorb.tscn"
 const RED = "res://test/scenes/redorb.tscn"
 
-
-var player = 1
+var player = PLAYER.PLAYER1
 
 var trajectory = Vector2(-1500,-1500)
 var x = 0.14 #starting angle of launcher
@@ -61,16 +62,24 @@ func _fixed_process(delta):
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())
 			get_parent().orbsonboard.push_front(orb)
+			if(player == PLAYER.PLAYER1):
+				orb.player = orb.PLAYER.PLAYER1
+			if(player == PLAYER.PLAYER2):
+				orb.player = orb.PLAYER.PLAYER2
 			loaded = true
 			print("loaded new orb")
 		else:
-			GetFireControls(delta)
-		
-	GetAimControls(delta)
+			if(player == PLAYER.PLAYER1):
+				GetFireControlsP1(delta)
+			if(player == PLAYER.PLAYER2):
+				GetFireControlsP2(delta)
+	if(player == PLAYER.PLAYER1):
+		GetAimControlsP1(delta)
+	if(player == PLAYER.PLAYER2):
+		GetAimControlsP2(delta)
 
 
-func GetAimControls(delta):
-	
+func GetAimControlsP1(delta):
 	if(Input.is_action_pressed("p1_aim_left")):
 		x -= PI/170
 		x = clamp(x,lowerlimit,upperlimit)
@@ -82,7 +91,20 @@ func GetAimControls(delta):
 		aim.set_param(0,270 - rad2deg(x))
 		#print(x)
 
-func GetFireControls(delta):
+func GetAimControlsP2(delta):
+	if(Input.is_action_pressed("p2_aim_left")):
+		x -= PI/170
+		x = clamp(x,lowerlimit,upperlimit)
+		aim.set_param(0,270 - rad2deg(x))
+		#print(x)
+	elif(Input.is_action_pressed("p2_aim_right")):
+		x += PI/170
+		x = clamp(x,lowerlimit,upperlimit)
+		aim.set_param(0,270 - rad2deg(x))
+		#print(x)
+
+
+func GetFireControlsP1(delta):
 	if(Input.is_action_pressed("p1_fire") and loaded == true): #if the key is pressed and the launcher is loaded
 		if(firing == false):
 			Fire()
@@ -117,9 +139,44 @@ func GetFireControls(delta):
 	else:
 		swapping = false
 
+func GetFireControlsP2(delta):
+	if(Input.is_action_pressed("p2_fire") and loaded == true): #if the key is pressed and the launcher is loaded
+		if(firing == false):
+			Fire()
+			firing = true
+			loaded = false
+			shottimer = 0.0
+	else:
+		firing = false
+	if(Input.is_action_pressed("p2_store") and !container.IsFull()):
+		if(storing == false):
+			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+			get_parent().remove_child(orb)
+			get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			container.TakeOrb(orb)
+			loaded = false
+			storing = true
+	else:
+		storing = false
+	
+	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty()):
+		if(swapping == false):
+			print(str(orb))
+			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+			get_parent().remove_child(orb)
+			get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			orb = container.Swap(orb)
+			get_parent().add_child(orb)
+			orb.set_pos(get_global_pos())
+			get_parent().orbsonboard.push_front(orb)
+			swapping = true
+			print(str(orb))
+	else:
+		swapping = false
+
+
 func Fire():
 	print(str(orb))
 	orb.trajectory.x = trajectory.x * cos(x)
 	orb.trajectory.y = trajectory.y * sin(x)
 	orb.ismoving = true
-	

@@ -9,6 +9,7 @@ extends KinematicBody2D
 #they can't all depend of the one orb that you shot
 
 enum COLOUR {NONE,BLACK,BLUE,GREEN,GREY,ORANGE,PURPLE,RED,WHITE,YELLOW}
+enum PLAYER {PLAYER1,PLAYER2}
 export(Vector2) var trajectory = Vector2(0,0)
 export(bool) var ismoving = false
 var inlauncher = false #if an orb is neither in the launcher nor moving then it is on the board
@@ -23,6 +24,7 @@ onready var inversescale = 1/get_scale().x
 
 var falling = false
 
+var player = PLAYER.PLAYER1
 var colour = COLOUR.NONE
 #neighboring orbs  Kinematic bodies
 var topleft
