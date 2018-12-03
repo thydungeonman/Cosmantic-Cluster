@@ -7,3 +7,4 @@ func _ready():
 
 func ActivateAbility():
 	print("BLACK ABILITY")
+	#set darkness.visibility = true for x seconds

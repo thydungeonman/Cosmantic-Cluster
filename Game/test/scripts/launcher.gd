@@ -15,7 +15,7 @@ const RED = "res://test/scenes/redorb.tscn"
 var player = PLAYER.PLAYER1
 
 var trajectory = Vector2(-1500,-1500)
-var x = 0.14 #starting angle of launcher
+var x = (PI)/2 #starting angle of launcher
 
 var upperlimit = PI - 0.14
 var lowerlimit = 0.14
@@ -28,13 +28,15 @@ var firing = false
 var loaded = false
 var orb
 var storing = false
-var swapping = false
+var swapping = false 
+var swapped = false #the player can only swap once
 
 onready var aim = get_node("Particles2D")
 onready var container = get_node("container")
 
 func _ready():
 	set_fixed_process(true)
+	aim.set_param(0,270 - rad2deg(x))
 
 
 func _fixed_process(delta):
@@ -60,7 +62,7 @@ func _fixed_process(delta):
 			elif(result == 7):
 				orb = preload(WHITE).instance()
 			get_parent().add_child(orb)
-			orb.set_pos(get_global_pos())
+			orb.set_pos(get_global_pos())#set the orb to launcher position
 			get_parent().orbsonboard.push_front(orb)
 			if(player == PLAYER.PLAYER1):
 				orb.player = orb.PLAYER.PLAYER1
@@ -124,7 +126,7 @@ func GetFireControlsP1(delta):
 	else:
 		storing = false
 	
-	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty()):
+	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty() and !swapped):
 		if(swapping == false):
 			print(str(orb))
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
@@ -135,6 +137,7 @@ func GetFireControlsP1(delta):
 			orb.set_pos(get_global_pos())
 			get_parent().orbsonboard.push_front(orb)
 			swapping = true
+			swapped = true
 			print(str(orb))
 	else:
 		swapping = false
@@ -159,7 +162,7 @@ func GetFireControlsP2(delta):
 	else:
 		storing = false
 	
-	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty()):
+	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty() and !swapped):
 		if(swapping == false):
 			print(str(orb))
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
@@ -170,6 +173,7 @@ func GetFireControlsP2(delta):
 			orb.set_pos(get_global_pos())
 			get_parent().orbsonboard.push_front(orb)
 			swapping = true
+			swapped = true
 			print(str(orb))
 	else:
 		swapping = false
@@ -180,3 +184,4 @@ func Fire():
 	orb.trajectory.x = trajectory.x * cos(x)
 	orb.trajectory.y = trajectory.y * sin(x)
 	orb.ismoving = true
+	swapped = false

@@ -6,3 +6,4 @@ func _ready():
 
 func ActivateAbility():
 	print("GREEN ABILITY")
+	#gain x health up to max

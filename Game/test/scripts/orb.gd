@@ -1,12 +1,6 @@
 extends KinematicBody2D
-
-#TODO fix very specific bug where if an orb hits the right side of an orb that at the
-#very top of the screen, the one that was hit will consider both its
-#right and top right neighbor to be the same orb
-#might be fixed
-
-#TODO overhaul the match and falling orb code so that each orb is responsible for its self
-#they can't all depend of the one orb that you shot
+#an orb should always have the board as its parent
+#even when instanced by the launcher
 
 enum COLOUR {NONE,BLACK,BLUE,GREEN,GREY,ORANGE,PURPLE,RED,WHITE,YELLOW}
 enum PLAYER {PLAYER1,PLAYER2}
@@ -84,7 +78,6 @@ func Move(delta):
 				positiondifference = positiondifference.normalized()
 				var dotproductnorth = positiondifference.dot(Vector2(0,-1))
 				var dotproductwest = positiondifference.dot(Vector2(-1,0))
-				
 #				print(dotproductnorth)
 #				print(dotproductwest)
 				
@@ -337,6 +330,8 @@ func LookForTop(crossreforbs):
 
 func ActivateAbility():
 	pass
+	#Board.HandleAbility(BLUE,PLAYER1)
+	#the board should be able to handle 
 
 func CountNeighbors():
 	var count = 0

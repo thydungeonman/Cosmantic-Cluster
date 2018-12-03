@@ -1,5 +1,7 @@
 extends Node2D
 
+enum COLOUR {NONE,YELLOW,BLUE,ORANGE,PURPLE,BLACK,GREEN,WHITE,RED}
+enum PLAYER {PLAYER1,PLAYER2}
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
 const BLUE = "res://test/scenes/blueorb.tscn"
@@ -13,14 +15,20 @@ const RED = "res://test/scenes/redorb.tscn"
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width
 
 var fallcheckarray = []
-var orbsonboard = []
+var orbsonboard = [] 
+var orbsonboardp1 = [] #if either is empty, the game is over
+var orbsonoboardp2 = [] 
 var s = false
 var t  = 0.0
 
 var leftoverorbs = []
 var crossreforbs = []
-var orb;
+var orb; #the newest orb
 var dd = false;
+var lastusedcolorp1
+var lastusedcolorp2
+var abilitycountp1 = 0 #counts the number of times a color is chained
+var abilitycountp2 = 0
 #test
 
 func _ready():
@@ -166,6 +174,20 @@ func GenerateP2Launcher():
 	var launcher = preload("res://test/scenes/launcher.tscn").instance()
 	add_child(launcher)
 	launcher.player = launcher.PLAYER.PLAYER2
-	launcher.set_pos(Vector2(1440,1030))
+	launcher.set_pos(Vector2(1455,1040))
 
+func GenerateP1Launcher():
+	var launcher = preload("res://test/scenes/launcher.tscn").instance()
+	add_child(launcher)
+	launcher.player = launcher.PLAYER.PLAYER1
+	launcher.set_pos(Vector2(465,1040))
+
+func HandleAbility(color,player):
+	pass
+#	if player = player1
+	#	switch(color):
+	#		if color == lastusedcolorp1
+	#			rack up multiplier effect
+	#		else
+	#			do regular effect
 

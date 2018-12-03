@@ -18,7 +18,7 @@ centered = false
 
 [node name="launcher" parent="." instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 480, 1030 )
+transform/pos = Vector2( 465, 1040 )
 
 [node name="wall" parent="." instance=ExtResource( 4 )]
 

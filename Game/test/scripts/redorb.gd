@@ -6,3 +6,5 @@ func _ready():
 
 func ActivateAbility():
 	print("RED ABILITY")
+	get_parent().HandleAbility(colour,player)
+	#damage enemy health by x amount

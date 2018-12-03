@@ -6,3 +6,4 @@ func _ready():
 
 func ActivateAbility():
 	print("WHITE ABILITY")
+	#launcher.Freeze()
