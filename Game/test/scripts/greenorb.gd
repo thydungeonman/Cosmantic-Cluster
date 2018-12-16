@@ -6,4 +6,5 @@ func _ready():
 
 func ActivateAbility():
 	print("GREEN ABILITY")
+	get_parent().HandleAbility(colour,player)
 	#gain x health up to max

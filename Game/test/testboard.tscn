@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://test/testboard.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/poortaste.png" type="Texture" id=2]
@@ -6,6 +6,23 @@
 [ext_resource path="res://test/scenes/wall.tscn" type="PackedScene" id=4]
 [ext_resource path="res://test/scenes/top.tscn" type="PackedScene" id=5]
 [ext_resource path="res://test/scenes/middlewall.tscn" type="PackedScene" id=6]
+[ext_resource path="res://test/sprites/black.png" type="Texture" id=7]
+
+[sub_resource type="CanvasItemShader" id=1]
+
+_code = {
+"fragment": "",
+"fragment_ofs": 0,
+"light": "",
+"light_ofs": 0,
+"vertex": "",
+"vertex_ofs": 0
+}
+
+[sub_resource type="CanvasItemMaterial" id=2]
+
+shader/shader = SubResource( 1 )
+shader/shading_mode = 0
 
 [node name="testboard" type="Node2D"]
 
@@ -16,7 +33,7 @@ script/script = ExtResource( 1 )
 texture = ExtResource( 2 )
 centered = false
 
-[node name="launcher" parent="." instance=ExtResource( 3 )]
+[node name="p1launcher" parent="." instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 465, 1040 )
 
@@ -37,5 +54,23 @@ transform/pos = Vector2( 975.121, -35.0616 )
 ] instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 960, 600.948 )
+
+[node name="p2darkness" type="Sprite" parent="."]
+
+visibility/visible = false
+material/material = SubResource( 2 )
+transform/pos = Vector2( 992.167, -6.18176 )
+transform/scale = Vector2( 927.311, 795.641 )
+z/z = 1
+texture = ExtResource( 7 )
+centered = false
+
+[node name="p1darkness" type="Sprite" parent="."]
+
+visibility/visible = false
+transform/scale = Vector2( 930.402, 792.551 )
+z/z = 1
+texture = ExtResource( 7 )
+centered = false
 
 

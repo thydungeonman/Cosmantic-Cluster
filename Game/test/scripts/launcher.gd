@@ -1,6 +1,9 @@
 extends Node2D
+#TODO having a launcher with separate functions for p1 and p2 is inelegant
+#the problem is how to use the same function but being able to wire
+# it up to different controls
 
-enum PLAYER {PLAYER1,PLAYER2,AI}
+enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
 
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
@@ -16,6 +19,7 @@ var player = PLAYER.PLAYER1
 
 var trajectory = Vector2(-1500,-1500)
 var x = (PI)/2 #starting angle of launcher
+var speed = PI/170
 
 var upperlimit = PI - 0.14
 var lowerlimit = 0.14
@@ -31,6 +35,10 @@ var storing = false
 var swapping = false 
 var swapped = false #the player can only swap once
 
+var isfrozen = false #has an enemies white ability been activated?
+var frozentime = 1.00
+var frozentimer = 0.00
+
 onready var aim = get_node("Particles2D")
 onready var container = get_node("container")
 
@@ -40,6 +48,15 @@ func _ready():
 
 
 func _fixed_process(delta):
+	LoadOrb(delta)
+	if(player == PLAYER.PLAYER1):
+		GetAimControlsP1(delta)
+	if(player == PLAYER.PLAYER2):
+		GetAimControlsP2(delta)
+	if(isfrozen):
+		Defrost(delta)
+
+func LoadOrb(delta):
 	shottimer += delta
 	if(shottimer > .5):
 		if(loaded == false):
@@ -75,32 +92,27 @@ func _fixed_process(delta):
 				GetFireControlsP1(delta)
 			if(player == PLAYER.PLAYER2):
 				GetFireControlsP2(delta)
-	if(player == PLAYER.PLAYER1):
-		GetAimControlsP1(delta)
-	if(player == PLAYER.PLAYER2):
-		GetAimControlsP2(delta)
-
 
 func GetAimControlsP1(delta):
 	if(Input.is_action_pressed("p1_aim_left")):
-		x -= PI/170
+		x -= speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(x)
 	elif(Input.is_action_pressed("p1_aim_right")):
-		x += PI/170
+		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(x)
 
 func GetAimControlsP2(delta):
 	if(Input.is_action_pressed("p2_aim_left")):
-		x -= PI/170
+		x -= speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(x)
 	elif(Input.is_action_pressed("p2_aim_right")):
-		x += PI/170
+		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(x)
@@ -180,8 +192,22 @@ func GetFireControlsP2(delta):
 
 
 func Fire():
+	# if yellow ablility = true
+	# spawn lightning area and child to orb
+	# when orb stops check bool in orb and then activate lightning
 	print(str(orb))
 	orb.trajectory.x = trajectory.x * cos(x)
 	orb.trajectory.y = trajectory.y * sin(x)
 	orb.ismoving = true
 	swapped = false
+
+func Freeze():
+	isfrozen = true
+	speed = 0
+
+func Defrost(delta):
+	frozentimer += delta
+	if(frozentimer >= frozentime):
+		speed = PI/170
+		isfrozen = false
+		frozentimer = 0.00

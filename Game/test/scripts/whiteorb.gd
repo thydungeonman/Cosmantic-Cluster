@@ -6,4 +6,5 @@ func _ready():
 
 func ActivateAbility():
 	print("WHITE ABILITY")
+	get_parent().HandleAbility(colour,player)
 	#launcher.Freeze()

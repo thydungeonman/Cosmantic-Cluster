@@ -1,7 +1,9 @@
 extends Node2D
 
-enum COLOUR {NONE,YELLOW,BLUE,ORANGE,PURPLE,BLACK,GREEN,WHITE,RED}
-enum PLAYER {PLAYER1,PLAYER2}
+enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
+	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
+enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
+
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
 const BLUE = "res://test/scenes/blueorb.tscn"
@@ -24,19 +26,34 @@ var t  = 0.0
 var leftoverorbs = []
 var crossreforbs = []
 var orb; #the newest orb
-var dd = false;
+
+onready var p1launcher = get_node("p1launcher")
+var p2launcher = null
+
+var player1health = 5
+var player2health = 5
 var lastusedcolorp1
 var lastusedcolorp2
 var abilitycountp1 = 0 #counts the number of times a color is chained
 var abilitycountp2 = 0
+
+var p1isdark = false
+var p1darktime = 1.00
+var p1darktimer = 0.00
+var p2isdark = false
+var p2darktime = 1.00 #time that the darkness ability lasts
+var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
+
 #test
 
+
 func _ready():
+	
 	GenerateP2Launcher()
 	GenerateBoardP1()
 	GenerateBoardP2()
-	set_fixed_process(true)
 	
+	set_fixed_process(true)
 
 func _fixed_process(delta):
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
@@ -50,6 +67,11 @@ func _fixed_process(delta):
 	if(Input.is_action_pressed("ui_select")):
 		for orb in orbsonboard:
 			orb.CountNeighbors()
+	
+	if(p2isdark):
+		P1BlackAblility(delta)
+	if(p1isdark):
+		P2BlackAbility(delta)
 
 func GenerateBoardP1():
 	#generate board based off of the width of the screen and the width of an orb
@@ -171,10 +193,11 @@ func GenerateEvenRow(xoffset, yoffset, width, player):
 		orbsonboard.push_front(orb)
 
 func GenerateP2Launcher():
-	var launcher = preload("res://test/scenes/launcher.tscn").instance()
-	add_child(launcher)
-	launcher.player = launcher.PLAYER.PLAYER2
-	launcher.set_pos(Vector2(1455,1040))
+	p2launcher = preload("res://test/scenes/launcher.tscn").instance()
+	add_child(p2launcher)
+	p2launcher.set_name("p2launcher")
+	p2launcher.player = p2launcher.PLAYER.PLAYER2
+	p2launcher.set_pos(Vector2(1455,1040))
 
 func GenerateP1Launcher():
 	var launcher = preload("res://test/scenes/launcher.tscn").instance()
@@ -182,12 +205,61 @@ func GenerateP1Launcher():
 	launcher.player = launcher.PLAYER.PLAYER1
 	launcher.set_pos(Vector2(465,1040))
 
-func HandleAbility(color,player):
-	pass
+func HandleAbility(colour,player):
 #	if player = player1
 	#	switch(color):
 	#		if color == lastusedcolorp1
 	#			rack up multiplier effect
 	#		else
 	#			do regular effect
+	print(str(colour))
+	print("activating ablity")
+	
+	if(player == PLAYER.PLAYER1):
+		if(colour == COLOUR.RED):
+			player2health -= 1
+			print("Player 2 health: " + str(player2health))
+		if(colour == COLOUR.GREEN):
+			player1health += 1
+			print("Player 1 health: " + str(player1health))
+		if(colour == COLOUR.BLACK):
+			get_node("p2darkness").set_hidden(false)
+			p2isdark = true
+		if(colour == COLOUR.WHITE):
+			p2launcher.Freeze()
+		if(colour == COLOUR.YELLOW):
+			pass
+			#set flag on laucher to activate yellow ability
+	elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
+		if(colour == COLOUR.RED):
+			player1health -= 1
+			print("Player 1 health " + str(player1health))
+		if(colour == COLOUR.BLACK):
+			get_node("p1darkness").set_hidden(false)
+			p1isdark = true
+		if(colour == COLOUR.WHITE):
+			p1launcher.Freeze()
 
+func P1BlackAblility(delta):
+	p2darktimer += delta
+	if(p2darktimer >= p2darktime):
+		get_node("p2darkness").set_hidden(true)
+		p2isdark = false
+		p2darktimer = 0.00
+
+func P2BlackAbility(delta):
+	p1darktimer += delta
+	if(p1darktimer >= p1darktime):
+		get_node("p1darkness").set_hidden(true)
+		p1isdark = false
+		p1darktimer = 0.0
+
+func P1GreyAbility():
+	pass
+	#check first if a spot isn't already accupied by an orb
+	#also check if the area right above the potential spawning
+	#point does have an orb to connect to so a grey orb doesn't
+	#just go through the warp gate and onto you own board
+
+func P2GreyAbility():
+	pass

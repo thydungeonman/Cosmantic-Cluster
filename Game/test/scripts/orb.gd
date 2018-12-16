@@ -2,7 +2,9 @@ extends KinematicBody2D
 #an orb should always have the board as its parent
 #even when instanced by the launcher
 
-enum COLOUR {NONE,BLACK,BLUE,GREEN,GREY,ORANGE,PURPLE,RED,WHITE,YELLOW}
+
+enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
+	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 enum PLAYER {PLAYER1,PLAYER2}
 export(Vector2) var trajectory = Vector2(0,0)
 export(bool) var ismoving = false
@@ -16,10 +18,13 @@ var crossreforbs = [] # these orbs are the ones that were found while looking fo
 onready var pos = get_pos()
 onready var inversescale = 1/get_scale().x
 
+var charged = false
+
 var falling = false
 
 var player = PLAYER.PLAYER1
 var colour = COLOUR.NONE
+
 #neighboring orbs  Kinematic bodies
 var topleft
 var topright
@@ -121,6 +126,9 @@ func Move(delta):
 					for i in matchingorbs:
 						i.Unhook()
 						get_parent().orbsonboard.remove(get_parent().orbsonboard.find(i))
+					#if(lightning ability):
+						#var killorbs = SearchGroup(2,colour,leftoverorbs)
+						#get rid of killorbs
 					get_parent().leftoverorbs = leftoverorbs
 					get_parent().CheckFall()
 					
@@ -349,3 +357,14 @@ func CountNeighbors():
 		count+=1
 	get_node("count").set_text(str(count))
 	return count
+
+
+#recursive function that searches outward from an orb one level at a time
+#returns all orbs that are a specific colour
+func Search(level, colour):
+	pass
+
+#recursive function that searches outward from a group of orbs one level at a time
+#returns all orbs that are a specific colour
+func SearchGroup(level, colour, group):
+	pass
