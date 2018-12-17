@@ -45,7 +45,7 @@ var p2darktime = 1.00 #time that the darkness ability lasts
 var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
 
 #test
-
+onready var ray = get_node("RayCast2D")
 
 func _ready():
 	
@@ -56,6 +56,12 @@ func _ready():
 	set_fixed_process(true)
 
 func _fixed_process(delta):
+	if(Input.is_action_pressed("ui_page_up")):
+		p1launcher.Charge()
+		p2launcher.Charge()
+	
+	if(Input.is_action_pressed("click")):
+		Click()
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
 	#so we will wait for one second for them to find their neighbors
 	if(t > .5 and s == false):
@@ -218,27 +224,34 @@ func HandleAbility(colour,player):
 	if(player == PLAYER.PLAYER1):
 		if(colour == COLOUR.RED):
 			player2health -= 1
-			print("Player 2 health: " + str(player2health))
+			p2launcher.get_node("health").set_text("Health: " + str(player2health))
 		if(colour == COLOUR.GREEN):
 			player1health += 1
 			print("Player 1 health: " + str(player1health))
+			p1launcher.get_node("health").set_text("Health: " + str(player1health))
 		if(colour == COLOUR.BLACK):
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
 		if(colour == COLOUR.WHITE):
 			p2launcher.Freeze()
 		if(colour == COLOUR.YELLOW):
-			pass
-			#set flag on laucher to activate yellow ability
+			p1launcher.Charge()
 	elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
 		if(colour == COLOUR.RED):
 			player1health -= 1
 			print("Player 1 health " + str(player1health))
+			p1launcher.get_node("health").set_text("Health: " + str(player1health))
+		if(colour == COLOUR.GREEN):
+			player2health += 1
+			print("Player 2 health: " + str(player2health))
+			p2launcher.get_node("health").set_text("Health: " + str(player2health))
 		if(colour == COLOUR.BLACK):
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
 		if(colour == COLOUR.WHITE):
 			p1launcher.Freeze()
+		if(colour == COLOUR.YELLOW):
+			p2launcher.Charge()
 
 func P1BlackAblility(delta):
 	p2darktimer += delta
@@ -263,3 +276,16 @@ func P1GreyAbility():
 
 func P2GreyAbility():
 	pass
+
+
+func Click():
+	var mousepos = get_viewport().get_mouse_pos()
+	ray.set_cast_to(mousepos - ray.get_global_pos())
+	print(ray.get_collider())
+	var testorb = ray.get_collider()
+	if(testorb != null):
+		if(testorb.is_in_group("orb")):
+			var group = []
+			testorb.Search(1,COLOUR.NONE,group)
+			print(str(group.size()))
+		

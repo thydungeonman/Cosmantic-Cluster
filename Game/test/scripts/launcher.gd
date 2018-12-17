@@ -35,6 +35,8 @@ var storing = false
 var swapping = false 
 var swapped = false #the player can only swap once
 
+var ischarged = false
+
 var isfrozen = false #has an enemies white ability been activated?
 var frozentime = 1.00
 var frozentimer = 0.00
@@ -199,6 +201,9 @@ func Fire():
 	orb.trajectory.x = trajectory.x * cos(x)
 	orb.trajectory.y = trajectory.y * sin(x)
 	orb.ismoving = true
+	if(ischarged):
+		orb.Charge()
+		ischarged = false
 	swapped = false
 
 func Freeze():
@@ -211,3 +216,6 @@ func Defrost(delta):
 		speed = PI/170
 		isfrozen = false
 		frozentimer = 0.00
+
+func Charge():
+	ischarged = true

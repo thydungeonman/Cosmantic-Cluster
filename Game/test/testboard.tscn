@@ -73,4 +73,12 @@ z/z = 1
 texture = ExtResource( 7 )
 centered = false
 
+[node name="RayCast2D" type="RayCast2D" parent="."]
+
+transform/pos = Vector2( 477.46, 797.618 )
+enabled = true
+cast_to = Vector2( 0, 0 )
+layer_mask = 1
+type_mask = 15
+
 

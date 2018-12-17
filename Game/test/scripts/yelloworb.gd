@@ -7,6 +7,7 @@ func _ready():
 
 func ActivateAbility():
 	print("YELLOW ABILITY")
+	get_parent().HandleAbility(colour,player)
 	#instance new lighning ball scene
 	#lightning ball has a specific diameter
 	#if orb collides with lball

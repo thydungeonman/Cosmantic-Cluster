@@ -39,4 +39,21 @@ texture = ExtResource( 2 )
 
 transform/pos = Vector2( 299.9, -85.9174 )
 
+[node name="health" type="Label" parent="."]
+
+rect/scale = Vector2( 1.5, 1.5 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = -130.0
+margin/top = -10.0
+margin/right = -72.0
+margin/bottom = 4.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Health: 5"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
 

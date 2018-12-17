@@ -17,8 +17,9 @@ var crossreforbs = [] # these orbs are the ones that were found while looking fo
 # they will be cross referenced with the leftover orbs so that no orb is looked through twice to find the top
 onready var pos = get_pos()
 onready var inversescale = 1/get_scale().x
+onready var anim = get_node("AnimationPlayer")
 
-var charged = false
+var charged = false #is lightning ability active?
 
 var falling = false
 
@@ -123,12 +124,25 @@ func Move(delta):
 				var foundmatch = CheckMatch(matchingorbs,leftoverorbs);
 				
 				if(foundmatch):
+					if(charged):
+						var killorbs = []
+						for orb in matchingorbs:  #get all of the orbs with the same colour as the match 2 orbs out
+							killorbs = orb.Search(2,colour,killorbs)
+						var extraleftovers = []
+						for orb in matchingorbs:  #remove the original match orbs 
+							killorbs.remove(killorbs.find(orb))
+						var extraleftovers = []
+						for orb in killorbs:
+							extraleftovers = orb.Search(1,COLOUR.NONE,extraleftovers)
+							orb.Unhook()
+							get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+							orb.anim.play("zap")
+						for orb in extraleftovers:
+							if(!leftoverorbs.has(orb)):
+								leftoverorbs.push_back(orb)
 					for i in matchingorbs:
 						i.Unhook()
 						get_parent().orbsonboard.remove(get_parent().orbsonboard.find(i))
-					#if(lightning ability):
-						#var killorbs = SearchGroup(2,colour,leftoverorbs)
-						#get rid of killorbs
 					get_parent().leftoverorbs = leftoverorbs
 					get_parent().CheckFall()
 					
@@ -136,16 +150,17 @@ func Move(delta):
 					
 					for orb in matchingorbs:
 						print(orb.get_name())
-						orb.get_node("AnimationPlayer").play("blink")
+						orb.anim.play("blink")
 				else:
 					matchingorbs.clear()
 					leftoverorbs.clear()
 
 
 func click():
-	var mousepos = get_viewport().get_mouse_pos()
-	ray.set_cast_to(mousepos - get_pos())
-	print(ray.get_collider())
+	pass
+#	var mousepos = get_viewport().get_mouse_pos()
+#	ray.set_cast_to(mousepos - get_pos())
+#	print(ray.get_collider())
 	#var positiondifference = mousepos - get_pos()
 	#positiondifference = positiondifference.normalized()
 	#var dotproductnorth = positiondifference.dot(Vector2(0,-1))
@@ -361,10 +376,52 @@ func CountNeighbors():
 
 #recursive function that searches outward from an orb one level at a time
 #returns all orbs that are a specific colour
-func Search(level, colour):
-	pass
+#searching for COLOUR.NONE will return all orbs
+func Search(level, searchcolour, group):
+	level -= 1
+	if(level >= 0):
+		if(topleft != null):
+			if(topleft.is_in_group("orb")):
+				if(topleft.colour == searchcolour or searchcolour == COLOUR.NONE):
+					if(!group.has(topleft)):
+						group.push_back(topleft)
+				topleft.Search(level,searchcolour,group)
+		if(topright != null):
+			if(topright.is_in_group("orb")):
+				if(topright.colour == searchcolour or searchcolour == COLOUR.NONE):
+					if(!group.has(topright)):
+						group.push_back(topright)
+				topright.Search(level,searchcolour,group)
+		if(left != null):
+			if(left.is_in_group("orb")):
+				if(left.colour == searchcolour or searchcolour == COLOUR.NONE):
+					if(!group.has(left)):
+						group.push_back(left)
+				left.Search(level,searchcolour,group)
+		if(right != null):
+			if(right.is_in_group("orb")):
+				if(right.colour == searchcolour or searchcolour == COLOUR.NONE):
+					if(!group.has(right)):
+						group.push_back(right)
+				right.Search(level,searchcolour,group)
+		if(bottomleft != null):
+			if(bottomleft.is_in_group("orb")):
+				if(bottomleft.colour == searchcolour or searchcolour == COLOUR.NONE):
+					if(!group.has(bottomleft)):
+						group.push_back(bottomleft)
+				bottomleft.Search(level,searchcolour,group)
+		if(bottomright != null):
+			if(bottomright.is_in_group("orb")):
+				if(bottomright.colour == searchcolour or searchcolour == COLOUR.NONE):
+					if(!group.has(bottomright)):
+						group.push_back(bottomright)
+				bottomright.Search(level,searchcolour,group)
+		return group
+
 
 #recursive function that searches outward from a group of orbs one level at a time
 #returns all orbs that are a specific colour
-func SearchGroup(level, colour, group):
+func SearchGroup(level, colour, startgroup):
 	pass
+func Charge():
+	charged = true
