@@ -5,9 +5,11 @@
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 32.0613, 604.366 )
+extents = Vector2( 39.6459, 604.366 )
 
-[node name="middlewall" type="StaticBody2D"]
+[node name="middlewall" type="StaticBody2D" groups=[
+"wall",
+]]
 
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
@@ -28,8 +30,8 @@ _update_shape_index = 0
 
 [node name="Sprite" type="Sprite" parent="."]
 
-transform/pos = Vector2( 0, -1.08604 )
-transform/scale = Vector2( 1, 18.8525 )
+transform/pos = Vector2( -0.438636, -1.08604 )
+transform/scale = Vector2( 1.23929, 18.8525 )
 texture = ExtResource( 1 )
 
 

@@ -236,6 +236,8 @@ func HandleAbility(colour,player):
 			p2launcher.Freeze()
 		if(colour == COLOUR.YELLOW):
 			p1launcher.Charge()
+		if(colour == COLOUR.BLUE):
+			P1BlueAbility()
 	elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
 		if(colour == COLOUR.RED):
 			player1health -= 1
@@ -252,6 +254,8 @@ func HandleAbility(colour,player):
 			p1launcher.Freeze()
 		if(colour == COLOUR.YELLOW):
 			p2launcher.Charge()
+		if(colour == COLOUR.BLUE):
+			P2BlueAbility()
 
 func P1BlackAblility(delta):
 	p2darktimer += delta
@@ -267,25 +271,45 @@ func P2BlackAbility(delta):
 		p1isdark = false
 		p1darktimer = 0.0
 
-func P1GreyAbility():
-	pass
-	#check first if a spot isn't already accupied by an orb
-	#also check if the area right above the potential spawning
-	#point does have an orb to connect to so a grey orb doesn't
-	#just go through the warp gate and onto you own board
+func P1BlueAbility():
+	var orb = FindAvailableSpot(PLAYER.PLAYER2)
+	var grey = preload("res://test/scenes/greyorb.tscn").instance()
+	add_child(grey)
+	if(orb.bottomleft == null):
+		grey.set_pos(orb.bottomleftspot)
+	elif(orb.bottomright == null):
+		grey.set_pos(orb.bottomrightspot)
+	grey.HookUp()
+	orbsonboard.push_back(grey)
 
-func P2GreyAbility():
-	pass
+func P2BlueAbility():
+	var orb = FindAvailableSpot(PLAYER.PLAYER1)
+	var grey = preload("res://test/scenes/greyorb.tscn").instance()
+	add_child(grey)
+	if(orb.bottomleft == null):
+		grey.set_pos(orb.bottomleftspot)
+	elif(orb.bottomright == null):
+		grey.set_pos(orb.bottomrightspot)
+	grey.HookUp()
+	orbsonboard.push_back(grey)
 
 
 func Click():
+	P2BlueAbility()
 	var mousepos = get_viewport().get_mouse_pos()
 	ray.set_cast_to(mousepos - ray.get_global_pos())
-	print(ray.get_collider())
+	if(ray.get_collider() != null):
+		print(ray.get_collider().get_name())
 	var testorb = ray.get_collider()
 	if(testorb != null):
 		if(testorb.is_in_group("orb")):
 			var group = []
 			testorb.Search(1,COLOUR.NONE,group)
 			print(str(group.size()))
-		
+
+func FindAvailableSpot(player):
+	for orb in orbsonboard:
+		if(orb.player == player):
+			if(orb.CountNeighbors() < 6 and (orb.bottomleft == null or orb.bottomright == null) and !orb.inlauncher):
+				print(str(orb.get_name()))
+				return orb

@@ -40,7 +40,7 @@ var leftspot
 var rightspot
 var bottomleftspot
 var bottomrightspot
-#neighboring orb local positions for raycast Vector2s
+#neighboring orb local positions for raycast Vector2s only
 onready var ltopleftspot = Vector2(-width,-width) * Vector2(1.07337749,1.8417709).normalized()
 onready var ltoprightspot = Vector2(width,-width) * Vector2(1.07337749,1.8417709).normalized()
 onready var lleftspot = Vector2(-width,0)
@@ -118,12 +118,16 @@ func Move(delta):
 					bottomleft = collider
 					print("hit bottom left")
 					
+				EnableLauncher()
 				GetNeighboringPositions()
 				GetNeighbors()
 				#print(CountNeighbors())
 				var foundmatch = CheckMatch(matchingorbs,leftoverorbs);
 				
 				if(foundmatch):
+					for orb in leftoverorbs:
+						if(orb.colour == COLOUR.GREY):
+							orb.TakeDamage()
 					if(charged):
 						var killorbs = []
 						for orb in matchingorbs:  #get all of the orbs with the same colour as the match 2 orbs out
@@ -203,6 +207,8 @@ func GetNeighbors():
 	ray.set_cast_to(lleftspot)
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self):
+		if(ray.get_collider() == self):
+			print("found self")
 		left = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().right = self
@@ -216,14 +222,7 @@ func GetNeighbors():
 			ray.get_collider().topleft = self
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
-	ray.set_cast_to(lrightspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		right = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().left = self
-			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
-			
+	
 	ray.set_cast_to(ltoprightspot)
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self):
@@ -240,6 +239,13 @@ func GetNeighbors():
 			ray.get_collider().topright = self
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 			
+	ray.set_cast_to(lrightspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self):
+		right = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().left = self
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 
 
 func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2d
@@ -309,37 +315,37 @@ func LookForTop(crossreforbs):
 	#this function takes an array or orbs that have already been checked and then checks to see if it has the top as itn neighbor
 	#if its neighbor is not the top, that neighbor will then check if it neighbors the top and so on
 	crossreforbs.push_back(self)
-	if(topleft != null):
+	if(topleft != null and !topleft.is_in_group("wall")):
 		print("topleft")
 		if(!crossreforbs.has(topleft)):
 			if(topleft.is_in_group("top") or (!topleft.is_in_group("top") and topleft.LookForTop(crossreforbs))):
 				print(str(get_name()) + " found top on topleft")
 				return true
-	if(topright != null):
+	if(topright != null and !topright.is_in_group("wall")):
 		print("topright")
 		if(!crossreforbs.has(topright)):
 			if(topright.is_in_group("top") or (!topright.is_in_group("top") and topright.LookForTop(crossreforbs))):
 				print(str(get_name()) + " found top on topright")
 				return true
-	if(left != null):
+	if(left != null and !left.is_in_group("wall")):
 		print("left")
 		if(!crossreforbs.has(left)):
 			if(left.is_in_group("top") or (!left.is_in_group("top") and left.LookForTop(crossreforbs))):
 				print(str(get_name()) + " found top on left")
 				return true
-	if(right != null):
+	if(right != null and !right.is_in_group("wall")):
 		print("right")
 		if(!crossreforbs.has(right)):
 			if(right.is_in_group("top") or (!right.is_in_group("top") and right.LookForTop(crossreforbs))):
 				print(str(get_name()) + " found top on right")
 				return true
-	if(bottomleft != null):
+	if(bottomleft != null and !bottomleft.is_in_group("wall")):
 		print("bottomleft")
 		if(!crossreforbs.has(bottomleft)):
 			if(bottomleft.is_in_group("top") or (!bottomleft.is_in_group("top") and bottomleft.LookForTop(crossreforbs))):
 				print(str(get_name()) + " found top on bottomleft")
 				return true
-	if(bottomright != null):
+	if(bottomright != null and !bottomright.is_in_group("wall")):
 		print("bottomright")
 		if(!crossreforbs.has(bottomright)):
 			if(bottomright.is_in_group("top") or (!bottomright.is_in_group("top") and bottomright.LookForTop(crossreforbs))):
@@ -423,5 +429,12 @@ func Search(level, searchcolour, group):
 #returns all orbs that are a specific colour
 func SearchGroup(level, colour, startgroup):
 	pass
+
 func Charge():
 	charged = true
+
+func EnableLauncher():
+	if(player == PLAYER.PLAYER1):
+		get_parent().get_node("p1launcher").Enable()
+	elif(player == PLAYER.PLAYER2):
+		get_parent().get_node("p2launcher").Enable()

@@ -37,7 +37,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 
 resource/name = "rest"
 length = 0.01
@@ -84,9 +84,8 @@ tracks/3/keys = {
 "values": [ true ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 
-resource/name = "shrink"
 length = 0.6
 loop = false
 step = 0.01
@@ -186,7 +185,7 @@ texture = ExtResource( 2 )
 enabled = true
 cast_to = Vector2( 0, 0 )
 layer_mask = 1
-type_mask = 18
+type_mask = 19
 
 [node name="Label" type="Label" parent="."]
 
@@ -209,8 +208,8 @@ playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
 anims/blink = SubResource( 2 )
-anims/rest = SubResource( 4 )
-anims/shrink = SubResource( 3 )
+anims/rest = SubResource( 3 )
+anims/shrink = SubResource( 4 )
 anims/zap = SubResource( 5 )
 playback/active = true
 playback/speed = 1.0

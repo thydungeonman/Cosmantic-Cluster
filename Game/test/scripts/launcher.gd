@@ -28,6 +28,7 @@ var rightpress = false
 var leftpress = false
 
 var shottimer = 0.0 #goes up to half a second then loads another orb into the launcher
+var canshoot = true
 var firing = false
 var loaded = false
 var orb
@@ -88,6 +89,7 @@ func LoadOrb(delta):
 			if(player == PLAYER.PLAYER2):
 				orb.player = orb.PLAYER.PLAYER2
 			loaded = true
+			orb.inlauncher = true
 			print("loaded new orb")
 		else:
 			if(player == PLAYER.PLAYER1):
@@ -122,11 +124,12 @@ func GetAimControlsP2(delta):
 
 func GetFireControlsP1(delta):
 	if(Input.is_action_pressed("p1_fire") and loaded == true): #if the key is pressed and the launcher is loaded
-		if(firing == false):
+		if(!firing and canshoot):
 			Fire()
 			firing = true
 			loaded = false
 			shottimer = 0.0
+			Disable()
 	else:
 		firing = false
 	if(Input.is_action_pressed("p1_store") and !container.IsFull()):
@@ -158,11 +161,12 @@ func GetFireControlsP1(delta):
 
 func GetFireControlsP2(delta):
 	if(Input.is_action_pressed("p2_fire") and loaded == true): #if the key is pressed and the launcher is loaded
-		if(firing == false):
+		if(!firing and canshoot):
 			Fire()
 			firing = true
 			loaded = false
 			shottimer = 0.0
+			Disable()
 	else:
 		firing = false
 	if(Input.is_action_pressed("p2_store") and !container.IsFull()):
@@ -201,6 +205,7 @@ func Fire():
 	orb.trajectory.x = trajectory.x * cos(x)
 	orb.trajectory.y = trajectory.y * sin(x)
 	orb.ismoving = true
+	orb.inlauncher = false
 	if(ischarged):
 		orb.Charge()
 		ischarged = false
@@ -219,3 +224,8 @@ func Defrost(delta):
 
 func Charge():
 	ischarged = true
+
+func Enable():
+	canshoot = true
+func Disable():
+	canshoot = false
