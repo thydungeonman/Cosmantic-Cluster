@@ -62,6 +62,8 @@ func _fixed_process(delta):
 	
 	if(Input.is_action_pressed("click")):
 		Click()
+	if(Input.is_action_pressed("rclick")):
+		RClick()
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
 	#so we will wait for one second for them to find their neighbors
 	if(t > .5 and s == false):
@@ -104,6 +106,7 @@ func GenerateBoardP2():
 	var yoffset = 40
 	add_child(startorb)
 	startorb.set_pos(Vector2(70 + 70,100))
+	startorb.player = PLAYER.PLAYER2
 	var orbwidth = startorb.width
 	
 	startorb.queue_free() #this is kind of cheap but whatever
@@ -306,6 +309,8 @@ func Click():
 			var group = []
 			testorb.Search(1,COLOUR.NONE,group)
 			print(str(group.size()))
+func RClick():
+	P1BlueAbility()
 
 func FindAvailableSpot(player):
 	for orb in orbsonboard:
