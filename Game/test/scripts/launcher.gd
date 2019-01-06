@@ -21,8 +21,8 @@ var trajectory = Vector2(-1500,-1500)
 var x = (PI)/2 #starting angle of launcher
 var speed = PI/170
 
-var upperlimit = PI - 0.14
-var lowerlimit = 0.14
+var upperlimit = PI# - 0.14
+var lowerlimit = 0#.14
 
 var rightpress = false
 var leftpress = false
@@ -42,6 +42,9 @@ var isfrozen = false #has an enemies white ability been activated?
 var frozentime = 1.00
 var frozentimer = 0.00
 
+var lasing = false
+var laserisactive = false
+
 onready var aim = get_node("Particles2D")
 onready var container = get_node("container")
 
@@ -58,6 +61,23 @@ func _fixed_process(delta):
 		GetAimControlsP2(delta)
 	if(isfrozen):
 		Defrost(delta)
+	if(player == PLAYER.PLAYER1 and loaded):
+		GetFireControlsP1(delta)
+	if(player == PLAYER.PLAYER2 and loaded):
+		GetFireControlsP2(delta)
+	
+	#LASER =========================================================>O
+	if(Input.is_action_pressed("laser")):
+		if(!lasing):
+			var las = preload("res://test/scenes/laser.tscn").instance()
+			get_parent().add_child(las)
+			las.set_pos(get_pos())
+			las.Charge(trajectory,x)
+			las.Fire()
+			lasing = true
+	else:
+		lasing = false
+	
 
 func LoadOrb(delta):
 	shottimer += delta
@@ -83,7 +103,7 @@ func LoadOrb(delta):
 				orb = preload(WHITE).instance()
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())#set the orb to launcher position
-			get_parent().orbsonboard.push_front(orb)
+			
 			if(player == PLAYER.PLAYER1):
 				orb.player = orb.PLAYER.PLAYER1
 			if(player == PLAYER.PLAYER2):
@@ -91,23 +111,18 @@ func LoadOrb(delta):
 			loaded = true
 			orb.inlauncher = true
 			print("loaded new orb")
-		else:
-			if(player == PLAYER.PLAYER1):
-				GetFireControlsP1(delta)
-			if(player == PLAYER.PLAYER2):
-				GetFireControlsP2(delta)
 
 func GetAimControlsP1(delta):
 	if(Input.is_action_pressed("p1_aim_left")):
 		x -= speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
-		#print(x)
+		print(str(x) + " " + str(tan(x)))
 	elif(Input.is_action_pressed("p1_aim_right")):
 		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
-		#print(x)
+		print(str(x) + " " + str(tan(x)))
 
 func GetAimControlsP2(delta):
 	if(Input.is_action_pressed("p2_aim_left")):
@@ -202,14 +217,28 @@ func Fire():
 	# spawn lightning area and child to orb
 	# when orb stops check bool in orb and then activate lightning
 	print(str(orb))
-	orb.trajectory.x = trajectory.x * cos(x)
-	orb.trajectory.y = trajectory.y * sin(x)
-	orb.ismoving = true
-	orb.inlauncher = false
-	if(ischarged):
-		orb.Charge()
-		ischarged = false
-	swapped = false
+	if(laserisactive):
+		var laser = preload("res://test/scenes/laser.tscn").instance()
+		var c = orb.colour
+		orb.queue_free()
+		get_parent().add_child(laser)
+		laser.set_pos(get_pos())
+		laser.colour = c
+		laser.player = player
+		laser.Charge(trajectory,x)
+		laser.Fire()
+
+		laserisactive = false
+	else:
+		orb.trajectory.x = trajectory.x * cos(x)
+		orb.trajectory.y = trajectory.y * sin(x)
+		orb.ismoving = true
+		orb.inlauncher = false
+		if(ischarged):
+			orb.Charge()
+			ischarged = false
+		swapped = false
+		get_parent().orbsonboard.push_front(orb)
 
 func Freeze():
 	isfrozen = true
@@ -229,3 +258,5 @@ func Enable():
 	canshoot = true
 func Disable():
 	canshoot = false
+func ActivateLaser():
+	laserisactive = true

@@ -191,7 +191,13 @@ func Unhook(): #unhooks an orbs neighbors from itself and then frees the orb
 	bottomright = null
 
 func Die():
+	get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
+	var leftovers = []
+	Search(2,COLOUR.NONE,leftovers)
+	print(str(leftovers.size()))
+	get_parent().leftoverorbs = leftovers
 	self.Unhook()
+	get_parent().CheckFall()
 	self.queue_free()
 
 func GetNeighbors():

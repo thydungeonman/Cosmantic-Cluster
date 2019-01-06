@@ -35,15 +35,15 @@ centered = false
 
 [node name="p1launcher" parent="." instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 465, 1040 )
+transform/pos = Vector2( 473, 1040 )
 
 [node name="wall" parent="." instance=ExtResource( 4 )]
 
-transform/pos = Vector2( 2.18194, 560.84 )
+transform/pos = Vector2( 8, 560.84 )
 
 [node name="wall 2" parent="." instance=ExtResource( 4 )]
 
-transform/pos = Vector2( 1917.96, 579.434 )
+transform/pos = Vector2( 1912, 579.434 )
 
 [node name="top" parent="." instance=ExtResource( 5 )]
 

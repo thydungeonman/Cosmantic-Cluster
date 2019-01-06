@@ -6,6 +6,7 @@ func _ready():
 
 func ActivateAbility():
 	print("ORANGE ABILITY")
+	get_parent().HandleAbility(colour,player)
 	#fire small squares that are the same color as the orb in the launcher
 	#if a square collides with an orb
 	#if the orb is the same color

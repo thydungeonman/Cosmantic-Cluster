@@ -8,3 +8,4 @@ func _ready():
 
 func ActivateAbility():
 	print("PURPLE ABILITY")
+	get_parent().HandleAbility(colour,player)

@@ -36,6 +36,8 @@ var lastusedcolorp1
 var lastusedcolorp2
 var abilitycountp1 = 0 #counts the number of times a color is chained
 var abilitycountp2 = 0
+var p1isnegated = false # these are for when a player has their next ability negated by a purple ability
+var p2isnegated = false
 
 var p1isdark = false
 var p1darktime = 1.00
@@ -84,7 +86,7 @@ func _fixed_process(delta):
 func GenerateBoardP1():
 	#generate board based off of the width of the screen and the width of an orb
 	var startorb = preload("res://test/scenes/orb.tscn").instance()
-	var xoffset = 35 + 10
+	var xoffset = 35 + 17
 	var yoffset = 40
 	add_child(startorb)
 	startorb.set_pos(Vector2(70 + 70,100))
@@ -102,7 +104,7 @@ func GenerateBoardP1():
 func GenerateBoardP2():
 	#generate board based off of the width of the screen and the width of an orb
 	var startorb = preload("res://test/scenes/orb.tscn").instance()
-	var xoffset = 960 + 70 + 5
+	var xoffset = 960 + 68
 	var yoffset = 40
 	add_child(startorb)
 	startorb.set_pos(Vector2(70 + 70,100))
@@ -120,7 +122,7 @@ func GenerateBoardP2():
 
 
 func CheckFall(): #will most likely take one or more kinematic bodies that are the neighboring orbs of the ones that were just matched and killed
-	
+	print("checking fall" + " " + str(leftoverorbs.size()))
 	for i in leftoverorbs:
 		print(i.get_name())
 		i.set_opacity(1)
@@ -206,7 +208,7 @@ func GenerateP2Launcher():
 	add_child(p2launcher)
 	p2launcher.set_name("p2launcher")
 	p2launcher.player = p2launcher.PLAYER.PLAYER2
-	p2launcher.set_pos(Vector2(1455,1040))
+	p2launcher.set_pos(Vector2(1447,1040))
 
 func GenerateP1Launcher():
 	var launcher = preload("res://test/scenes/launcher.tscn").instance()
@@ -215,16 +217,11 @@ func GenerateP1Launcher():
 	launcher.set_pos(Vector2(465,1040))
 
 func HandleAbility(colour,player):
-#	if player = player1
-	#	switch(color):
-	#		if color == lastusedcolorp1
-	#			rack up multiplier effect
-	#		else
-	#			do regular effect
+
 	print(str(colour))
 	print("activating ablity")
 	
-	if(player == PLAYER.PLAYER1):
+	if(player == PLAYER.PLAYER1 and !p1isnegated):
 		if(colour == COLOUR.RED):
 			player2health -= 1
 			p2launcher.get_node("health").set_text("Health: " + str(player2health))
@@ -241,7 +238,13 @@ func HandleAbility(colour,player):
 			p1launcher.Charge()
 		if(colour == COLOUR.BLUE):
 			P1BlueAbility()
-	elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
+		if(colour == COLOUR.PURPLE):
+			p2isnegated = true
+		if(colour == COLOUR.ORANGE):
+			p1launcher.ActivateLaser()
+	elif(player == PLAYER.PLAYER1 and p1isnegated):
+		p1isnegated = false
+	elif((player == PLAYER.PLAYER2 or player == PLAYER.AI) and !p2isnegated):
 		if(colour == COLOUR.RED):
 			player1health -= 1
 			print("Player 1 health " + str(player1health))
@@ -259,6 +262,12 @@ func HandleAbility(colour,player):
 			p2launcher.Charge()
 		if(colour == COLOUR.BLUE):
 			P2BlueAbility()
+		if(colour == COLOUR.PURPLE):
+			p1isnegated = true
+		if(colour == COLOUR.ORANGE):
+			p2launcher.ActivateLaser()
+	elif(player == PLAYER.PLAYER2 and p2isnegated):
+		p2isnegated = true
 
 func P1BlackAblility(delta):
 	p2darktimer += delta
