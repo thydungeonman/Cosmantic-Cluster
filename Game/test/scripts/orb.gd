@@ -72,6 +72,9 @@ func GetNeighboringPositions():
 func Move(delta):
 	move(trajectory * delta)
 	if(is_colliding()):
+		
+		get_parent().get_node("StreamPlayer").play(0)
+		
 		var collider = get_collider()
 		if(collider.is_in_group("wall")):
 			trajectory.x *= -1

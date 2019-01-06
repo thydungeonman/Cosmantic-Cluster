@@ -267,7 +267,7 @@ func HandleAbility(colour,player):
 		if(colour == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()
 	elif(player == PLAYER.PLAYER2 and p2isnegated):
-		p2isnegated = true
+		p2isnegated = false
 
 func P1BlackAblility(delta):
 	p2darktimer += delta
