@@ -29,7 +29,7 @@ params/final_size = 10.0
 params/hue_variation = 0.0
 params/anim_speed_scale = 1.0
 params/anim_initial_pos = 0.0
-color/color = Color( 0, 0, 0, 1 )
+color/color = Color( 0.894118, 0.894118, 0.847059, 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 

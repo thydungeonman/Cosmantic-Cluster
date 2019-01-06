@@ -19,7 +19,9 @@ var player = PLAYER.PLAYER1
 
 var trajectory = Vector2(-1500,-1500)
 var x = (PI)/2 #starting angle of launcher
-var speed = PI/170
+var speed = PI/240
+var minspeed = PI/1000
+var maxspeed = PI/170
 
 var upperlimit = PI# - 0.14
 var lowerlimit = 0#.14
@@ -114,28 +116,43 @@ func LoadOrb(delta):
 
 func GetAimControlsP1(delta):
 	if(Input.is_action_pressed("p1_aim_left")):
+		print(speed)
+		speed += PI/1500
+		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
-		print(str(x) + " " + str(tan(x)))
+		#print(str(x) + " " + str(tan(x)))
 	elif(Input.is_action_pressed("p1_aim_right")):
+		print(speed)
+		speed += PI/300
+		speed = clamp(speed,minspeed,maxspeed)
 		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
-		print(str(x) + " " + str(tan(x)))
+		#print(str(x) + " " + str(tan(x)))
+	else:
+		speed = minspeed
 
 func GetAimControlsP2(delta):
 	if(Input.is_action_pressed("p2_aim_left")):
+		print(speed)
+		speed += PI/1500
+		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
-		#print(x)
+		#print(str(x) + " " + str(tan(x)))
 	elif(Input.is_action_pressed("p2_aim_right")):
+		print(speed)
+		speed += PI/300
+		speed = clamp(speed,minspeed,maxspeed)
 		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
-		#print(x)
-
+		#print(str(x) + " " + str(tan(x)))
+	else:
+		speed = minspeed
 
 func GetFireControlsP1(delta):
 	if(Input.is_action_pressed("p1_fire") and loaded == true): #if the key is pressed and the launcher is loaded
