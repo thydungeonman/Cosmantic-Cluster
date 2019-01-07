@@ -23,8 +23,8 @@ var speed = PI/240
 var minspeed = PI/1000
 var maxspeed = PI/170
 
-var upperlimit = PI# - 0.14
-var lowerlimit = 0#.14
+var upperlimit = PI - 0.14
+var lowerlimit = .14
 
 var rightpress = false
 var leftpress = false

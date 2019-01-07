@@ -324,6 +324,6 @@ func RClick():
 func FindAvailableSpot(player):
 	for orb in orbsonboard:
 		if(orb.player == player):
-			if(orb.CountNeighbors() < 6 and (orb.bottomleft == null or orb.bottomright == null) and !orb.inlauncher):
+			if(orb.CountNeighbors() < 6 and (orb.bottomleft == null or orb.bottomright == null) and !orb.inlauncher and !orb.ismoving):
 				print(str(orb.get_name()))
 				return orb
