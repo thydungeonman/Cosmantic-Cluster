@@ -5,7 +5,7 @@ extends KinematicBody2D
 
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
-enum PLAYER {PLAYER1,PLAYER2}
+enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
 export(Vector2) var trajectory = Vector2(0,0)
 export(bool) var ismoving = false
 var inlauncher = false #if an orb is neither in the launcher nor moving then it is on the board
