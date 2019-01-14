@@ -3,7 +3,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 1045.42, 25.9935 )
+extents = Vector2( 1045.42, 80.0502 )
 
 [node name="top" type="Area2D" groups=[
 "top",

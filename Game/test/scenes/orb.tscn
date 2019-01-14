@@ -215,7 +215,7 @@ tracks/2/keys = {
 "orb",
 ]]
 
-input/pickable = false
+input/pickable = true
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
@@ -342,5 +342,36 @@ params/hue_variation = 0.0
 params/anim_speed_scale = 1.0
 params/anim_initial_pos = 0.0
 color/color = Color( 0.414063, 0.380096, 0.380096, 1 )
+
+[node name="sparkles" type="Particles2D" parent="."]
+
+config/amount = 500
+config/lifetime = 0.8
+config/emitting = false
+config/process_mode = 1
+config/half_extents = Vector2( 30, 30 )
+config/local_space = false
+params/direction = 0.0
+params/spread = 36.0
+params/linear_velocity = 50.0
+params/spin_velocity = 0.0
+params/orbit_velocity = 0.0
+params/gravity_direction = 0.0
+params/gravity_strength = 0.0
+params/radial_accel = 0.0
+params/tangential_accel = 0.0
+params/damping = 20.0
+params/initial_angle = 0.0
+params/initial_size = 2.0
+params/final_size = 0.1
+params/hue_variation = 0.0
+params/anim_speed_scale = 1.0
+params/anim_initial_pos = 0.0
+randomness/direction = -0.02
+randomness/spread = 0.02
+randomness/hue_variation = -1.0
+color/color = Color( 0.983952, 0.992188, 0.961182, 1 )
+
+[connection signal="mouse_enter" from="." to="." method="_on_orb_mouse_enter"]
 
 

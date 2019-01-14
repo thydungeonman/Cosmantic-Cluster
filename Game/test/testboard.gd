@@ -50,7 +50,6 @@ var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
 onready var ray = get_node("RayCast2D")
 
 func _ready():
-	
 	GenerateP2Launcher()
 	GenerateBoardP1()
 	GenerateBoardP2()
@@ -87,7 +86,7 @@ func GenerateBoardP1():
 	#generate board based off of the width of the screen and the width of an orb
 	var startorb = preload("res://test/scenes/orb.tscn").instance()
 	var xoffset = 35 + 17
-	var yoffset = 40
+	var yoffset = 40 + 70 + 70
 	add_child(startorb)
 	startorb.set_pos(Vector2(70 + 70,100))
 	var orbwidth = startorb.width
@@ -105,7 +104,7 @@ func GenerateBoardP2():
 	#generate board based off of the width of the screen and the width of an orb
 	var startorb = preload("res://test/scenes/orb.tscn").instance()
 	var xoffset = 960 + 68
-	var yoffset = 40
+	var yoffset = 40 + 70 + 70
 	add_child(startorb)
 	startorb.set_pos(Vector2(70 + 70,100))
 	startorb.player = PLAYER.PLAYER2
@@ -307,7 +306,7 @@ func P2BlueAbility():
 
 
 func Click():
-	P2BlueAbility()
+	#P2BlueAbility()
 	var mousepos = get_viewport().get_mouse_pos()
 	ray.set_cast_to(mousepos - ray.get_global_pos())
 	if(ray.get_collider() != null):
@@ -319,7 +318,8 @@ func Click():
 			testorb.Search(1,COLOUR.NONE,group)
 			print(str(group.size()))
 func RClick():
-	P1BlueAbility()
+	#P1BlueAbility()
+	pass
 
 func FindAvailableSpot(player):
 	for orb in orbsonboard:

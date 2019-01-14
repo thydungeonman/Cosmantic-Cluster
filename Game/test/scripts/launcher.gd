@@ -168,7 +168,9 @@ func GetFireControlsP1(delta):
 		if(storing == false):
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
 			get_parent().remove_child(orb)
-			get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			print(str(get_parent().orbsonboard.size()))
+			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			print(str(get_parent().orbsonboard.size()))
 			container.TakeOrb(orb)
 			loaded = false
 			storing = true
@@ -180,11 +182,11 @@ func GetFireControlsP1(delta):
 			print(str(orb))
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
 			get_parent().remove_child(orb)
-			get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
 			orb = container.Swap(orb)
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())
-			get_parent().orbsonboard.push_front(orb)
+			#get_parent().orbsonboard.push_front(orb)
 			swapping = true
 			swapped = true
 			print(str(orb))
@@ -205,7 +207,7 @@ func GetFireControlsP2(delta):
 		if(storing == false):
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
 			get_parent().remove_child(orb)
-			get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
 			container.TakeOrb(orb)
 			loaded = false
 			storing = true
@@ -217,11 +219,11 @@ func GetFireControlsP2(delta):
 			print(str(orb))
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
 			get_parent().remove_child(orb)
-			get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
 			orb = container.Swap(orb)
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())
-			get_parent().orbsonboard.push_front(orb)
+			#get_parent().orbsonboard.push_front(orb)
 			swapping = true
 			swapped = true
 			print(str(orb))
@@ -249,8 +251,10 @@ func Fire():
 	else:
 		orb.trajectory.x = trajectory.x * cos(x)
 		orb.trajectory.y = trajectory.y * sin(x)
+		orb.get_node("sparkles").set_rot(x- (PI/2))
 		orb.ismoving = true
 		orb.inlauncher = false
+		orb.Sparkle()
 		if(ischarged):
 			orb.Charge()
 			ischarged = false

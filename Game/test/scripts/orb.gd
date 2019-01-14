@@ -6,6 +6,7 @@ extends KinematicBody2D
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
+
 export(Vector2) var trajectory = Vector2(0,0)
 export(bool) var ismoving = false
 var inlauncher = false #if an orb is neither in the launcher nor moving then it is on the board
@@ -19,12 +20,14 @@ onready var pos = get_pos()
 onready var inversescale = 1/get_scale().x
 onready var anim = get_node("AnimationPlayer")
 
-var charged = false #is lightning ability active?
+var charged = false #changes to true if the yellow ability is active
 
 var falling = false
 
 var player = PLAYER.PLAYER1
 var colour = COLOUR.NONE
+
+var warped = false #changes to true after sent through a warp
 
 #neighboring orbs  Kinematic bodies
 var topleft
@@ -51,12 +54,17 @@ onready var lbottomrightspot = Vector2(width,width) * Vector2(1.07337749,1.84177
 func _ready():
 	set_fixed_process(true)
 	get_node("Label").set_text(str(get_name()))
+	set_process_input(true)
+func _input(event):
+	pass
 
 func _fixed_process(delta):
+	
 	if(ismoving):
 		Move(delta)
 
 func GetNeighboringPositions():
+	#calculates the positions that neighboring orbs will be set too, creates a hexagon shape.
 	var pos = get_pos()
 	#print(width)
 	
@@ -70,7 +78,17 @@ func GetNeighboringPositions():
 	bottomrightspot = pos + (Vector2(width,width) * Vector2(1.07337749,1.8417709).normalized())
 
 func Move(delta):
+	get_node("Sprite").rotate(.1)
+	#main function. 
+	#moves orb, checks for collision,if wall: bounces back
+	#if orb: determines axis of collision and moves orb to correct spot 
+	#then checks for a match, removing the correct orbs, activating ability and checking for falls if a match is made
 	move(trajectory * delta)
+	if(get_pos().y > 1080):
+		get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
+		EnableLauncher()
+		queue_free()
+		print("orb went out of bounds")
 	if(is_colliding()):
 		
 		get_parent().get_node("StreamPlayer").play(0)
@@ -78,10 +96,17 @@ func Move(delta):
 		var collider = get_collider()
 		if(collider.is_in_group("wall")):
 			trajectory.x *= -1
+			get_node("sparkles").set_rotd(get_node("sparkles").get_rotd() *- -1)
 		elif(collider.is_in_group("roof")):
 			trajectory.y *= -1
 		elif(collider.is_in_group("orb")):
-			if(!collider.ismoving):
+			if(collider.inlauncher):
+				get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
+				EnableLauncher()
+				queue_free()
+				print("hit launcher orb")
+			if(!collider.ismoving and !collider.inlauncher):
+				StopSparkle()
 				ismoving = false
 				var positiondifference = get_pos() - collider.get_pos()
 				positiondifference = positiondifference.normalized()
@@ -165,6 +190,7 @@ func Move(delta):
 
 func click():
 	pass
+	#debugging function
 #	var mousepos = get_viewport().get_mouse_pos()
 #	ray.set_cast_to(mousepos - get_pos())
 #	print(ray.get_collider())
@@ -173,7 +199,8 @@ func click():
 	#var dotproductnorth = positiondifference.dot(Vector2(0,-1))
 	#var dotproductwest = positiondifference.dot(Vector2(-1,0))
 
-func Unhook(): #unhooks an orbs neighbors from itself and then frees the orb
+func Unhook(): 
+	#unhooks an orbs neighbors from itself and it from its neighbors
 	if(topleft != null and topleft.is_in_group("orb")):
 		topleft.bottomright = null
 	if(topright != null and topright.is_in_group("orb")):
@@ -194,6 +221,8 @@ func Unhook(): #unhooks an orbs neighbors from itself and then frees the orb
 	bottomright = null
 
 func Die():
+	#this function perform all of the necessary actions before an orb can be freed and then frees it
+	#removes itself from the list of orbs, unhooks from its neighbors, and checks if orbs around it will fall after its freed
 	get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
 	var leftovers = []
 	Search(2,COLOUR.NONE,leftovers)
@@ -203,58 +232,18 @@ func Die():
 	get_parent().CheckFall()
 	self.queue_free()
 
+func MovingDie():
+	get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
+	EnableLauncher()
+	queue_free()
+
+
+#this function raycasts in each direction, grabbing the closest body and area
+#it then casts again only looking for bodies since if the orb is inside of an area it will only detect areas since they are the closest
 func GetNeighbors():
-	ray.set_cast_to(ltopleftspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		topleft = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().bottomright = self
-			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
-	
-	
-	ray.set_cast_to(lleftspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		if(ray.get_collider() == self):
-			print("found self")
-		left = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().right = self
-			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
-	
-	ray.set_cast_to(lbottomrightspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		bottomright = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().topleft = self
-			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
-	
-	
-	ray.set_cast_to(ltoprightspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		topright = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().bottomleft = self
-			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
-			
-	ray.set_cast_to(lbottomleftspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		bottomleft = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().topright = self
-			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
-			
-	ray.set_cast_to(lrightspot)
-	ray.force_raycast_update()
-	if(ray.is_colliding() and ray.get_collider() != self):
-		right = ray.get_collider()
-		if(ray.get_collider().is_in_group("orb")):
-			ray.get_collider().left = self
-			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+	DoCasts()
+	ray.set_type_mask(Physics2DDirectSpaceState.TYPE_MASK_KINEMATIC_BODY)
+	DoCasts()
 
 
 func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2d
@@ -320,9 +309,9 @@ func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2
 
 
 #the topmost orbs neighbor an area that is in the group "top"
+#this function takes an array or orbs that have already been checked and then checks to see if it has the top as itn neighbor
+#if its neighbor is not the top, that neighbor will then check if it neighbors the top and so on
 func LookForTop(crossreforbs): 
-	#this function takes an array or orbs that have already been checked and then checks to see if it has the top as itn neighbor
-	#if its neighbor is not the top, that neighbor will then check if it neighbors the top and so on
 	crossreforbs.push_back(self)
 	if(topleft != null and !topleft.is_in_group("wall")):
 		print("topleft")
@@ -367,10 +356,10 @@ func LookForTop(crossreforbs):
 
 
 func ActivateAbility():
+	#virtual method. Activates when this orb matches with two or more other orbs
 	pass
-	#Board.HandleAbility(BLUE,PLAYER1)
-	#the board should be able to handle 
 
+#returns the current number of neighboring orbs
 func CountNeighbors():
 	var count = 0
 	if(topleft != null):
@@ -440,10 +429,110 @@ func SearchGroup(level, colour, startgroup):
 	pass
 
 func Charge():
+	#this bool signals that the yellow ability was activated for this orb
 	charged = true
 
 func EnableLauncher():
+	#the launcher will not fire until the last orb is on the board. This enables the launcher.
 	if(player == PLAYER.PLAYER1):
 		get_parent().get_node("p1launcher").Enable()
 	elif(player == PLAYER.PLAYER2):
 		get_parent().get_node("p2launcher").Enable()
+
+func Warp(spot):
+	trajectory *= -1
+	set_pos(spot)
+	warped = true
+	if(is_colliding()):
+		print("Died in the warp")
+		MovingDie()
+
+func PrintNeighbors():
+	if(topleft != null):
+		print("topleft: " + str(topleft) + " " + topleft.get_name())
+	else:
+		print("topleft: " + "null")
+	if(topright != null):
+		print("topright: " + str(topright) + " " + topright.get_name())
+	else:
+		print("topright: " + "null")
+	if(left != null):
+		print("left: " + str(left) + " " + left.get_name())
+	else:
+		print("left: " + "null")
+	if(right != null):
+		print("right: " + str(right) + " " + right.get_name())
+	else:
+		print("right: " + "null")
+	if(bottomleft != null):
+		print("bottomleft: " + str(bottomleft) + " " + bottomleft.get_name())
+	else:
+		print("bottomleft: " + "null")
+	if(bottomright != null):
+		print("bottomright: " + str(bottomright) + " " +  bottomright.get_name())
+	else:
+		print("bottomright: " + "null")
+	print("")
+	
+	
+	
+
+func _on_orb_mouse_enter():
+	PrintNeighbors()
+
+func DoCasts():
+	#raycasts to local neighboring positions to find neighboring orbs and then hooks them up
+	ray.set_cast_to(ltopleftspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self and !ray.get_collider().is_in_group("warp")):
+		topleft = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().bottomright = self
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+	
+	ray.set_cast_to(lleftspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self and !ray.get_collider().is_in_group("warp")):
+		left = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().right = self
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+	
+	ray.set_cast_to(lbottomrightspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self and !ray.get_collider().is_in_group("warp")):
+		bottomright = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().topleft = self
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+	
+	
+	ray.set_cast_to(ltoprightspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self and !ray.get_collider().is_in_group("warp")):
+		topright = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().bottomleft = self
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+			
+	ray.set_cast_to(lbottomleftspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self and !ray.get_collider().is_in_group("warp")):
+		bottomleft = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().topright = self
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+			
+	ray.set_cast_to(lrightspot)
+	ray.force_raycast_update()
+	if(ray.is_colliding() and ray.get_collider() != self and !ray.get_collider().is_in_group("warp")):
+		right = ray.get_collider()
+		if(ray.get_collider().is_in_group("orb")):
+			ray.get_collider().left = self
+			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
+
+func Sparkle():
+	get_node("sparkles").set_emitting(true)
+	print("sparkles")
+func StopSparkle():
+	get_node("sparkles").set_emitting(false)
