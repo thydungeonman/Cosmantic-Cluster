@@ -284,25 +284,31 @@ func P2BlackAbility(delta):
 
 func P1BlueAbility():
 	var orb = FindAvailableSpot(PLAYER.PLAYER2)
-	var grey = preload("res://test/scenes/greyorb.tscn").instance()
-	add_child(grey)
-	if(orb.bottomleft == null):
-		grey.set_pos(orb.bottomleftspot)
-	elif(orb.bottomright == null):
-		grey.set_pos(orb.bottomrightspot)
-	grey.HookUp()
-	orbsonboard.push_back(grey)
+	if(orb == null):
+		return #couldn't find an orb. bail out
+	else:
+		var grey = preload("res://test/scenes/greyorb.tscn").instance()
+		add_child(grey)
+		if(orb.bottomleft == null):
+			grey.set_pos(orb.bottomleftspot)
+		elif(orb.bottomright == null):
+			grey.set_pos(orb.bottomrightspot)
+		grey.HookUp()
+		orbsonboard.push_back(grey)
 
 func P2BlueAbility():
 	var orb = FindAvailableSpot(PLAYER.PLAYER1)
-	var grey = preload("res://test/scenes/greyorb.tscn").instance()
-	add_child(grey)
-	if(orb.bottomleft == null):
-		grey.set_pos(orb.bottomleftspot)
-	elif(orb.bottomright == null):
-		grey.set_pos(orb.bottomrightspot)
-	grey.HookUp()
-	orbsonboard.push_back(grey)
+	if(orb == null):
+		return #couldn't find an orb. bail out
+	else:
+		var grey = preload("res://test/scenes/greyorb.tscn").instance()
+		add_child(grey)
+		if(orb.bottomleft == null):
+			grey.set_pos(orb.bottomleftspot)
+		elif(orb.bottomright == null):
+			grey.set_pos(orb.bottomrightspot)
+		grey.HookUp()
+		orbsonboard.push_back(grey)
 
 
 func Click():
@@ -322,8 +328,12 @@ func RClick():
 	pass
 
 func FindAvailableSpot(player):
+	#finds the first available spot for a gray orb to be spawned for the player that is passed to the function
+	#usually is the last orb that player fired
 	for orb in orbsonboard:
 		if(orb.player == player):
 			if(orb.CountNeighbors() < 6 and (orb.bottomleft == null or orb.bottomright == null) and !orb.inlauncher and !orb.ismoving):
 				print(str(orb.get_name()))
 				return orb
+			else:
+				return null

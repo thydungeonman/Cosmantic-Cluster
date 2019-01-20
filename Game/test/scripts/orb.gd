@@ -223,7 +223,11 @@ func Unhook():
 func Die():
 	#this function perform all of the necessary actions before an orb can be freed and then frees it
 	#removes itself from the list of orbs, unhooks from its neighbors, and checks if orbs around it will fall after its freed
-	get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
+	
+	
+	var index = get_parent().orbsonboard.find(self)
+	if(index != -1):
+		get_parent().orbsonboard.remove(index)
 	var leftovers = []
 	Search(2,COLOUR.NONE,leftovers)
 	print(str(leftovers.size()))
@@ -233,7 +237,9 @@ func Die():
 	self.queue_free()
 
 func MovingDie():
-	get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
+	var index = get_parent().orbsonboard.find(self)
+	if(index != -1):
+		get_parent().orbsonboard.remove(index)
 	EnableLauncher()
 	queue_free()
 
@@ -381,6 +387,7 @@ func CountNeighbors():
 #recursive function that searches outward from an orb one level at a time
 #returns all orbs that are a specific colour
 #searching for COLOUR.NONE will return all orbs
+#searching deeper than one level will also return the original orb
 func Search(level, searchcolour, group):
 	level -= 1
 	if(level >= 0):
@@ -473,8 +480,6 @@ func PrintNeighbors():
 	else:
 		print("bottomright: " + "null")
 	print("")
-	
-	
 	
 
 func _on_orb_mouse_enter():
