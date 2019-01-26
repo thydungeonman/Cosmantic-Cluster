@@ -17,6 +17,7 @@ func _fixed_process(delta):
 			if(!orb.warped and orb.ismoving):
 				if(orb.player == PLAYER.PLAYER1):
 					var exit = orb.get_pos()
+					exit.y = 0
 					exit.x = 1920 - exit.x
 					checker.set_global_pos(exit)
 					if(checker.get_overlapping_bodies().size() > 0):
@@ -24,8 +25,10 @@ func _fixed_process(delta):
 						print("Died in the warp")
 					else:
 						orb.Warp(exit)
+					#orb.Warp(exit)
 				elif(orb.player == PLAYER.PLAYER2):
 					var exit = orb.get_pos()
+					exit.y = 0
 					exit.x = 0 + (1920 - exit.x)
 					checker.set_global_pos(exit)
 					if(checker.get_overlapping_bodies().size() > 0):
@@ -33,6 +36,7 @@ func _fixed_process(delta):
 						print("Died in the warp")
 					else:
 						orb.Warp(exit)
+#					orb.Warp(exit)
 	#wait until kinematic body enters
 	#if player1 warp to player2 board
 	#elif player2 warp to player1 board

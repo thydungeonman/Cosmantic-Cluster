@@ -91,7 +91,7 @@ func Move(delta):
 		print("orb went out of bounds")
 	if(is_colliding()):
 		
-		get_parent().get_node("StreamPlayer").play(0)
+		#get_parent().get_node("StreamPlayer").play(0) #chip sound
 		
 		var collider = get_collider()
 		if(collider.is_in_group("wall")):
@@ -248,8 +248,10 @@ func MovingDie():
 #it then casts again only looking for bodies since if the orb is inside of an area it will only detect areas since they are the closest
 func GetNeighbors():
 	DoCasts()
+	#print("mask: " + str(ray.get_type_mask()))
 	ray.set_type_mask(Physics2DDirectSpaceState.TYPE_MASK_KINEMATIC_BODY)
 	DoCasts()
+	#print("mask: " + str(ray.get_type_mask()))
 
 
 func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2d

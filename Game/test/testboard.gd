@@ -51,7 +51,7 @@ onready var ray = get_node("RayCast2D")
 
 func _ready():
 	GenerateP2Launcher()
-	GenerateBoardP1()
+	#GenerateBoardP1()
 	GenerateBoardP2()
 	
 	set_fixed_process(true)
