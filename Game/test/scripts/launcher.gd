@@ -16,6 +16,7 @@ const WHITE = "res://test/scenes/whiteorb.tscn"
 const RED = "res://test/scenes/redorb.tscn"
 
 var player = PLAYER.PLAYER1
+onready var sfx = get_node("SamplePlayer")
 
 var trajectory = Vector2(-1500,-1500)
 var x = (PI)/2 #starting angle of launcher
@@ -120,9 +121,10 @@ func GetAimControlsP1(delta):
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
-		x = clamp(x,lowerlimit,upperlimit)
+		x = clamp(x,lowerlimit,upperlimit)     
 		aim.set_param(0,270 - rad2deg(x))
 		#print(str(x) + " " + str(tan(x)))
+		sfx.play("mrown1__tick launcher aiming left or right")
 	elif(Input.is_action_pressed("p1_aim_right")):
 		print(speed)
 		speed += PI/300
@@ -131,6 +133,7 @@ func GetAimControlsP1(delta):
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(str(x) + " " + str(tan(x)))
+		sfx.play("mrown1__tick launcher aiming left or right")
 	else:
 		speed = minspeed
 
@@ -143,6 +146,7 @@ func GetAimControlsP2(delta):
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(str(x) + " " + str(tan(x)))
+		sfx.play("mrown1__tick launcher aiming left or right")
 	elif(Input.is_action_pressed("p2_aim_right")):
 		print(speed)
 		speed += PI/300
@@ -151,6 +155,7 @@ func GetAimControlsP2(delta):
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		#print(str(x) + " " + str(tan(x)))
+		sfx.play("mrown1__tick launcher aiming left or right")
 	else:
 		speed = minspeed
 
@@ -174,6 +179,7 @@ func GetFireControlsP1(delta):
 			container.TakeOrb(orb)
 			loaded = false
 			storing = true
+			sfx.play("bump - orb saved for later")
 	else:
 		storing = false
 	
@@ -189,6 +195,7 @@ func GetFireControlsP1(delta):
 			#get_parent().orbsonboard.push_front(orb)
 			swapping = true
 			swapped = true
+			sfx.play("hurt-c-02 - orb switch")
 			print(str(orb))
 	else:
 		swapping = false
@@ -201,6 +208,7 @@ func GetFireControlsP2(delta):
 			loaded = false
 			shottimer = 0.0
 			Disable()
+			
 	else:
 		firing = false
 	if(Input.is_action_pressed("p2_store") and !container.IsFull()):
@@ -211,6 +219,7 @@ func GetFireControlsP2(delta):
 			container.TakeOrb(orb)
 			loaded = false
 			storing = true
+			sfx.play("bump - orb saved for later")
 	else:
 		storing = false
 	
@@ -227,6 +236,7 @@ func GetFireControlsP2(delta):
 			swapping = true
 			swapped = true
 			print(str(orb))
+			sfx.play("hurt-c-02 - orb switch")
 	else:
 		swapping = false
 
@@ -246,8 +256,8 @@ func Fire():
 		laser.player = player
 		laser.Charge(trajectory,x)
 		laser.Fire()
-
 		laserisactive = false
+		sfx.play("laser-shot-silenced - orange ability launched")
 	else:
 		orb.trajectory.x = trajectory.x * cos(x)
 		orb.trajectory.y = trajectory.y * sin(x)
@@ -258,8 +268,10 @@ func Fire():
 		if(ischarged):
 			orb.Charge()
 			ischarged = false
+			sfx.play("electric-zap-001 - Yellow ability launched")
 		swapped = false
 		get_parent().orbsonboard.push_front(orb)
+		sfx.play("jump-c-05 - orb launched")
 
 func Freeze():
 	isfrozen = true
@@ -271,6 +283,7 @@ func Defrost(delta):
 		speed = PI/170
 		isfrozen = false
 		frozentimer = 0.00
+		sfx.play("ice-cracking - laucher unfreezing")
 
 func Charge():
 	ischarged = true

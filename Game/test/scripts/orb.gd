@@ -19,6 +19,7 @@ var crossreforbs = [] # these orbs are the ones that were found while looking fo
 onready var pos = get_pos()
 onready var inversescale = 1/get_scale().x
 onready var anim = get_node("AnimationPlayer")
+onready var sfx = get_node("SamplePlayer2D")
 
 var charged = false #changes to true if the yellow ability is active
 
@@ -91,12 +92,12 @@ func Move(delta):
 		print("orb went out of bounds")
 	if(is_colliding()):
 		
-		#get_parent().get_node("StreamPlayer").play(0) #chip sound
 		
 		var collider = get_collider()
 		if(collider.is_in_group("wall")):
 			trajectory.x *= -1
 			get_node("sparkles").set_rotd(get_node("sparkles").get_rotd() *- -1)
+			sfx.play("retro-video-game-sfx-bounce - orb bouncing off wall")
 		elif(collider.is_in_group("roof")):
 			trajectory.y *= -1
 		elif(collider.is_in_group("orb")):
@@ -107,7 +108,9 @@ func Move(delta):
 				print("hit launcher orb")
 			if(!collider.ismoving and !collider.inlauncher):
 				StopSparkle()
+				sfx.play("beer-bottles - orbs collide together")
 				ismoving = false
+				print("playing sfx")
 				var positiondifference = get_pos() - collider.get_pos()
 				positiondifference = positiondifference.normalized()
 				var dotproductnorth = positiondifference.dot(Vector2(0,-1))
@@ -153,10 +156,12 @@ func Move(delta):
 				var foundmatch = CheckMatch(matchingorbs,leftoverorbs);
 				
 				if(foundmatch):
+					sfx.play("glass-shatter-3 - Group of orbs removed")
 					for orb in leftoverorbs:
 						if(orb.colour == COLOUR.GREY):
 							orb.TakeDamage()
 					if(charged):
+						sfx.play("electric-zap - Yellow abilty used removed orbs")
 						var killorbs = []
 						for orb in matchingorbs:  #get all of the orbs with the same colour as the match 2 orbs out
 							killorbs = orb.Search(2,colour,killorbs)
@@ -224,13 +229,14 @@ func Die():
 	#this function perform all of the necessary actions before an orb can be freed and then frees it
 	#removes itself from the list of orbs, unhooks from its neighbors, and checks if orbs around it will fall after its freed
 	
-	
 	var index = get_parent().orbsonboard.find(self)
 	if(index != -1):
 		get_parent().orbsonboard.remove(index)
 	var leftovers = []
 	Search(2,COLOUR.NONE,leftovers)
-	print(str(leftovers.size()))
+	if(leftovers.size() > 0):
+		leftovers.remove(leftovers.find(self))
+	print("leftover size: " + str(leftovers.size()))
 	get_parent().leftoverorbs = leftovers
 	self.Unhook()
 	get_parent().CheckFall()
@@ -322,40 +328,40 @@ func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2
 func LookForTop(crossreforbs): 
 	crossreforbs.push_back(self)
 	if(topleft != null and !topleft.is_in_group("wall")):
-		print("topleft")
+		#print("topleft")
 		if(!crossreforbs.has(topleft)):
 			if(topleft.is_in_group("top") or (!topleft.is_in_group("top") and topleft.LookForTop(crossreforbs))):
-				print(str(get_name()) + " found top on topleft")
+				#print(str(get_name()) + " found top on topleft")
 				return true
 	if(topright != null and !topright.is_in_group("wall")):
-		print("topright")
+		#print("topright")
 		if(!crossreforbs.has(topright)):
 			if(topright.is_in_group("top") or (!topright.is_in_group("top") and topright.LookForTop(crossreforbs))):
-				print(str(get_name()) + " found top on topright")
+				#print(str(get_name()) + " found top on topright")
 				return true
 	if(left != null and !left.is_in_group("wall")):
-		print("left")
+		#print("left")
 		if(!crossreforbs.has(left)):
 			if(left.is_in_group("top") or (!left.is_in_group("top") and left.LookForTop(crossreforbs))):
-				print(str(get_name()) + " found top on left")
+				#print(str(get_name()) + " found top on left")
 				return true
 	if(right != null and !right.is_in_group("wall")):
-		print("right")
+		#print("right")
 		if(!crossreforbs.has(right)):
 			if(right.is_in_group("top") or (!right.is_in_group("top") and right.LookForTop(crossreforbs))):
-				print(str(get_name()) + " found top on right")
+				#print(str(get_name()) + " found top on right")
 				return true
 	if(bottomleft != null and !bottomleft.is_in_group("wall")):
-		print("bottomleft")
+		#print("bottomleft")
 		if(!crossreforbs.has(bottomleft)):
 			if(bottomleft.is_in_group("top") or (!bottomleft.is_in_group("top") and bottomleft.LookForTop(crossreforbs))):
-				print(str(get_name()) + " found top on bottomleft")
+				#print(str(get_name()) + " found top on bottomleft")
 				return true
 	if(bottomright != null and !bottomright.is_in_group("wall")):
-		print("bottomright")
+		#print("bottomright")
 		if(!crossreforbs.has(bottomright)):
 			if(bottomright.is_in_group("top") or (!bottomright.is_in_group("top") and bottomright.LookForTop(crossreforbs))):
-				print(str(get_name()) + " found top on bottomright")
+				#print(str(get_name()) + " found top on bottomright")
 				return true
 				
 	falling = true

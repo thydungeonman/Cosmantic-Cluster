@@ -1,6 +1,7 @@
 extends Area2D
 
 onready var checker = get_node("checker")
+onready var sfx = get_node("SamplePlayer2D")
 #warp gate
 #sits at the top of each players board and warps any orbs that go into it to the top
 #of the opponents board going the opposite direction
@@ -25,6 +26,7 @@ func _fixed_process(delta):
 						print("Died in the warp")
 					else:
 						orb.Warp(exit)
+						sfx.play("teleport-morphy - Orb entering warpgate")
 					#orb.Warp(exit)
 				elif(orb.player == PLAYER.PLAYER2):
 					var exit = orb.get_pos()
@@ -36,6 +38,7 @@ func _fixed_process(delta):
 						print("Died in the warp")
 					else:
 						orb.Warp(exit)
+						sfx.play("teleport-morphy - Orb entering warpgate")
 #					orb.Warp(exit)
 	#wait until kinematic body enters
 	#if player1 warp to player2 board

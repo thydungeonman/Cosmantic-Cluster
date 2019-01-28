@@ -14,6 +14,9 @@ const GREEN = "res://test/scenes/greenorb.tscn"
 const WHITE = "res://test/scenes/whiteorb.tscn"
 const RED = "res://test/scenes/redorb.tscn"
 
+onready var music = get_node("backgroundmusic")
+onready var sfx = get_node("SamplePlayer2D")
+
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width
 
 var fallcheckarray = []
@@ -29,6 +32,9 @@ var orb; #the newest orb
 
 onready var p1launcher = get_node("p1launcher")
 var p2launcher = null
+
+var p1flag #flag orbs
+var p2flag
 
 var player1health = 5
 var player2health = 5
@@ -50,9 +56,14 @@ var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
 onready var ray = get_node("RayCast2D")
 
 func _ready():
+	music.play(0)
+	
 	GenerateP2Launcher()
-	#GenerateBoardP1()
+	GeneratePlayer1Flag()
+	GeneratePlayer2Flag()
+	GenerateBoardP1()
 	GenerateBoardP2()
+
 	
 	set_fixed_process(true)
 
@@ -86,7 +97,7 @@ func GenerateBoardP1():
 	#generate board based off of the width of the screen and the width of an orb
 	var startorb = preload("res://test/scenes/orb.tscn").instance()
 	var xoffset = 35 + 17
-	var yoffset = 40 + 70 + 70
+	var yoffset = 40 + (70 * 3)
 	add_child(startorb)
 	startorb.set_pos(Vector2(70 + 70,100))
 	var orbwidth = startorb.width
@@ -99,12 +110,13 @@ func GenerateBoardP1():
 		elif(i%2 == 0):
 			GenerateEvenRow(xoffset, yoffset, orbwidth,1)
 		yoffset += orbwidth * Vector2(1.07337749,1.8417709).normalized().y;
+		print(str(orbwidth))
 
 func GenerateBoardP2():
 	#generate board based off of the width of the screen and the width of an orb
 	var startorb = preload("res://test/scenes/orb.tscn").instance()
 	var xoffset = 960 + 68
-	var yoffset = 40 + 70 + 70
+	var yoffset = 40 + (70 * 3)
 	add_child(startorb)
 	startorb.set_pos(Vector2(70 + 70,100))
 	startorb.player = PLAYER.PLAYER2
@@ -122,6 +134,7 @@ func GenerateBoardP2():
 
 func CheckFall(): #will most likely take one or more kinematic bodies that are the neighboring orbs of the ones that were just matched and killed
 	print("checking fall" + " " + str(leftoverorbs.size()))
+	var orbfell = false
 	for i in leftoverorbs:
 		print(i.get_name())
 		i.set_opacity(1)
@@ -131,14 +144,15 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 			print("end")
 			if s == false:
 				for badorb in crossreforbs:
+					orbfell = true
 					var x = orbsonboard.find(badorb)
 					if(x != -1):
 						orbsonboard.remove(x)
 					badorb.get_node("AnimationPlayer").play("shrink")
 			crossreforbs.clear()
-#	for i in orbsonboard:
-#		if(i.falling):
-#			i.get_node("AnimationPlayer").play("shrink")
+	if(orbfell):
+		sfx.play("punch sound - falling orbs")
+		print("sfx played")
 	
 
 func GenerateOddRow(xoffset, yoffset, width, player):
@@ -223,22 +237,32 @@ func HandleAbility(colour,player):
 	if(player == PLAYER.PLAYER1 and !p1isnegated):
 		if(colour == COLOUR.RED):
 			player2health -= 1
-			p2launcher.get_node("health").set_text("Health: " + str(player2health))
+			p2launcher.get_node("health").set_text("Health " + str(player2health))
+			sfx.play("fireworks-mortar - Red ability used Hp loss")
 		if(colour == COLOUR.GREEN):
 			player1health += 1
 			print("Player 1 health: " + str(player1health))
-			p1launcher.get_node("health").set_text("Health: " + str(player1health))
+			p1launcher.get_node("health").set_text("Health " + str(player1health))
+			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
 		if(colour == COLOUR.BLACK):
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
+			sfx.play("dark magic loop - Black ability used")
 		if(colour == COLOUR.WHITE):
 			p2launcher.Freeze()
+			sfx.play("winter wind - White ability used")
 		if(colour == COLOUR.YELLOW):
 			p1launcher.Charge()
+			if(p1isdark):
+				p1darktimer = p1darktime
+				p1isdark = false
+				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
 		if(colour == COLOUR.BLUE):
 			P1BlueAbility()
+			sfx.play("billiard-balls-single-hit-dry - Grey orbs spawn")
 		if(colour == COLOUR.PURPLE):
 			p2isnegated = true
+			sfx.play("moved-02-dark - Purple ability used")
 		if(colour == COLOUR.ORANGE):
 			p1launcher.ActivateLaser()
 	elif(player == PLAYER.PLAYER1 and p1isnegated):
@@ -247,22 +271,32 @@ func HandleAbility(colour,player):
 		if(colour == COLOUR.RED):
 			player1health -= 1
 			print("Player 1 health " + str(player1health))
-			p1launcher.get_node("health").set_text("Health: " + str(player1health))
+			p1launcher.get_node("health").set_text("Health " + str(player1health))
+			sfx.play("fireworks-mortar - Red ability used Hp loss")
 		if(colour == COLOUR.GREEN):
 			player2health += 1
 			print("Player 2 health: " + str(player2health))
-			p2launcher.get_node("health").set_text("Health: " + str(player2health))
+			p2launcher.get_node("health").set_text("Health " + str(player2health))
+			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
 		if(colour == COLOUR.BLACK):
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
+			sfx.play("dark magic loop - Black ability used")
 		if(colour == COLOUR.WHITE):
 			p1launcher.Freeze()
+			sfx.play("winter wind - White ability used")
 		if(colour == COLOUR.YELLOW):
 			p2launcher.Charge()
+			if(p2isdark):
+				p2darktimer = p2darktime
+				p2isdark = false
+				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
 		if(colour == COLOUR.BLUE):
 			P2BlueAbility()
+			sfx.play("billiard-balls-single-hit-dry - Grey orbs spawn")
 		if(colour == COLOUR.PURPLE):
 			p1isnegated = true
+			sfx.play("moved-02-dark - Purple ability used")
 		if(colour == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()
 	elif(player == PLAYER.PLAYER2 and p2isnegated):
@@ -337,3 +371,79 @@ func FindAvailableSpot(player):
 				return orb
 			else:
 				return null
+
+func GeneratePlayer1Flag():
+	p1flag = preload("res://test/scenes/flagorb.tscn").instance()
+	var s = Image()
+	
+	randomize()
+	var result = randi() % 8
+	if(result == 0):
+		s.load("res://test/sprites/flag orb yellow.png")
+		p1flag.colour = COLOUR.YELLOW
+	elif(result == 1):
+		s.load("res://test/sprites/flag orb blue.png")
+		p1flag.colour = COLOUR.BLUE
+	elif(result == 2):
+		s.load("res://test/sprites/flagorbred.png")
+		p1flag.colour = COLOUR.RED
+	elif(result == 3):
+		s.load("res://test/sprites/flag orb orange.png")
+		p1flag.colour = COLOUR.ORANGE
+	elif(result == 4):
+		s.load("res://test/sprites/flag orb purple.png")
+		p1flag.colour = COLOUR.PURPLE
+	elif(result == 5):
+		s.load("res://test/sprites/flag orb green.png")
+		p1flag.colour = COLOUR.GREEN
+	elif(result == 6):
+		s.load("res://test/sprites/flag orb black.png")
+		p1flag.colour = COLOUR.BLACK
+	elif(result == 7):
+		s.load("res://test/sprites/flag orb white.png")
+		p1flag.colour = COLOUR.WHITE
+	print("flag1 colour: " + str(p1flag.colour))
+	p1flag.get_node("Sprite").get_texture().create_from_image(s)
+	randomize()
+	var p = randi() % 11
+	add_child(p1flag)
+	orbsonboard.push_back(p1flag)
+	p1flag.set_pos(Vector2(17 + 70 + (70 * p),40 + 70 + 70 + 70 - (70 * Vector2(1.07337749,1.8417709).normalized().y)))
+
+func GeneratePlayer2Flag():
+	p2flag = preload("res://test/scenes/flagorb2.tscn").instance()
+	var s = Image()
+	
+	randomize()
+	var result = randi() % 8
+	if(result == 0):
+		s.load("res://test/sprites/flag orb yellow.png")
+		p2flag.colour = COLOUR.YELLOW
+	elif(result == 1):
+		s.load("res://test/sprites/flag orb blue.png")
+		p2flag.colour = COLOUR.BLUE
+	elif(result == 2):
+		s.load("res://test/sprites/flagorbred.png")
+		p2flag.colour = COLOUR.RED
+	elif(result == 3):
+		s.load("res://test/sprites/flag orb orange.png")
+		p2flag.colour = COLOUR.ORANGE
+	elif(result == 4):
+		s.load("res://test/sprites/flag orb purple.png")
+		p2flag.colour = COLOUR.PURPLE
+	elif(result == 5):
+		s.load("res://test/sprites/flag orb green.png")
+		p2flag.colour = COLOUR.GREEN
+	elif(result == 6):
+		s.load("res://test/sprites/flag orb black.png")
+		p2flag.colour = COLOUR.BLACK
+	elif(result == 7):
+		s.load("res://test/sprites/flag orb white.png")
+		p2flag.colour = COLOUR.WHITE
+	print("flag2 colour: " + str(p2flag.colour))
+	p2flag.get_node("Sprite").get_texture().create_from_image(s)
+	randomize()
+	var p = randi() % 11
+	add_child(p2flag)
+	orbsonboard.push_back(p2flag)
+	p2flag.set_pos(Vector2(960 + 33 + 70 + (70 * p),40 + 70 + 70 + 70 - (70 * Vector2(1.07337749,1.8417709).normalized().y)))

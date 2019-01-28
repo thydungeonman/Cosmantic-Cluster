@@ -1,7 +1,13 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=16 format=1]
 
 [ext_resource path="res://test/scripts/orb.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/red orb.png" type="Texture" id=2]
+[ext_resource path="res://test/sfx/beer-bottles - orbs collide together.smp" type="Sample" id=3]
+[ext_resource path="res://test/sfx/crack-2 - Grey orb damage.smp" type="Sample" id=4]
+[ext_resource path="res://test/sfx/cracking-crunching - Grey orb destroyed.smp" type="Sample" id=5]
+[ext_resource path="res://test/sfx/electric-zap - Yellow abilty used removed orbs.smp" type="Sample" id=6]
+[ext_resource path="res://test/sfx/glass-shatter-3 - Group of orbs removed.smp" type="Sample" id=7]
+[ext_resource path="res://test/sfx/retro-video-game-sfx-bounce - orb bouncing off wall.smp" type="Sample" id=8]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -211,6 +217,45 @@ tracks/2/keys = {
 "values": [ 1.0, 0.0 ]
 }
 
+[sub_resource type="SampleLibrary" id=7]
+
+"samples/beer-bottles - orbs collide together" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 3 )
+}
+"samples/crack-2 - Grey orb damage" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 4 )
+}
+"samples/cracking-crunching - Grey orb destroyed" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 5 )
+}
+"samples/electric-zap - Yellow abilty used removed orbs" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 6 )
+}
+"samples/glass-shatter-3 - Group of orbs removed" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 7 )
+}
+"samples/retro-video-game-sfx-bounce - orb bouncing off wall" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 8 )
+}
+
 [node name="orb" type="KinematicBody2D" groups=[
 "orb",
 ]]
@@ -242,7 +287,7 @@ texture = ExtResource( 2 )
 enabled = true
 cast_to = Vector2( 0, 0 )
 layer_mask = 1
-type_mask = 19
+type_mask = 18
 
 [node name="Label" type="Label" parent="."]
 
@@ -371,6 +416,17 @@ randomness/direction = -0.02
 randomness/spread = 0.02
 randomness/hue_variation = -1.0
 color/color = Color( 0.983952, 0.992188, 0.961182, 1 )
+
+[node name="SamplePlayer2D" type="SamplePlayer2D" parent="."]
+
+params/volume_db = 0.0
+params/pitch_scale = 1.0
+params/attenuation/min_distance = 1.0
+params/attenuation/max_distance = 2048.0
+params/attenuation/distance_exp = 1.0
+config/polyphony = 3
+config/samples = SubResource( 7 )
+config/pitch_random = 0.0
 
 [connection signal="mouse_enter" from="." to="." method="_on_orb_mouse_enter"]
 
