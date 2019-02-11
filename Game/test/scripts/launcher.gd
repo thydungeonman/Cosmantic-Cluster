@@ -183,7 +183,7 @@ func GetFireControlsP1(delta):
 	else:
 		storing = false
 	
-	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty() and !swapped):
+	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty()): #and !swapped
 		if(swapping == false):
 			print(str(orb))
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
@@ -223,7 +223,7 @@ func GetFireControlsP2(delta):
 	else:
 		storing = false
 	
-	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty() and !swapped):
+	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty()): #and !swapped
 		if(swapping == false):
 			print(str(orb))
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs

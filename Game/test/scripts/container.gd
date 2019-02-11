@@ -49,3 +49,9 @@ func DisplayOrbs():
 			orb2.set_texture(orbs[1].get_node("Sprite").get_texture())
 		if(i == 2):
 			orb3.set_texture(orbs[2].get_node("Sprite").get_texture())
+
+func Reset():
+	orb1.set_texture(null)
+	orb2.set_texture(null)
+	orb3.set_texture(null)
+	orbs.clear()

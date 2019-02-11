@@ -86,6 +86,7 @@ color/color = Color( 0.894118, 0.894118, 0.847059, 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 
+z/z = -1
 texture = ExtResource( 2 )
 
 [node name="container" parent="." instance=ExtResource( 3 )]

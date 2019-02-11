@@ -2,4 +2,6 @@ extends "orb.gd"
 
 
 func _ready():
-	pass
+	player = PLAYER.PLAYER1
+	isflag = true
+ 

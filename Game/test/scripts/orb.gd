@@ -30,6 +30,8 @@ var colour = COLOUR.NONE
 
 var warped = false #changes to true after sent through a warp
 
+var isflag = false #should be a better way to do this
+
 #neighboring orbs  Kinematic bodies
 var topleft
 var topright
@@ -54,7 +56,8 @@ onready var lbottomrightspot = Vector2(width,width) * Vector2(1.07337749,1.84177
 
 func _ready():
 	set_fixed_process(true)
-	get_node("Label").set_text(str(get_name()))
+	#get_node("Label").set_text(str(get_name()))
+	get_node("Label").set_text(str(self))
 	set_process_input(true)
 func _input(event):
 	pass
@@ -188,6 +191,8 @@ func Move(delta):
 					for orb in matchingorbs:
 						print(orb.get_name())
 						orb.anim.play("blink")
+						if(orb.isflag):
+							get_parent().GameOver()
 				else:
 					matchingorbs.clear()
 					leftoverorbs.clear()
@@ -240,6 +245,10 @@ func Die():
 	get_parent().leftoverorbs = leftovers
 	self.Unhook()
 	get_parent().CheckFall()
+	
+	if(isflag):
+		get_parent().GameOver()
+	
 	self.queue_free()
 
 func MovingDie():

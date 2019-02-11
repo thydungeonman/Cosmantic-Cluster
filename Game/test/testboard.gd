@@ -1,4 +1,7 @@
 extends Node2D
+#TODO win scenarios
+#combos
+
 
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
@@ -22,7 +25,7 @@ var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width
 var fallcheckarray = []
 var orbsonboard = [] 
 var orbsonboardp1 = [] #if either is empty, the game is over
-var orbsonoboardp2 = [] 
+var orbsonboardp2 = [] 
 var s = false
 var t  = 0.0
 
@@ -46,15 +49,15 @@ var p1isnegated = false # these are for when a player has their next ability neg
 var p2isnegated = false
 
 var p1isdark = false
-var p1darktime = 1.00
+var p1darktime = 5.00
 var p1darktimer = 0.00
 var p2isdark = false
-var p2darktime = 1.00 #time that the darkness ability lasts
+var p2darktime = 5.00 #time that the darkness ability lasts
 var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
 
 #test
 onready var ray = get_node("RayCast2D")
-
+var rclick = false
 func _ready():
 	music.play(0)
 	
@@ -63,7 +66,6 @@ func _ready():
 	GeneratePlayer2Flag()
 	GenerateBoardP1()
 	GenerateBoardP2()
-
 	
 	set_fixed_process(true)
 
@@ -71,11 +73,26 @@ func _fixed_process(delta):
 	if(Input.is_action_pressed("ui_page_up")):
 		p1launcher.Charge()
 		p2launcher.Charge()
+		var p1 = 0
+		var p2 = 0
+		for orb in orbsonboard:
+			if orb.player == PLAYER.PLAYER1:
+				p1 += 1;
+			else:
+				p2 += 1
+#		print("player one orbs: " + str(p1))
+#		print("player two orbs: " + str(p2))
+		print("player one available spot: " + str(FindAvailableSpot(PLAYER.PLAYER1)))
+		print("player two available spot: " + str(FindAvailableSpot(PLAYER.PLAYER2)))
 	
 	if(Input.is_action_pressed("click")):
 		Click()
 	if(Input.is_action_pressed("rclick")):
-		RClick()
+		if(rclick == false):
+			RClick()
+			rclick = true
+	else:
+		rclick = false
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
 	#so we will wait for one second for them to find their neighbors
 	if(t > .5 and s == false):
@@ -255,7 +272,7 @@ func HandleAbility(colour,player):
 			p1launcher.Charge()
 			if(p1isdark):
 				p1darktimer = p1darktime
-				p1isdark = false
+				#p1isdark = false
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
 		if(colour == COLOUR.BLUE):
 			P1BlueAbility()
@@ -289,7 +306,7 @@ func HandleAbility(colour,player):
 			p2launcher.Charge()
 			if(p2isdark):
 				p2darktimer = p2darktime
-				p2isdark = false
+				#p2isdark = false
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
 		if(colour == COLOUR.BLUE):
 			P2BlueAbility()
@@ -359,6 +376,7 @@ func Click():
 			print(str(group.size()))
 func RClick():
 	#P1BlueAbility()
+	GameOver()
 	pass
 
 func FindAvailableSpot(player):
@@ -369,8 +387,7 @@ func FindAvailableSpot(player):
 			if(orb.CountNeighbors() < 6 and (orb.bottomleft == null or orb.bottomright == null) and !orb.inlauncher and !orb.ismoving):
 				print(str(orb.get_name()))
 				return orb
-			else:
-				return null
+	return null
 
 func GeneratePlayer1Flag():
 	p1flag = preload("res://test/scenes/flagorb.tscn").instance()
@@ -447,3 +464,34 @@ func GeneratePlayer2Flag():
 	add_child(p2flag)
 	orbsonboard.push_back(p2flag)
 	p2flag.set_pos(Vector2(960 + 33 + 70 + (70 * p),40 + 70 + 70 + 70 - (70 * Vector2(1.07337749,1.8417709).normalized().y)))
+
+
+func Restart():
+	for orb in orbsonboard:
+		orb.queue_free()
+	orbsonboard.clear()
+	orbsonboardp1.clear()
+	orbsonboardp2.clear()
+	GenerateBoardP1()
+	GenerateBoardP2()
+	GeneratePlayer1Flag()
+	GeneratePlayer2Flag()
+	p1launcher.container.Reset()
+	p2launcher.container.Reset()
+	t = 0
+	s = false
+
+
+func GameOver():
+	get_node("screendim").set_hidden(false)
+	get_node("replaybutton").set_hidden(false)
+	get_node("gameoverlabel").set_hidden(false)
+	get_node("replaybutton").set_disabled(false)
+	
+
+func _on_replaybutton_pressed():
+	get_node("screendim").set_hidden(true)
+	get_node("replaybutton").set_hidden(true)
+	get_node("gameoverlabel").set_hidden(true)
+	get_node("replaybutton").set_disabled(true)
+	Restart()

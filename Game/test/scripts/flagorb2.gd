@@ -1,4 +1,5 @@
 extends "orb.gd"
 
 func _ready():
-	pass
+	player = PLAYER.PLAYER2
+	isflag = true
