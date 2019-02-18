@@ -8,4 +8,6 @@ func _ready():
 
 func ActivateAbility():
 	print("PURPLE ABILITY")
-	get_parent().HandleAbility(colour,player)
+	var combo = get_parent().HandleAbilityCombo(colour,player)
+	if(combo != 0):
+		get_parent().NewHandleAbility(player)

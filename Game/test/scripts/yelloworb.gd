@@ -7,10 +7,8 @@ func _ready():
 
 func ActivateAbility():
 	print("YELLOW ABILITY")
-	get_parent().HandleAbility(colour,player)
-	#instance new lighning ball scene
-	#lightning ball has a specific diameter
-	#if orb collides with lball
-		#if orb is correct color
-			#orb.anim.play(zap)
-	# the actual lightning ball should only be around for a few frames
+	#get_parent().HandleAbility(colour,player)
+	var combo = get_parent().HandleAbilityCombo(colour,player)
+	if(combo != 0):
+		get_parent().NewHandleAbility(player)
+	

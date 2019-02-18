@@ -6,6 +6,6 @@ func _ready():
 
 func ActivateAbility():
 	print("BLUE ABILITY")
-	get_parent().HandleAbility(colour,player)
+	var combo = get_parent().HandleAbilityCombo(colour,player)
 	#instance x amount of grey orbs
 	#they spawn attatched to orbs that have available bottom left or right spots

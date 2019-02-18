@@ -186,7 +186,9 @@ func Move(delta):
 					get_parent().leftoverorbs = leftoverorbs
 					get_parent().CheckFall()
 					
+					#get_parent().HandleAbilityCombo(colour,player)
 					ActivateAbility()
+					
 					
 					for orb in matchingorbs:
 						print(orb.get_name())
@@ -194,6 +196,7 @@ func Move(delta):
 						if(orb.isflag):
 							get_parent().GameOver()
 				else:
+					get_parent().NewHandleAbility(player)
 					matchingorbs.clear()
 					leftoverorbs.clear()
 

@@ -3,6 +3,8 @@ extends Node2D
 #combos
 
 
+
+
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
@@ -41,12 +43,14 @@ var p2flag
 
 var player1health = 5
 var player2health = 5
-var lastusedcolorp1
-var lastusedcolorp2
-var abilitycountp1 = 0 #counts the number of times a color is chained
-var abilitycountp2 = 0
+var lastusedcolourp1 = COLOUR.NONE
+var lastusedcolourp2 = COLOUR.NONE
+var abilitycombop1 = 0 #counts the number of times a color is chained
+var abilitycombop2 = 0
 var p1isnegated = false # these are for when a player has their next ability negated by a purple ability
 var p2isnegated = false
+onready var p1abilitylabel = get_node("p1combo")
+onready var p2abilitylabel = get_node("p2combo")
 
 var p1isdark = false
 var p1darktime = 5.00
@@ -58,8 +62,9 @@ var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
 #test
 onready var ray = get_node("RayCast2D")
 var rclick = false
+
 func _ready():
-	music.play(0)
+	#music.play(0)
 	
 	GenerateP2Launcher()
 	GeneratePlayer1Flag()
@@ -246,6 +251,159 @@ func GenerateP1Launcher():
 	launcher.player = launcher.PLAYER.PLAYER1
 	launcher.set_pos(Vector2(465,1040))
 
+func HandleAbilityCombo(colour,player):
+	var combo = 0
+	print(str(lastusedcolourp1))
+	if(player == PLAYER.PLAYER1):
+		if(lastusedcolourp1 == colour or lastusedcolourp1 == COLOUR.BLUE):
+			print("same colour or blue")
+			abilitycombop1 += 1
+		else:
+			if(lastusedcolourp1 != COLOUR.NONE):
+				NewHandleAbility(player)
+			lastusedcolourp1 = colour
+			abilitycombop1 = 1
+			
+			combo = abilitycombop1
+		if(lastusedcolourp1 != COLOUR.BLUE):
+			if(colour == COLOUR.BLACK):
+				get_node("p1combo").set_text("BLACK ABILITY X")
+			elif(colour == COLOUR.BLUE):
+				get_node("p1combo").set_text("BLUE ABILITY X")
+			elif(colour == COLOUR.GREEN):
+				get_node("p1combo").set_text("GREEN ABILITY X")
+			elif(colour == COLOUR.ORANGE):
+				get_node("p1combo").set_text("ORANGE ABILITY X")
+			elif(colour == COLOUR.PURPLE):
+				get_node("p1combo").set_text("PURPLE ABILITY X")
+			elif(colour == COLOUR.RED):
+				get_node("p1combo").set_text("RED ABILITY X")
+			elif(colour == COLOUR.WHITE):
+				get_node("p1combo").set_text("WHITE ABILITY X")
+			elif(colour == COLOUR.YELLOW):
+				get_node("p1combo").set_text("YELLOW ABILITY X")
+		else:
+			get_node("p1combo").set_text("BLUE ABILITY X")
+		get_node("p1combo").set_text(get_node("p1combo").get_text() + str(abilitycombop1))
+	elif(player == PLAYER.PLAYER2):
+		if(lastusedcolourp2 == colour or lastusedcolourp2 == COLOUR.BLUE):
+			abilitycombop2 += 1
+		else:
+			if(lastusedcolourp2 != COLOUR.NONE):
+				NewHandleAbility(player)
+			abilitycombop2 = 1
+			lastusedcolourp2 = colour
+			combo = abilitycombop2
+		if(lastusedcolourp2 != COLOUR.BLUE):
+			if(colour == COLOUR.BLACK):
+				get_node("p2combo").set_text("BLACK ABILITY X")
+			elif(colour == COLOUR.BLUE):
+				get_node("p2combo").set_text("BLUE ABILITY X")
+			elif(colour == COLOUR.GREEN):
+				get_node("p2combo").set_text("GREEN ABILITY X")
+			elif(colour == COLOUR.ORANGE):
+				get_node("p2combo").set_text("ORANGE ABILITY X")
+			elif(colour == COLOUR.PURPLE):
+				get_node("p2combo").set_text("PURPLE ABILITY X")
+			elif(colour == COLOUR.RED):
+				get_node("p2combo").set_text("RED ABILITY X")
+			elif(colour == COLOUR.WHITE):
+				get_node("p2combo").set_text("WHITE ABILITY X")
+			elif(colour == COLOUR.YELLOW):
+				get_node("p2combo").set_text("YELLOW ABILITY X")
+		else:
+			get_node("p2combo").set_text("BLUE ABILITY X")
+		get_node("p2combo").set_text(get_node("p2combo").get_text() + str(abilitycombop2))
+	print("colour: " + str(colour) + " combo: " +  str(abilitycombop2))
+	return combo
+
+func NewHandleAbility(player):
+	
+	print("activating combo")
+	
+	if(player == PLAYER.PLAYER1):
+		if(lastusedcolourp1 == COLOUR.BLACK): #comboable
+			p2darktime = 1.0 * abilitycombop1
+			get_node("p2darkness").set_hidden(false)
+			p2isdark = true
+		elif(lastusedcolourp1 == COLOUR.BLUE): #comboable
+			for i in range(abilitycombop1):
+				P1BlueAbility()
+		elif(lastusedcolourp1 == COLOUR.GREEN): #comboable
+			player1health += abilitycombop1
+			print("Player 1 health: " + str(player1health))
+			p1launcher.get_node("health").set_text("Health " + str(player1health))
+			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+		elif(lastusedcolourp1 == COLOUR.ORANGE):
+			p1launcher.ActivateLaser()
+		elif(lastusedcolourp1 == COLOUR.PURPLE):
+			lastusedcolourp2 = COLOUR.NONE
+			abilitycombop2 = 0
+			get_node("p2combo").set_text("NONE ABILITY X0")
+			sfx.play("moved-02-dark - Purple ability used")
+		elif(lastusedcolourp1 == COLOUR.RED): #comboable
+			print("red combo activated")
+			player2health -= abilitycombop1
+			p2launcher.get_node("health").set_text("Health " + str(player2health))
+			sfx.play("fireworks-mortar - Red ability used Hp loss")
+		elif(lastusedcolourp1 == COLOUR.WHITE): #comboable
+			p2launcher.Freeze(1.0 * abilitycombop1)
+			sfx.play("winter wind - White ability used")
+		elif(lastusedcolourp1 == COLOUR.YELLOW):
+			p1launcher.Charge()
+			if(p1isdark):
+				p1darktimer = p1darktime
+				#p1isdark = false
+				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
+		lastusedcolourp1 = COLOUR.NONE
+		abilitycombop1 = 0
+		get_node("p1combo").set_text("NONE ABILITY X0")
+	elif(player == PLAYER.PLAYER2):
+		if(lastusedcolourp2 == COLOUR.BLACK): #comboable
+			p1darktime = 1.0 * abilitycombop1
+			get_node("p1darkness").set_hidden(false)
+			p1isdark = true
+		elif(lastusedcolourp2 == COLOUR.BLUE): #comboable
+			for i in range(abilitycombop2):
+				P2BlueAbility()
+		elif(lastusedcolourp2 == COLOUR.GREEN): #comboable
+			player2health += abilitycombop2
+			print("Player 2 health: " + str(player2health))
+			p2launcher.get_node("health").set_text("Health " + str(player2health))
+			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+		elif(lastusedcolourp2 == COLOUR.ORANGE):
+			p2launcher.ActivateLaser()
+		elif(lastusedcolourp2 == COLOUR.PURPLE):
+			lastusedcolourp1 = COLOUR.NONE
+			abilitycombop1 = 0
+			get_node("p1combo").set_text("NONE ABILITY X0")
+			sfx.play("moved-02-dark - Purple ability used")
+		elif(lastusedcolourp2 == COLOUR.RED): #comboable
+			print("red combo activated")
+			player1health -= abilitycombop2
+			p1launcher.get_node("health").set_text("Health " + str(player1health))
+			sfx.play("fireworks-mortar - Red ability used Hp loss")
+		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
+			p1launcher.Freeze(1.0 * abilitycombop2)
+			sfx.play("winter wind - White ability used")
+		elif(lastusedcolourp2 == COLOUR.YELLOW):
+			p2launcher.Charge()
+			if(p2isdark):
+				p2darktimer = p2darktime
+				#p2isdark = false
+				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
+		lastusedcolourp2 = COLOUR.NONE
+		abilitycombop2 = 0
+		get_node("p2combo").set_text("NONE ABILITY X0")
+	
+
+
+
+
+
+
+
+
 func HandleAbility(colour,player):
 
 	print(str(colour))
@@ -256,18 +414,22 @@ func HandleAbility(colour,player):
 			player2health -= 1
 			p2launcher.get_node("health").set_text("Health " + str(player2health))
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
+			p1abilitylabel.set_text("RED ABILITY")
 		if(colour == COLOUR.GREEN):
 			player1health += 1
 			print("Player 1 health: " + str(player1health))
 			p1launcher.get_node("health").set_text("Health " + str(player1health))
 			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+			p1abilitylabel.set_text("GREEN ABILITY")
 		if(colour == COLOUR.BLACK):
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
 			sfx.play("dark magic loop - Black ability used")
+			p1abilitylabel.set_text("BLACK ABILITY")
 		if(colour == COLOUR.WHITE):
 			p2launcher.Freeze()
 			sfx.play("winter wind - White ability used")
+			p1abilitylabel.set_text("WHITE ABILITY")
 		if(colour == COLOUR.YELLOW):
 			p1launcher.Charge()
 			if(p1isdark):
@@ -279,6 +441,7 @@ func HandleAbility(colour,player):
 			sfx.play("billiard-balls-single-hit-dry - Grey orbs spawn")
 		if(colour == COLOUR.PURPLE):
 			p2isnegated = true
+			get_node("p2combo").set_text("NONE ABILITY X0")
 			sfx.play("moved-02-dark - Purple ability used")
 		if(colour == COLOUR.ORANGE):
 			p1launcher.ActivateLaser()
@@ -300,7 +463,7 @@ func HandleAbility(colour,player):
 			p1isdark = true
 			sfx.play("dark magic loop - Black ability used")
 		if(colour == COLOUR.WHITE):
-			p1launcher.Freeze()
+			p1launcher.Freeze(1.0)
 			sfx.play("winter wind - White ability used")
 		if(colour == COLOUR.YELLOW):
 			p2launcher.Charge()
@@ -314,6 +477,7 @@ func HandleAbility(colour,player):
 		if(colour == COLOUR.PURPLE):
 			p1isnegated = true
 			sfx.play("moved-02-dark - Purple ability used")
+			get_node("p1combo").set_text("NONE ABILITY X0")
 		if(colour == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()
 	elif(player == PLAYER.PLAYER2 and p2isnegated):
@@ -325,6 +489,7 @@ func P1BlackAblility(delta):
 		get_node("p2darkness").set_hidden(true)
 		p2isdark = false
 		p2darktimer = 0.00
+		p2darktime = 1.0
 
 func P2BlackAbility(delta):
 	p1darktimer += delta
@@ -332,6 +497,7 @@ func P2BlackAbility(delta):
 		get_node("p1darkness").set_hidden(true)
 		p1isdark = false
 		p1darktimer = 0.0
+		p1darktime = 1.0
 
 func P1BlueAbility():
 	var orb = FindAvailableSpot(PLAYER.PLAYER2)

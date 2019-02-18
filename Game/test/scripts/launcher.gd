@@ -58,9 +58,9 @@ func _ready():
 
 func _fixed_process(delta):
 	LoadOrb(delta)
-	if(player == PLAYER.PLAYER1):
+	if(player == PLAYER.PLAYER1 and !isfrozen):
 		GetAimControlsP1(delta)
-	if(player == PLAYER.PLAYER2):
+	if(player == PLAYER.PLAYER2 and !isfrozen):
 		GetAimControlsP2(delta)
 	if(isfrozen):
 		Defrost(delta)
@@ -273,8 +273,9 @@ func Fire():
 		get_parent().orbsonboard.push_front(orb)
 		sfx.play("jump-c-05 - orb launched")
 
-func Freeze():
+func Freeze(duration):
 	isfrozen = true
+	frozentime = duration
 	speed = 0
 
 func Defrost(delta):
@@ -283,6 +284,7 @@ func Defrost(delta):
 		speed = PI/170
 		isfrozen = false
 		frozentimer = 0.00
+		frozentime = 1.0
 		sfx.play("ice-cracking - laucher unfreezing")
 
 func Charge():

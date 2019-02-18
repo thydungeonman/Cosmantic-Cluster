@@ -6,5 +6,5 @@ func _ready():
 
 func ActivateAbility():
 	print("WHITE ABILITY")
-	get_parent().HandleAbility(colour,player)
+	var combo = get_parent().HandleAbilityCombo(colour,player)
 	#launcher.Freeze()

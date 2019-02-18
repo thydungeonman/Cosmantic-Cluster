@@ -7,6 +7,6 @@ func _ready():
 
 func ActivateAbility():
 	print("BLACK ABILITY")
-	get_parent().HandleAbility(colour,player)
+	var combo = get_parent().HandleAbilityCombo(colour,player)
 	
 	#set darkness.visibility = true for x seconds
