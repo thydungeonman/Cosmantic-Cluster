@@ -65,6 +65,7 @@ script/script = ExtResource( 1 )
 
 config/amount = 50
 config/lifetime = 5.0
+config/emitting = false
 config/process_mode = 1
 params/direction = 261.0
 params/spread = 0.0
@@ -100,10 +101,10 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = -274.0
-margin/top = -10.0
-margin/right = -126.0
-margin/bottom = 15.0
+margin/left = 75.0
+margin/top = -18.0
+margin/right = 223.0
+margin/bottom = 7.0
 custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -129,5 +130,10 @@ default/filter/gain = 1.0
 default/reverb_room = 2
 default/reverb_send = 0.0
 default/chorus_send = 0.0
+
+[node name="nextorb" type="Sprite" parent="."]
+
+transform/pos = Vector2( -100, 0 )
+transform/scale = Vector2( 0.11, 0.11 )
 
 

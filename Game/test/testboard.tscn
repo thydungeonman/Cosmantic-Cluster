@@ -111,6 +111,10 @@ transform/pos = Vector2( 473, 1040 )
 
 transform/pos = Vector2( 8, 560.84 )
 
+[node name="Sprite" parent="wall"]
+
+transform/pos = Vector2( 0, -0.36908 )
+
 [node name="wall 2" parent="." instance=ExtResource( 4 )]
 
 transform/pos = Vector2( 1912, 579.434 )
@@ -256,3 +260,4 @@ flat = false
 [connection signal="pressed" from="replaybutton" to="." method="_on_replaybutton_pressed"]
 
 
+[editable path="wall"]

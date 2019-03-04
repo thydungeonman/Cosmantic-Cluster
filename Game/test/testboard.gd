@@ -75,6 +75,10 @@ func _ready():
 	set_fixed_process(true)
 
 func _fixed_process(delta):
+	if(player1health < 1 or player2health < 1):
+		GameOver()
+	
+	
 	if(Input.is_action_pressed("ui_page_up")):
 		p1launcher.Charge()
 		p2launcher.Charge()
@@ -323,7 +327,7 @@ func NewHandleAbility(player):
 	
 	if(player == PLAYER.PLAYER1):
 		if(lastusedcolourp1 == COLOUR.BLACK): #comboable
-			p2darktime = 1.0 * abilitycombop1
+			p2darktime = 5.0 * ((abilitycombop1 - 1) * 3)
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
 		elif(lastusedcolourp1 == COLOUR.BLUE): #comboable
@@ -360,7 +364,7 @@ func NewHandleAbility(player):
 		get_node("p1combo").set_text("NONE ABILITY X0")
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == COLOUR.BLACK): #comboable
-			p1darktime = 1.0 * abilitycombop1
+			p1darktime = 5.0 * ((abilitycombop2 - 1) * 3)
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
 		elif(lastusedcolourp2 == COLOUR.BLUE): #comboable
@@ -396,11 +400,6 @@ func NewHandleAbility(player):
 		abilitycombop2 = 0
 		get_node("p2combo").set_text("NONE ABILITY X0")
 	
-
-
-
-
-
 
 
 
@@ -500,17 +499,24 @@ func P2BlackAbility(delta):
 		p1darktime = 1.0
 
 func P1BlueAbility():
+	
 	var orb = FindAvailableSpot(PLAYER.PLAYER2)
 	if(orb == null):
 		return #couldn't find an orb. bail out
 	else:
 		var grey = preload("res://test/scenes/greyorb.tscn").instance()
 		add_child(grey)
-		if(orb.bottomleft == null):
+		if(orb.touchingwallright):
 			grey.set_pos(orb.bottomleftspot)
-		elif(orb.bottomright == null):
+		elif(orb.touchingwallleft):
 			grey.set_pos(orb.bottomrightspot)
+		else:
+			if(orb.bottomright == null):
+				grey.set_pos(orb.bottomrightspot)
+			elif(orb.bottomleft == null):
+				grey.set_pos(orb.bottomleftspot)
 		grey.HookUp()
+		grey.player = PLAYER.PLAYER2
 		orbsonboard.push_back(grey)
 
 func P2BlueAbility():
@@ -520,11 +526,17 @@ func P2BlueAbility():
 	else:
 		var grey = preload("res://test/scenes/greyorb.tscn").instance()
 		add_child(grey)
-		if(orb.bottomleft == null):
+		if(orb.touchingwallright):
 			grey.set_pos(orb.bottomleftspot)
-		elif(orb.bottomright == null):
+		elif(orb.touchingwallleft):
 			grey.set_pos(orb.bottomrightspot)
+		else:
+			if(orb.bottomright == null):
+				grey.set_pos(orb.bottomrightspot)
+			elif(orb.bottomleft == null):
+				grey.set_pos(orb.bottomleftspot)
 		grey.HookUp()
+		grey.player = PLAYER.PLAYER1
 		orbsonboard.push_back(grey)
 
 
@@ -541,19 +553,27 @@ func Click():
 			testorb.Search(1,COLOUR.NONE,group)
 			print(str(group.size()))
 func RClick():
-	#P1BlueAbility()
-	GameOver()
+	P2BlueAbility()
+	#GameOver()
 	pass
 
 func FindAvailableSpot(player):
 	#finds the first available spot for a gray orb to be spawned for the player that is passed to the function
-	#usually is the last orb that player fired
+	#usually that is the last orb that player fired
+	var spot = null
 	for orb in orbsonboard:
 		if(orb.player == player):
-			if(orb.CountNeighbors() < 6 and (orb.bottomleft == null or orb.bottomright == null) and !orb.inlauncher and !orb.ismoving):
+			if(orb.CountNeighbors() < 6):
+				if(orb.touchingwallleft == true and orb.bottomright != null):
+					continue
+				if(orb.touchingwallright == true and orb.bottomleft != null):
+					continue
+				if(orb.bottomright != null and orb.bottomleft != null):
+					continue
 				print(str(orb.get_name()))
-				return orb
-	return null
+				spot = orb
+				break
+	return spot
 
 func GeneratePlayer1Flag():
 	p1flag = preload("res://test/scenes/flagorb.tscn").instance()
@@ -646,6 +666,8 @@ func Restart():
 	p2launcher.container.Reset()
 	t = 0
 	s = false
+	player1health = 5
+	player2health = 5
 
 
 func GameOver():

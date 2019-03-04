@@ -288,7 +288,7 @@ texture = ExtResource( 2 )
 enabled = true
 cast_to = Vector2( 0, 0 )
 layer_mask = 1
-type_mask = 18
+type_mask = 19
 
 [node name="Label" type="Label" parent="."]
 

@@ -21,6 +21,9 @@ onready var inversescale = 1/get_scale().x
 onready var anim = get_node("AnimationPlayer")
 onready var sfx = get_node("SamplePlayer2D")
 
+var touchingwallleft = false
+var touchingwallright = false
+
 var charged = false #changes to true if the yellow ability is active
 
 var falling = false
@@ -88,7 +91,7 @@ func Move(delta):
 	#if orb: determines axis of collision and moves orb to correct spot 
 	#then checks for a match, removing the correct orbs, activating ability and checking for falls if a match is made
 	move(trajectory * delta)
-	if(get_pos().y > 1080):
+	if(get_pos().y > 1080 or get_pos().y < -400):
 		get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
 		EnableLauncher()
 		queue_free()
@@ -475,6 +478,8 @@ func Warp(spot):
 		MovingDie()
 
 func PrintNeighbors():
+	print(str(self.get_name()) + " " + str(self))
+	print("touching wall left: " +str(touchingwallleft) + " touching wall right: " + str(touchingwallright))
 	if(topleft != null):
 		print("topleft: " + str(topleft) + " " + topleft.get_name())
 	else:
@@ -519,6 +524,9 @@ func DoCasts():
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self and !ray.get_collider().is_in_group("warp")):
 		left = ray.get_collider()
+		if(left != null):
+			if(left.is_in_group("wall")):
+				touchingwallleft = true
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().right = self
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
@@ -552,6 +560,9 @@ func DoCasts():
 	ray.force_raycast_update()
 	if(ray.is_colliding() and ray.get_collider() != self and !ray.get_collider().is_in_group("warp")):
 		right = ray.get_collider()
+		if(right != null):
+			if(right.is_in_group("wall")):
+				touchingwallright = true
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().left = self
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)

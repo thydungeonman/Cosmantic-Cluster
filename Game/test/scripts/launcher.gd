@@ -4,6 +4,8 @@ extends Node2D
 # it up to different controls
 
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
+enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
+	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
@@ -17,6 +19,8 @@ const RED = "res://test/scenes/redorb.tscn"
 
 var player = PLAYER.PLAYER1
 onready var sfx = get_node("SamplePlayer")
+onready var nextorb = get_node("nextorb") # the sprite of the upcoming orb
+var upcomingorb #this holds an enumeration for the upcoming orb
 
 var trajectory = Vector2(-1500,-1500)
 var x = (PI)/2 #starting angle of launcher
@@ -50,11 +54,16 @@ var laserisactive = false
 
 onready var aim = get_node("Particles2D")
 onready var container = get_node("container")
+var reticule = null
 
 func _ready():
 	set_fixed_process(true)
-	aim.set_param(0,270 - rad2deg(x))
-
+	#aim.set_param(0,270 - rad2deg(x))
+	reticule = preload("res://test/scenes/aimingreticule.tscn").instance()
+	add_child(reticule)
+	reticule.set_pos(Vector2(0,20))
+	AimReticule()
+	
 
 func _fixed_process(delta):
 	LoadOrb(delta)
@@ -83,27 +92,35 @@ func _fixed_process(delta):
 	
 
 func LoadOrb(delta):
+	
+	if(upcomingorb == null):
+				randomize()
+				var rand = randi() % 8
+				if(rand == 0):
+					upcomingorb = preload(YELLOW).instance()
+				elif(rand == 1):
+					upcomingorb = preload(BLUE).instance()
+				elif(rand == 2):
+					upcomingorb = preload(RED).instance()
+				elif(rand == 3):
+					upcomingorb = preload(ORANGE).instance()
+				elif(rand == 4):
+					upcomingorb = preload(PURPLE).instance()
+				elif(rand == 5):
+					upcomingorb = preload(GREEN).instance()
+				elif(rand == 6):
+					upcomingorb = preload(BLACK).instance()
+				elif(rand == 7):
+					upcomingorb = preload(WHITE).instance()
+				nextorb.set_texture(upcomingorb.get_node("Sprite").get_texture())
+	
 	shottimer += delta
 	if(shottimer > .5):
 		if(loaded == false):
-			randomize()
-			var result = randi() % 8
-			if(result == 0):
-				orb = preload(YELLOW).instance()
-			elif(result == 1):
-				orb = preload(BLUE).instance()
-			elif(result == 2):
-				orb = preload(RED).instance()
-			elif(result == 3):
-				orb = preload(ORANGE).instance()
-			elif(result == 4):
-				orb = preload(PURPLE).instance()
-			elif(result == 5):
-				orb = preload(GREEN).instance()
-			elif(result == 6):
-				orb = preload(BLACK).instance()
-			elif(result == 7):
-				orb = preload(WHITE).instance()
+			orb = upcomingorb #make the switch
+			upcomingorb = null
+			nextorb.set_texture(null)
+			
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())#set the orb to launcher position
 			
@@ -123,6 +140,7 @@ func GetAimControlsP1(delta):
 		x -= speed
 		x = clamp(x,lowerlimit,upperlimit)     
 		aim.set_param(0,270 - rad2deg(x))
+		AdjustReticule()
 		#print(str(x) + " " + str(tan(x)))
 		sfx.play("mrown1__tick launcher aiming left or right")
 	elif(Input.is_action_pressed("p1_aim_right")):
@@ -132,6 +150,7 @@ func GetAimControlsP1(delta):
 		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
+		AdjustReticule()
 		#print(str(x) + " " + str(tan(x)))
 		sfx.play("mrown1__tick launcher aiming left or right")
 	else:
@@ -145,6 +164,7 @@ func GetAimControlsP2(delta):
 		x -= speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
+		AdjustReticule()
 		#print(str(x) + " " + str(tan(x)))
 		sfx.play("mrown1__tick launcher aiming left or right")
 	elif(Input.is_action_pressed("p2_aim_right")):
@@ -154,6 +174,7 @@ func GetAimControlsP2(delta):
 		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
+		AdjustReticule()
 		#print(str(x) + " " + str(tan(x)))
 		sfx.play("mrown1__tick launcher aiming left or right")
 	else:
@@ -183,7 +204,7 @@ func GetFireControlsP1(delta):
 	else:
 		storing = false
 	
-	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty()): #and !swapped
+	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty() and !swapped):
 		if(swapping == false):
 			print(str(orb))
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
@@ -223,7 +244,7 @@ func GetFireControlsP2(delta):
 	else:
 		storing = false
 	
-	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty()): #and !swapped
+	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty() and !swapped):
 		if(swapping == false):
 			print(str(orb))
 			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
@@ -296,3 +317,10 @@ func Disable():
 	canshoot = false
 func ActivateLaser():
 	laserisactive = true
+
+func AimReticule():
+	var reticuletrajectory = Vector2((trajectory.x * cos(x))/100,(trajectory.y * sin(x))/100)
+	reticule.ExtendLine(reticuletrajectory)
+func AdjustReticule():
+	var reticuletrajectory = Vector2((trajectory.x * cos(x))/100,(trajectory.y * sin(x))/100)
+	reticule.ModifyLine(reticuletrajectory)

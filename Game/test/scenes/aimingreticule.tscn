@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://test/scripts/aimingreticule.gd" type="Script" id=1]
+[ext_resource path="res://test/sprites/red.png" type="Texture" id=2]
+
+[node name="aimingreticule" type="RayCast2D" groups=[
+"aim",
+]]
+
+transform/pos = Vector2( -0.0538073, 0.0134518 )
+enabled = true
+cast_to = Vector2( 0, -1 )
+layer_mask = 1
+type_mask = 3
+script/script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+
+visibility/light_mask = 0
+transform/scale = Vector2( 4, 4 )
+texture = ExtResource( 2 )
+modulate = Color( 0.85025, 0.949949, 0.980469, 1 )
+
+
