@@ -323,6 +323,7 @@ autoplay = ""
 
 [node name="count" type="Label" parent="."]
 
+visibility/visible = false
 rect/scale = Vector2( 2, 2 )
 focus/ignore_mouse = true
 focus/stop_mouse = true

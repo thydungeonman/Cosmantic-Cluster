@@ -582,28 +582,28 @@ func GeneratePlayer1Flag():
 	randomize()
 	var result = randi() % 8
 	if(result == 0):
-		s.load("res://test/sprites/flag orb yellow.png")
+		s.load("res://test/sprites/flag orb yellow new.png")
 		p1flag.colour = COLOUR.YELLOW
 	elif(result == 1):
-		s.load("res://test/sprites/flag orb blue.png")
+		s.load("res://test/sprites/flag orb blue new.png")
 		p1flag.colour = COLOUR.BLUE
 	elif(result == 2):
-		s.load("res://test/sprites/flagorbred.png")
+		s.load("res://test/sprites/flag orb red new ver 2.png")
 		p1flag.colour = COLOUR.RED
 	elif(result == 3):
-		s.load("res://test/sprites/flag orb orange.png")
+		s.load("res://test/sprites/flag orb orange new.png")
 		p1flag.colour = COLOUR.ORANGE
 	elif(result == 4):
-		s.load("res://test/sprites/flag orb purple.png")
+		s.load("res://test/sprites/flag orb purple new.png")
 		p1flag.colour = COLOUR.PURPLE
 	elif(result == 5):
-		s.load("res://test/sprites/flag orb green.png")
+		s.load("res://test/sprites/flag orb green new.png")
 		p1flag.colour = COLOUR.GREEN
 	elif(result == 6):
-		s.load("res://test/sprites/flag orb black.png")
+		s.load("res://test/sprites/flag orb black new.png")
 		p1flag.colour = COLOUR.BLACK
 	elif(result == 7):
-		s.load("res://test/sprites/flag orb white.png")
+		s.load("res://test/sprites/flag orb white new.png")
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
 	p1flag.get_node("Sprite").get_texture().create_from_image(s)
@@ -620,28 +620,28 @@ func GeneratePlayer2Flag():
 	randomize()
 	var result = randi() % 8
 	if(result == 0):
-		s.load("res://test/sprites/flag orb yellow.png")
+		s.load("res://test/sprites/flag orb yellow new.png")
 		p2flag.colour = COLOUR.YELLOW
 	elif(result == 1):
-		s.load("res://test/sprites/flag orb blue.png")
+		s.load("res://test/sprites/flag orb blue new.png")
 		p2flag.colour = COLOUR.BLUE
 	elif(result == 2):
-		s.load("res://test/sprites/flagorbred.png")
+		s.load("res://test/sprites/flag orb red new ver 2.png")
 		p2flag.colour = COLOUR.RED
 	elif(result == 3):
-		s.load("res://test/sprites/flag orb orange.png")
+		s.load("res://test/sprites/flag orb orange new.png")
 		p2flag.colour = COLOUR.ORANGE
 	elif(result == 4):
-		s.load("res://test/sprites/flag orb purple.png")
+		s.load("res://test/sprites/flag orb purple new.png")
 		p2flag.colour = COLOUR.PURPLE
 	elif(result == 5):
-		s.load("res://test/sprites/flag orb green.png")
+		s.load("res://test/sprites/flag orb green new.png")
 		p2flag.colour = COLOUR.GREEN
 	elif(result == 6):
-		s.load("res://test/sprites/flag orb black.png")
+		s.load("res://test/sprites/flag orb black new.png")
 		p2flag.colour = COLOUR.BLACK
 	elif(result == 7):
-		s.load("res://test/sprites/flag orb white.png")
+		s.load("res://test/sprites/flag orb white new.png")
 		p2flag.colour = COLOUR.WHITE
 	print("flag2 colour: " + str(p2flag.colour))
 	p2flag.get_node("Sprite").get_texture().create_from_image(s)
