@@ -1,6 +1,5 @@
 extends Node2D
 #TODO win scenarios
-#combos
 
 
 
@@ -75,8 +74,11 @@ func _ready():
 	set_fixed_process(true)
 
 func _fixed_process(delta):
-	if(player1health < 1 or player2health < 1):
-		GameOver()
+	if(player1health < 1):
+		GameOver("Player two wins")
+	elif(player2health < 1):
+		GameOver("Player one wins")
+	
 	
 	
 	if(Input.is_action_pressed("ui_page_up")):
@@ -327,7 +329,7 @@ func NewHandleAbility(player):
 	
 	if(player == PLAYER.PLAYER1):
 		if(lastusedcolourp1 == COLOUR.BLACK): #comboable
-			p2darktime = 5.0 * ((abilitycombop1 - 1) * 3)
+			p2darktime = 5.0 + ((abilitycombop1 - 1) * 3)
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
 		elif(lastusedcolourp1 == COLOUR.BLUE): #comboable
@@ -336,7 +338,7 @@ func NewHandleAbility(player):
 		elif(lastusedcolourp1 == COLOUR.GREEN): #comboable
 			player1health += abilitycombop1
 			print("Player 1 health: " + str(player1health))
-			p1launcher.get_node("health").set_text("Health " + str(player1health))
+			UpdateHealthLabels()
 			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
 		elif(lastusedcolourp1 == COLOUR.ORANGE):
 			p1launcher.ActivateLaser()
@@ -348,7 +350,7 @@ func NewHandleAbility(player):
 		elif(lastusedcolourp1 == COLOUR.RED): #comboable
 			print("red combo activated")
 			player2health -= abilitycombop1
-			p2launcher.get_node("health").set_text("Health " + str(player2health))
+			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 		elif(lastusedcolourp1 == COLOUR.WHITE): #comboable
 			p2launcher.Freeze(1.0 * abilitycombop1)
@@ -364,7 +366,7 @@ func NewHandleAbility(player):
 		get_node("p1combo").set_text("NONE ABILITY X0")
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == COLOUR.BLACK): #comboable
-			p1darktime = 5.0 * ((abilitycombop2 - 1) * 3)
+			p1darktime = 5.0 + ((abilitycombop2 - 1) * 3)
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
 		elif(lastusedcolourp2 == COLOUR.BLUE): #comboable
@@ -373,7 +375,7 @@ func NewHandleAbility(player):
 		elif(lastusedcolourp2 == COLOUR.GREEN): #comboable
 			player2health += abilitycombop2
 			print("Player 2 health: " + str(player2health))
-			p2launcher.get_node("health").set_text("Health " + str(player2health))
+			UpdateHealthLabels()
 			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
 		elif(lastusedcolourp2 == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()
@@ -385,7 +387,7 @@ func NewHandleAbility(player):
 		elif(lastusedcolourp2 == COLOUR.RED): #comboable
 			print("red combo activated")
 			player1health -= abilitycombop2
-			p1launcher.get_node("health").set_text("Health " + str(player1health))
+			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
 			p1launcher.Freeze(1.0 * abilitycombop2)
@@ -668,11 +670,16 @@ func Restart():
 	s = false
 	player1health = 5
 	player2health = 5
+	UpdateHealthLabels()
+	
+func UpdateHealthLabels():
+	p1launcher.get_node("health").set_text("Health " + str(player1health))
+	p2launcher.get_node("health").set_text("Health " + str(player2health))
 
-
-func GameOver():
+func GameOver(gameoverstring):
 	get_node("screendim").set_hidden(false)
 	get_node("replaybutton").set_hidden(false)
+	get_node("gameoverlabel").set_text(gameoverstring)
 	get_node("gameoverlabel").set_hidden(false)
 	get_node("replaybutton").set_disabled(false)
 	

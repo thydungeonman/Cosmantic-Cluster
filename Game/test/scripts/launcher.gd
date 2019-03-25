@@ -92,7 +92,6 @@ func _fixed_process(delta):
 	
 
 func LoadOrb(delta):
-	
 	if(upcomingorb == null):
 				randomize()
 				var rand = randi() % 8
@@ -187,6 +186,8 @@ func GetFireControlsP1(delta):
 			firing = true
 			loaded = false
 			shottimer = 0.0
+			get_parent().orbsonboard.push_front(orb)
+			get_parent().orbsonboardp1.push_front(orb)
 			Disable()
 	else:
 		firing = false
@@ -228,6 +229,8 @@ func GetFireControlsP2(delta):
 			firing = true
 			loaded = false
 			shottimer = 0.0
+			get_parent().orbsonboard.push_front(orb)
+			get_parent().orbsonboardp2.push_front(orb)
 			Disable()
 			
 	else:
@@ -291,7 +294,6 @@ func Fire():
 			ischarged = false
 			sfx.play("electric-zap-001 - Yellow ability launched")
 		swapped = false
-		get_parent().orbsonboard.push_front(orb)
 		sfx.play("jump-c-05 - orb launched")
 
 func Freeze(duration):

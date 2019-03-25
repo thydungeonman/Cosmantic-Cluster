@@ -179,6 +179,7 @@ func Move(delta):
 							extraleftovers = orb.Search(1,COLOUR.NONE,extraleftovers)
 							orb.Unhook()
 							get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+							orb.RemoveFromPlayer()
 							orb.anim.play("zap")
 						for orb in extraleftovers:
 							if(!leftoverorbs.has(orb)):
@@ -186,6 +187,7 @@ func Move(delta):
 					for i in matchingorbs:
 						i.Unhook()
 						get_parent().orbsonboard.remove(get_parent().orbsonboard.find(i))
+						i.RemoveFromPlayer()
 					get_parent().leftoverorbs = leftoverorbs
 					get_parent().CheckFall()
 					
@@ -197,7 +199,10 @@ func Move(delta):
 						print(orb.get_name())
 						orb.anim.play("blink")
 						if(orb.isflag):
-							get_parent().GameOver()
+							if(orb.player == PLAYER.PLAYER1):
+								get_parent().GameOver("Player two wins")
+							elif(orb.player == PLAYER.PLAYER2 or player == PLAYER.AI):
+								get_parent().GameOver("Player one wins")
 				else:
 					get_parent().NewHandleAbility(player)
 					matchingorbs.clear()
@@ -239,7 +244,7 @@ func Unhook():
 func Die():
 	#this function perform all of the necessary actions before an orb can be freed and then frees it
 	#removes itself from the list of orbs, unhooks from its neighbors, and checks if orbs around it will fall after its freed
-	
+	RemoveFromPlayer()
 	var index = get_parent().orbsonboard.find(self)
 	if(index != -1):
 		get_parent().orbsonboard.remove(index)
@@ -249,21 +254,35 @@ func Die():
 		leftovers.remove(leftovers.find(self))
 	print("leftover size: " + str(leftovers.size()))
 	get_parent().leftoverorbs = leftovers
-	self.Unhook()
+	Unhook()
 	get_parent().CheckFall()
 	
 	if(isflag):
-		get_parent().GameOver()
+		if(player == PLAYER.PLAYER1):
+			get_parent().GameOver("Player two wins")
+		elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
+			get_parent().GameOver("Player one wins")
+		
 	
-	self.queue_free()
+	queue_free()
 
 func MovingDie():
 	var index = get_parent().orbsonboard.find(self)
 	if(index != -1):
 		get_parent().orbsonboard.remove(index)
+	RemoveFromPlayer()
 	EnableLauncher()
 	queue_free()
 
+func RemoveFromPlayer():
+	if(player == PLAYER.PLAYER1):
+		var index = get_parent().orbsonboardp1.find(self)
+		if(index != -1):
+			get_parent().orbsonboardp1.remove(index)
+	elif(player == PLAYER.PLAYER2):
+		var index = get_parent().orbsonboardp2.find(self)
+		if(index != -1):
+			get_parent().orbsonboardp2.remove(index)
 
 #this function raycasts in each direction, grabbing the closest body and area
 #it then casts again only looking for bodies since if the orb is inside of an area it will only detect areas since they are the closest
