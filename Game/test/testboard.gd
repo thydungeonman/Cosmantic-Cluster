@@ -564,7 +564,7 @@ func FindAvailableSpot(player):
 	#usually that is the last orb that player fired
 	var spot = null
 	for orb in orbsonboard:
-		if(orb.player == player):
+		if(orb.player == player and orb.ismoving == false):
 			if(orb.CountNeighbors() < 6):
 				if(orb.touchingwallleft == true and orb.bottomright != null):
 					continue
