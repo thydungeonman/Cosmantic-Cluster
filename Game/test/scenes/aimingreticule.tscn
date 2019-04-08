@@ -18,6 +18,7 @@ script/script = ExtResource( 1 )
 
 visibility/light_mask = 0
 transform/scale = Vector2( 4, 4 )
+z/z = -1
 texture = ExtResource( 2 )
 modulate = Color( 0.85025, 0.949949, 0.980469, 1 )
 

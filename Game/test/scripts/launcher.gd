@@ -125,8 +125,10 @@ func LoadOrb(delta):
 			
 			if(player == PLAYER.PLAYER1):
 				orb.player = orb.PLAYER.PLAYER1
+				orb.onboard = orb.PLAYER.PLAYER1
 			if(player == PLAYER.PLAYER2):
 				orb.player = orb.PLAYER.PLAYER2
+				orb.onboard = orb.PLAYER.PLAYER2
 			loaded = true
 			orb.inlauncher = true
 			print("loaded new orb")

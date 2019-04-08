@@ -21,6 +21,8 @@ onready var inversescale = 1/get_scale().x
 onready var anim = get_node("AnimationPlayer")
 onready var sfx = get_node("SamplePlayer2D")
 
+var onboard #whos board the orb is on
+
 var touchingwallleft = false
 var touchingwallright = false
 
@@ -275,11 +277,11 @@ func MovingDie():
 	queue_free()
 
 func RemoveFromPlayer():
-	if(player == PLAYER.PLAYER1):
+	if(onboard == PLAYER.PLAYER1):
 		var index = get_parent().orbsonboardp1.find(self)
 		if(index != -1):
 			get_parent().orbsonboardp1.remove(index)
-	elif(player == PLAYER.PLAYER2):
+	elif(onboard == PLAYER.PLAYER2):
 		var index = get_parent().orbsonboardp2.find(self)
 		if(index != -1):
 			get_parent().orbsonboardp2.remove(index)
@@ -492,6 +494,10 @@ func Warp(spot):
 	trajectory *= -1
 	set_pos(spot)
 	warped = true
+	if(orb.onboard == PLAYER.PLAYER1):
+		orb.onboard = PLAYER.PLAYER2
+	elif(orb.onboard == PLAYER.PLAYER2):
+		orb.onboard = PLAYER.PLAYER1
 	if(is_colliding()):
 		print("Died in the warp")
 		MovingDie()
