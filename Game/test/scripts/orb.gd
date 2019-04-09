@@ -116,6 +116,7 @@ func Move(delta):
 				print("hit launcher orb")
 			if(!collider.ismoving and !collider.inlauncher):
 				StopSparkle()
+				AddToPlayer()
 				sfx.play("beer-bottles - orbs collide together")
 				ismoving = false
 				print("playing sfx")
@@ -275,6 +276,12 @@ func MovingDie():
 	RemoveFromPlayer()
 	EnableLauncher()
 	queue_free()
+
+func AddToPlayer():
+	if(onboard == PLAYER.PLAYER1):
+		get_parent().orbsonboardp1.push_back(self)
+	elif(onboard == PLAYER.PLAYER2):
+		get_parent().orbsonboardp2.push_back(self)
 
 func RemoveFromPlayer():
 	if(onboard == PLAYER.PLAYER1):
@@ -494,10 +501,10 @@ func Warp(spot):
 	trajectory *= -1
 	set_pos(spot)
 	warped = true
-	if(orb.onboard == PLAYER.PLAYER1):
-		orb.onboard = PLAYER.PLAYER2
-	elif(orb.onboard == PLAYER.PLAYER2):
-		orb.onboard = PLAYER.PLAYER1
+	if(onboard == PLAYER.PLAYER1):
+		onboard = PLAYER.PLAYER2
+	elif(onboard == PLAYER.PLAYER2):
+		onboard = PLAYER.PLAYER1
 	if(is_colliding()):
 		print("Died in the warp")
 		MovingDie()
