@@ -554,7 +554,10 @@ func Click():
 			var group = []
 			testorb.Search(1,COLOUR.NONE,group)
 			print(str(group.size()))
+	GameOver("ITS OVER")
 func RClick():
+	P2BlueAbility()
+	P2BlueAbility()
 	P2BlueAbility()
 	#GameOver()
 	pass
@@ -664,6 +667,8 @@ func Restart():
 	GenerateBoardP2()
 	GeneratePlayer1Flag()
 	GeneratePlayer2Flag()
+	p1launcher.Reset()
+	p2launcher.Reset()
 	p1launcher.container.Reset()
 	p2launcher.container.Reset()
 	t = 0

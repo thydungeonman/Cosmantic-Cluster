@@ -328,3 +328,10 @@ func AimReticule():
 func AdjustReticule():
 	var reticuletrajectory = Vector2((trajectory.x * cos(x))/100,(trajectory.y * sin(x))/100)
 	reticule.ModifyLine(reticuletrajectory)
+	
+func Reset():
+	orb.queue_free()
+	upcomingorb = null
+	nextorb.set_texture(null)
+	shottimer = 0
+	loaded = false
