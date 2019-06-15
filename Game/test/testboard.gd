@@ -105,7 +105,7 @@ func _fixed_process(delta):
 	else:
 		rclick = false
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
-	#so we will wait for one second for them to find their neighbors
+	#so we will wait for a half second for them to find their neighbors
 	if(t > .5 and s == false):
 		for i in orbsonboard:
 			i.GetNeighboringPositions()
@@ -559,6 +559,9 @@ func RClick():
 	P2BlueAbility()
 	P2BlueAbility()
 	P2BlueAbility()
+	P1BlueAbility()
+	P1BlueAbility()
+	P1BlueAbility()
 	#GameOver()
 	pass
 
@@ -676,6 +679,10 @@ func Restart():
 	player1health = 5
 	player2health = 5
 	UpdateHealthLabels()
+	lastusedcolourp1 = COLOUR.NONE
+	lastusedcolourp2 = COLOUR.NONE
+	abilitycombop1 = 0
+	abilitycombop2 = 0
 	
 func UpdateHealthLabels():
 	p1launcher.get_node("health").set_text("Health " + str(player1health))

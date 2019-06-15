@@ -188,8 +188,8 @@ func GetFireControlsP1(delta):
 			firing = true
 			loaded = false
 			shottimer = 0.0
-			get_parent().orbsonboard.push_front(orb)
-			get_parent().orbsonboardp1.push_front(orb)
+			#get_parent().orbsonboard.push_front(orb)
+			#get_parent().orbsonboardp1.push_front(orb)
 			Disable()
 	else:
 		firing = false
@@ -231,8 +231,8 @@ func GetFireControlsP2(delta):
 			firing = true
 			loaded = false
 			shottimer = 0.0
-			get_parent().orbsonboard.push_front(orb)
-			get_parent().orbsonboardp2.push_front(orb)
+			#get_parent().orbsonboard.push_front(orb)
+			#get_parent().orbsonboardp2.push_front(orb)
 			Disable()
 			
 	else:

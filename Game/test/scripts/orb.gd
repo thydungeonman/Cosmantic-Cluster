@@ -277,7 +277,8 @@ func MovingDie():
 	EnableLauncher()
 	queue_free()
 
-func AddToPlayer():
+func AddToPlayer(): #this function adds the orb to the boards list of orbs and the players list of orbs
+	get_parent().orbsonboard.push_back(self)
 	if(onboard == PLAYER.PLAYER1):
 		get_parent().orbsonboardp1.push_back(self)
 	elif(onboard == PLAYER.PLAYER2):
