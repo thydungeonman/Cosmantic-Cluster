@@ -27,8 +27,8 @@ var fallcheckarray = []
 var orbsonboard = [] 
 var orbsonboardp1 = [] #if either is empty, the game is over
 var orbsonboardp2 = [] 
-var s = false
-var t  = 0.0
+var s = false 
+var t  = 0.0 #timer variable to delay the raycasts of the orbs when generated, works with s
 
 var leftoverorbs = []
 var crossreforbs = []

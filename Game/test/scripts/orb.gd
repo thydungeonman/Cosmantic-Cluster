@@ -210,6 +210,8 @@ func Move(delta):
 					get_parent().NewHandleAbility(player)
 					matchingorbs.clear()
 					leftoverorbs.clear()
+					if(WentOverDeathLine()):
+						SignalGameOver()
 
 
 func click():
@@ -605,3 +607,15 @@ func Sparkle():
 	print("sparkles")
 func StopSparkle():
 	get_node("sparkles").set_emitting(false)
+
+
+func WentOverDeathLine(): # check to see if an orb is lower than y = 1000, which would put it right next to the launcher
+	return get_global_pos().y >= 1000
+
+func SignalGameOver(): #used when an orb goes over the death line
+	var s;
+	if(player == PLAYER.PLAYER1):
+		s = "Player 2 Wins!"
+	else:
+		s = "Player 1 Wins!"
+	get_parent().GameOver(s)
