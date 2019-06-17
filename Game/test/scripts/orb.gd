@@ -64,6 +64,7 @@ func _ready():
 	#get_node("Label").set_text(str(get_name()))
 	get_node("Label").set_text(str(self))
 	set_process_input(true)
+
 func _input(event):
 	pass
 
@@ -514,29 +515,54 @@ func Warp(spot):
 
 func PrintNeighbors():
 	print(str(self.get_name()) + " " + str(self))
+	print("Colour: " + str(colour))
 	print("touching wall left: " +str(touchingwallleft) + " touching wall right: " + str(touchingwallright))
 	if(topleft != null):
-		print("topleft: " + str(topleft) + " " + topleft.get_name())
+		var s = ""
+		s += "topleft: " + str(topleft) + " " + topleft.get_name()
+		if(topleft.is_in_group("orb")):
+			s += " Colour: " + str(topleft.colour)
+		print(s)
 	else:
 		print("topleft: " + "null")
 	if(topright != null):
-		print("topright: " + str(topright) + " " + topright.get_name())
+		var s = ""
+		s += "topright: " + str(topright) + " " + topright.get_name()
+		if(topright.is_in_group("orb")):
+			s += " Colour: " + str(topright.colour)
+		print(s)
 	else:
 		print("topright: " + "null")
 	if(left != null):
-		print("left: " + str(left) + " " + left.get_name())
+		var s = ""
+		s += "left: " + str(left) + " " + left.get_name()
+		if(left.is_in_group("orb")):
+			s += " Colour: " + str(left.colour)
+		print(s)
 	else:
 		print("left: " + "null")
 	if(right != null):
-		print("right: " + str(right) + " " + right.get_name())
+		var s = ""
+		s += "right: " + str(right) + " " + right.get_name()
+		if(right.is_in_group("orb")):
+			s += " Colour: " + str(right.colour)
+		print(s)
 	else:
 		print("right: " + "null")
 	if(bottomleft != null):
-		print("bottomleft: " + str(bottomleft) + " " + bottomleft.get_name())
+		var s = ""
+		s += "bottomleft: " + str(bottomleft) + " " + bottomleft.get_name()
+		if(bottomleft.is_in_group("orb")):
+			s += " Colour: " + str(bottomleft.colour)
+		print(s)
 	else:
 		print("bottomleft: " + "null")
 	if(bottomright != null):
-		print("bottomright: " + str(bottomright) + " " +  bottomright.get_name())
+		var s = ""
+		s += "bottomright: " + str(bottomright) + " " + bottomright.get_name()
+		if(bottomright.is_in_group("orb")):
+			s += " Colour: " + str(bottomright.colour)
+		print(s)
 	else:
 		print("bottomright: " + "null")
 	print("")
