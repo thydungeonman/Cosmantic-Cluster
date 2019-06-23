@@ -20,6 +20,7 @@ const RED = "res://test/scenes/redorb.tscn"
 
 onready var music = get_node("backgroundmusic")
 onready var sfx = get_node("SamplePlayer2D")
+onready var anim = get_node("AnimationPlayer")
 
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width
 
@@ -340,6 +341,7 @@ func NewHandleAbility(player):
 			print("Player 1 health: " + str(player1health))
 			UpdateHealthLabels()
 			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+			p1launcher.HealAnim()
 		elif(lastusedcolourp1 == COLOUR.ORANGE):
 			p1launcher.ActivateLaser()
 		elif(lastusedcolourp1 == COLOUR.PURPLE):
@@ -347,11 +349,13 @@ func NewHandleAbility(player):
 			abilitycombop2 = 0
 			get_node("p2combo").set_text("NONE ABILITY X0")
 			sfx.play("moved-02-dark - Purple ability used")
+			anim.play("p1purpleability")
 		elif(lastusedcolourp1 == COLOUR.RED): #comboable
 			print("red combo activated")
 			player2health -= abilitycombop1
 			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
+			p2launcher.DamageAnim()
 		elif(lastusedcolourp1 == COLOUR.WHITE): #comboable
 			p2launcher.Freeze(1.0 * abilitycombop1)
 			sfx.play("winter wind - White ability used")
@@ -377,6 +381,7 @@ func NewHandleAbility(player):
 			print("Player 2 health: " + str(player2health))
 			UpdateHealthLabels()
 			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+			p2launcher.HealAnim()
 		elif(lastusedcolourp2 == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()
 		elif(lastusedcolourp2 == COLOUR.PURPLE):
@@ -384,11 +389,13 @@ func NewHandleAbility(player):
 			abilitycombop1 = 0
 			get_node("p1combo").set_text("NONE ABILITY X0")
 			sfx.play("moved-02-dark - Purple ability used")
+			anim.play("p2purpleability")
 		elif(lastusedcolourp2 == COLOUR.RED): #comboable
 			print("red combo activated")
 			player1health -= abilitycombop2
 			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
+			p1launcher.DamageAnim()
 		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
 			p1launcher.Freeze(1.0 * abilitycombop2)
 			sfx.play("winter wind - White ability used")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=1]
+[gd_scene load_steps=31 format=1]
 
 [ext_resource path="res://test/testboard.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/a71c466e2535309b4849dda26c8beb1d.jpg" type="Texture" id=2]
@@ -19,6 +19,9 @@
 [ext_resource path="res://test/sfx/punch sound - falling orbs.smp" type="Sample" id=17]
 [ext_resource path="res://test/sfx/winter wind - White ability used.smp" type="Sample" id=18]
 [ext_resource path="res://test/fonts/orbit.fnt" type="BitmapFont" id=19]
+[ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=20]
+[ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=21]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/Ena Idle Temp sprite sheet.png" type="Texture" id=22]
 
 [sub_resource type="CanvasItemShader" id=1]
 
@@ -91,6 +94,131 @@ shader/shading_mode = 0
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 18 )
+}
+
+[sub_resource type="Animation" id=4]
+
+resource/name = "p1purpleability"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("p1purpleability:visibility/visible")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 1 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("p1purpleability:visibility/opacity")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": FloatArray( 0, 0.5, 1 ),
+"transitions": FloatArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.7, 0.0 ]
+}
+
+[sub_resource type="Animation" id=5]
+
+resource/name = "p2purpleability"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("p2purpleability:visibility/visible")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 1 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("p2purpleability:visibility/opacity")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": FloatArray( 0, 0.5, 1 ),
+"transitions": FloatArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.7, 0.0 ]
+}
+
+[sub_resource type="Animation" id=6]
+
+resource/name = "rest"
+length = 0.1
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("p2purpleability:visibility/opacity")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("p1purpleability:visibility/opacity")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=7]
+
+resource/name = "yellowability"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("lightningarea:visibility/visible")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 1 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("lightningarea:visibility/opacity")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": FloatArray( 0, 0.5, 1 ),
+"transitions": FloatArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=8]
+
+resource/name = "ena idle"
+length = 0.8
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": FloatArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
 }
 
 [node name="testboard" type="Node2D"]
@@ -257,6 +385,62 @@ enabled_focus_mode = 2
 shortcut = null
 text = "Play Again?"
 flat = false
+
+[node name="p1purpleability" type="Sprite" parent="."]
+
+visibility/visible = false
+visibility/opacity = 0.0
+transform/pos = Vector2( 1087.49, 1041.26 )
+transform/scale = Vector2( 4, 4 )
+texture = ExtResource( 20 )
+
+[node name="p2purpleability" type="Sprite" parent="."]
+
+visibility/visible = false
+visibility/opacity = 0.0
+transform/pos = Vector2( 84.9795, 1050.61 )
+transform/scale = Vector2( 4, 4 )
+texture = ExtResource( 20 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+playback/process_mode = 1
+playback/default_blend_time = 0.0
+root/root = NodePath("..")
+anims/p1purpleability = SubResource( 4 )
+anims/p2purpleability = SubResource( 5 )
+anims/rest = SubResource( 6 )
+anims/yellowability = SubResource( 7 )
+playback/active = true
+playback/speed = 1.0
+blend_times = [  ]
+autoplay = "rest"
+
+[node name="lightningarea" type="Sprite" parent="."]
+
+visibility/visible = false
+visibility/opacity = 0.0
+transform/pos = Vector2( 510.686, 309.008 )
+transform/scale = Vector2( 14, 14 )
+texture = ExtResource( 21 )
+
+[node name="Sprite" type="Sprite" parent="."]
+
+transform/pos = Vector2( 316.343, 1023.09 )
+texture = ExtResource( 22 )
+hframes = 4
+frame = 3
+
+[node name="enaplayer" type="AnimationPlayer" parent="."]
+
+playback/process_mode = 1
+playback/default_blend_time = 0.0
+root/root = NodePath("..")
+"anims/ena idle" = SubResource( 8 )
+playback/active = true
+playback/speed = 1.0
+blend_times = [  ]
+autoplay = "ena idle"
 
 [connection signal="pressed" from="replaybutton" to="." method="_on_replaybutton_pressed"]
 

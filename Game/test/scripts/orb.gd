@@ -171,6 +171,8 @@ func Move(delta):
 						if(orb.colour == COLOUR.GREY):
 							orb.TakeDamage()
 					if(charged):
+						get_parent().get_node("lightningarea").set_pos(get_global_pos())
+						get_parent().anim.play("yellowability")
 						sfx.play("electric-zap - Yellow abilty used removed orbs")
 						var killorbs = []
 						for orb in matchingorbs:  #get all of the orbs with the same colour as the match 2 orbs out

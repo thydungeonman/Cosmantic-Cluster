@@ -19,6 +19,8 @@ const RED = "res://test/scenes/redorb.tscn"
 
 var player = PLAYER.PLAYER1
 onready var sfx = get_node("SamplePlayer")
+onready var anim = get_node("LauncherAnimationPlayer")
+onready var abilityanim = get_node("AbilityAnimationPlayer")
 onready var nextorb = get_node("nextorb") # the sprite of the upcoming orb
 var upcomingorb #this holds an enumeration for the upcoming orb
 
@@ -284,6 +286,7 @@ func Fire():
 		laser.Fire()
 		laserisactive = false
 		sfx.play("laser-shot-silenced - orange ability launched")
+		abilityanim.play("rest")
 	else:
 		orb.trajectory.x = trajectory.x * cos(x)
 		orb.trajectory.y = trajectory.y * sin(x)
@@ -295,6 +298,7 @@ func Fire():
 			orb.Charge()
 			ischarged = false
 			sfx.play("electric-zap-001 - Yellow ability launched")
+			abilityanim.play("rest")
 		swapped = false
 		sfx.play("jump-c-05 - orb launched")
 
@@ -302,6 +306,7 @@ func Freeze(duration):
 	isfrozen = true
 	frozentime = duration
 	speed = 0
+	anim.play("freeze")
 
 func Defrost(delta):
 	frozentimer += delta
@@ -311,9 +316,11 @@ func Defrost(delta):
 		frozentimer = 0.00
 		frozentime = 1.0
 		sfx.play("ice-cracking - laucher unfreezing")
+		anim.play("crack")
 
-func Charge():
+func Charge(): #yellow abilty
 	ischarged = true
+	abilityanim.play("lightning")
 
 func Enable():
 	canshoot = true
@@ -321,6 +328,7 @@ func Disable():
 	canshoot = false
 func ActivateLaser():
 	laserisactive = true
+	abilityanim.play("laser")
 
 func AimReticule():
 	var reticuletrajectory = Vector2((trajectory.x * cos(x))/100,(trajectory.y * sin(x))/100)
@@ -335,3 +343,7 @@ func Reset():
 	nextorb.set_texture(null)
 	shottimer = 0
 	loaded = false
+func DamageAnim():
+	abilityanim.play("damage")
+func HealAnim():
+	abilityanim.play("heal")
