@@ -42,6 +42,18 @@ tracks/1/keys = {
 "method": "Die"
 } ]
 }
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "BecomeEthereal"
+} ]
+}
 
 [sub_resource type="Animation" id=3]
 
@@ -79,6 +91,18 @@ tracks/2/keys = {
 "values": [ {
 "args": [  ],
 "method": "Die"
+} ]
+}
+tracks/3/type = "method"
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/imported = false
+tracks/3/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "BecomeEthereal"
 } ]
 }
 
@@ -216,6 +240,18 @@ tracks/2/keys = {
 "update": 0,
 "values": [ 1.0, 0.0 ]
 }
+tracks/3/type = "method"
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/imported = false
+tracks/3/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "BecomeEthereal"
+} ]
+}
 
 [sub_resource type="SampleLibrary" id=7]
 
@@ -319,7 +355,7 @@ anims/zap = SubResource( 6 )
 playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
-autoplay = ""
+autoplay = "rest"
 
 [node name="count" type="Label" parent="."]
 
@@ -343,7 +379,6 @@ max_lines_visible = -1
 config/amount = 174
 config/lifetime = 1.0
 config/time_scale = 1.5
-config/emitting = false
 config/process_mode = 1
 config/half_extents = Vector2( 35, 35 )
 params/direction = 0.0
@@ -370,7 +405,6 @@ color/color = Color( 0.892206, 0.992188, 0.00775146, 1 )
 
 config/amount = 30
 config/lifetime = 0.7
-config/emitting = false
 config/process_mode = 1
 config/half_extents = Vector2( 30, 30 )
 params/direction = 88.62

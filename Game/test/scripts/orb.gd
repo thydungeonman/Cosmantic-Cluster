@@ -633,6 +633,7 @@ func DoCasts():
 func Sparkle():
 	get_node("sparkles").set_emitting(true)
 	print("sparkles")
+
 func StopSparkle():
 	get_node("sparkles").set_emitting(false)
 
@@ -647,3 +648,7 @@ func SignalGameOver(): #used when an orb goes over the death line
 	else:
 		s = "Player 1 Wins!"
 	get_parent().GameOver(s)
+
+func BecomeEthereal():
+	set_layer_mask(2)
+	set_collision_mask(2)
