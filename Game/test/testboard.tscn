@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=1]
+[gd_scene load_steps=32 format=1]
 
 [ext_resource path="res://test/testboard.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/a71c466e2535309b4849dda26c8beb1d.jpg" type="Texture" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=20]
 [ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=21]
 [ext_resource path="res://test/sprites/Ena Sprite Sheet/Ena Idle Temp sprite sheet.png" type="Texture" id=22]
+[ext_resource path="res://icon.png" type="Texture" id=23]
 
 [sub_resource type="CanvasItemShader" id=1]
 
@@ -211,7 +212,7 @@ length = 0.8
 loop = true
 step = 0.1
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:frame")
+tracks/0/path = NodePath("ena:frame")
 tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = {
@@ -234,7 +235,7 @@ centered = false
 
 [node name="p1launcher" parent="." instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 473, 1040 )
+transform/pos = Vector2( 473, 960 )
 
 [node name="wall" parent="." instance=ExtResource( 4 )]
 
@@ -319,9 +320,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 32.0
-margin/top = 1044.0
-margin/right = 72.0
-margin/bottom = 1058.0
+margin/top = 970.0
+margin/right = 81.0
+margin/bottom = 984.0
 text = "ABILITY"
 percent_visible = 1.0
 lines_skipped = 0
@@ -334,9 +335,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 1021.0
-margin/top = 1038.0
-margin/right = 1061.0
-margin/bottom = 1052.0
+margin/top = 970.0
+margin/right = 1070.0
+margin/bottom = 984.0
 text = "ABILITy"
 percent_visible = 1.0
 lines_skipped = 0
@@ -388,17 +389,15 @@ flat = false
 
 [node name="p1purpleability" type="Sprite" parent="."]
 
-visibility/visible = false
 visibility/opacity = 0.0
-transform/pos = Vector2( 1087.49, 1041.26 )
+transform/pos = Vector2( 1046.79, 976.445 )
 transform/scale = Vector2( 4, 4 )
 texture = ExtResource( 20 )
 
 [node name="p2purpleability" type="Sprite" parent="."]
 
-visibility/visible = false
 visibility/opacity = 0.0
-transform/pos = Vector2( 84.9795, 1050.61 )
+transform/pos = Vector2( 56.3401, 975.243 )
 transform/scale = Vector2( 4, 4 )
 texture = ExtResource( 20 )
 
@@ -418,15 +417,15 @@ autoplay = "rest"
 
 [node name="lightningarea" type="Sprite" parent="."]
 
-visibility/visible = false
 visibility/opacity = 0.0
 transform/pos = Vector2( 510.686, 309.008 )
 transform/scale = Vector2( 14, 14 )
 texture = ExtResource( 21 )
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="ena" type="Sprite" parent="."]
 
-transform/pos = Vector2( 316.343, 1023.09 )
+transform/pos = Vector2( 290.718, 985.407 )
+transform/scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 22 )
 hframes = 4
 frame = 3
@@ -441,6 +440,14 @@ playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
 autoplay = "ena idle"
+
+[node name="ground" type="Sprite" parent="."]
+
+transform/pos = Vector2( 960.469, 1049.3 )
+transform/scale = Vector2( 30, 1 )
+z/z = -1
+texture = ExtResource( 23 )
+flip_v = true
 
 [connection signal="pressed" from="replaybutton" to="." method="_on_replaybutton_pressed"]
 

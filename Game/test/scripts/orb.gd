@@ -639,7 +639,7 @@ func StopSparkle():
 
 
 func WentOverDeathLine(): # check to see if an orb is lower than y = 1000, which would put it right next to the launcher
-	return get_global_pos().y >= 1000
+	return get_global_pos().y >= 930
 
 func SignalGameOver(): #used when an orb goes over the death line
 	var s;

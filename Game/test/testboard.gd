@@ -250,7 +250,7 @@ func GenerateP2Launcher():
 	add_child(p2launcher)
 	p2launcher.set_name("p2launcher")
 	p2launcher.player = p2launcher.PLAYER.PLAYER2
-	p2launcher.set_pos(Vector2(1447,1040))
+	p2launcher.set_pos(Vector2(1447,960))
 
 func GenerateP1Launcher():
 	var launcher = preload("res://test/scenes/launcher.tscn").instance()

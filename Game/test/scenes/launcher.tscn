@@ -64,7 +64,7 @@
 "sample": ExtResource( 10 )
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=2]
 
 resource/name = "crack"
 length = 0.5
@@ -91,7 +91,7 @@ tracks/1/keys = {
 "values": [ 1.0, 0.0 ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=3]
 
 resource/name = "freeze"
 length = 0.1
@@ -148,9 +148,8 @@ tracks/4/keys = {
 "values": [ 1.0 ]
 }
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=4]
 
-resource/name = "rest"
 length = 0.1
 loop = false
 step = 0.1
@@ -285,9 +284,8 @@ tracks/12/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=5]
 
-resource/name = "spin"
 length = 1.0
 loop = true
 step = 0.1
@@ -546,10 +544,10 @@ transform/scale = Vector2( 0.11, 0.11 )
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-anims/crack = SubResource( 4 )
-anims/freeze = SubResource( 5 )
-anims/rest = SubResource( 2 )
-anims/spin = SubResource( 3 )
+anims/crack = SubResource( 2 )
+anims/freeze = SubResource( 3 )
+anims/rest = SubResource( 4 )
+anims/spin = SubResource( 5 )
 next/crack = "rest"
 next/rest = "spin"
 playback/active = true
