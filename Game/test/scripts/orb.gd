@@ -206,9 +206,9 @@ func Move(delta):
 						orb.anim.play("blink")
 						if(orb.isflag):
 							if(orb.player == PLAYER.PLAYER1):
-								get_parent().GameOver("Player two wins")
+								get_parent().GameOver("Player two wins",PLAYER.PLAYER2)
 							elif(orb.player == PLAYER.PLAYER2 or player == PLAYER.AI):
-								get_parent().GameOver("Player one wins")
+								get_parent().GameOver("Player one wins",PLAYER.PLAYER1)
 				else:
 					get_parent().NewHandleAbility(player)
 					matchingorbs.clear()
@@ -267,9 +267,9 @@ func Die():
 	
 	if(isflag):
 		if(player == PLAYER.PLAYER1):
-			get_parent().GameOver("Player two wins")
+			get_parent().GameOver("Player two wins",PLAYER.PLAYER2)
 		elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
-			get_parent().GameOver("Player one wins")
+			get_parent().GameOver("Player one wins",PLAYER.PLAYER1)
 		
 	
 	queue_free()
@@ -643,11 +643,14 @@ func WentOverDeathLine(): # check to see if an orb is lower than y = 1000, which
 
 func SignalGameOver(): #used when an orb goes over the death line
 	var s;
+	var k;
 	if(player == PLAYER.PLAYER1):
-		s = "Player 2 Wins!"
+		s = "Player 2 Wins"
+		k = PLAYER.PLAYER2
 	else:
-		s = "Player 1 Wins!"
-	get_parent().GameOver(s)
+		s = "Player 1 Wins"
+		k = PLAYER.PLAYER1
+	get_parent().GameOver(s,k)
 
 func BecomeEthereal():
 	set_layer_mask(2)

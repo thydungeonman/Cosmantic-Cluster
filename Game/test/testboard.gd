@@ -21,6 +21,8 @@ const RED = "res://test/scenes/redorb.tscn"
 onready var music = get_node("backgroundmusic")
 onready var sfx = get_node("SamplePlayer2D")
 onready var anim = get_node("AnimationPlayer")
+onready var animenap1 = get_node("enaplayer")
+onready var animenap2 = get_node("enaP2player")
 
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width
 
@@ -76,9 +78,9 @@ func _ready():
 
 func _fixed_process(delta):
 	if(player1health < 1):
-		GameOver("Player two wins")
+		GameOver("Player two wins",PLAYER.PLAYER2)
 	elif(player2health < 1):
-		GameOver("Player one wins")
+		GameOver("Player one wins",PLAYER.PLAYER1)
 	
 	
 	
@@ -250,7 +252,7 @@ func GenerateP2Launcher():
 	add_child(p2launcher)
 	p2launcher.set_name("p2launcher")
 	p2launcher.player = p2launcher.PLAYER.PLAYER2
-	p2launcher.set_pos(Vector2(1447,960))
+	p2launcher.set_pos(Vector2(1447,980))
 
 func GenerateP1Launcher():
 	var launcher = preload("res://test/scenes/launcher.tscn").instance()
@@ -356,6 +358,8 @@ func NewHandleAbility(player):
 			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 			p2launcher.DamageAnim()
+			animenap1.play("ena attack")
+			animenap2.play("enap2 damage")
 		elif(lastusedcolourp1 == COLOUR.WHITE): #comboable
 			p2launcher.Freeze(1.0 * abilitycombop1)
 			sfx.play("winter wind - White ability used")
@@ -368,6 +372,7 @@ func NewHandleAbility(player):
 		lastusedcolourp1 = COLOUR.NONE
 		abilitycombop1 = 0
 		get_node("p1combo").set_text("NONE ABILITY X0")
+	
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == COLOUR.BLACK): #comboable
 			p1darktime = 5.0 + ((abilitycombop2 - 1) * 3)
@@ -396,6 +401,8 @@ func NewHandleAbility(player):
 			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 			p1launcher.DamageAnim()
+			animenap1.play("ena damage")
+			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
 			p1launcher.Freeze(1.0 * abilitycombop2)
 			sfx.play("winter wind - White ability used")
@@ -561,7 +568,7 @@ func Click():
 			var group = []
 			testorb.Search(1,COLOUR.NONE,group)
 			print(str(group.size()))
-	GameOver("ITS OVER")
+	GameOver("ITS OVER",PLAYER.PLAYER1)
 func RClick():
 	P2BlueAbility()
 	P2BlueAbility()
@@ -690,12 +697,20 @@ func Restart():
 	lastusedcolourp2 = COLOUR.NONE
 	abilitycombop1 = 0
 	abilitycombop2 = 0
+	animenap1.play("ena idle")
+	animenap2.play("enap2 idle")
 	
 func UpdateHealthLabels():
 	p1launcher.get_node("health").set_text("Health " + str(player1health))
 	p2launcher.get_node("health").set_text("Health " + str(player2health))
 
-func GameOver(gameoverstring):
+func GameOver(gameoverstring,winner):
+	if(winner == PLAYER.PLAYER1):
+		animenap1.play("ena win")
+		animenap2.play("enap2 lose")
+	elif(winner == PLAYER.PLAYER2):
+		animenap1.play("ena lose")
+		animenap2.play("enap2 win")
 	get_node("screendim").set_hidden(false)
 	get_node("replaybutton").set_hidden(false)
 	get_node("gameoverlabel").set_text(gameoverstring)
