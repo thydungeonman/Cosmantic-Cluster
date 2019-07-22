@@ -335,9 +335,11 @@ func NewHandleAbility(player):
 			p2darktime = 5.0 + ((abilitycombop1 - 1) * 3)
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
+			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.BLUE): #comboable
 			for i in range(abilitycombop1):
 				P1BlueAbility()
+			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.GREEN): #comboable
 			player1health += abilitycombop1
 			print("Player 1 health: " + str(player1health))
@@ -352,6 +354,7 @@ func NewHandleAbility(player):
 			get_node("p2combo").set_text("NONE ABILITY X0")
 			sfx.play("moved-02-dark - Purple ability used")
 			anim.play("p1purpleability")
+			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.RED): #comboable
 			print("red combo activated")
 			player2health -= abilitycombop1
@@ -363,6 +366,7 @@ func NewHandleAbility(player):
 		elif(lastusedcolourp1 == COLOUR.WHITE): #comboable
 			p2launcher.Freeze(1.0 * abilitycombop1)
 			sfx.play("winter wind - White ability used")
+			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.YELLOW):
 			p1launcher.Charge()
 			if(p1isdark):
@@ -378,9 +382,11 @@ func NewHandleAbility(player):
 			p1darktime = 5.0 + ((abilitycombop2 - 1) * 3)
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
+			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.BLUE): #comboable
 			for i in range(abilitycombop2):
 				P2BlueAbility()
+			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.GREEN): #comboable
 			player2health += abilitycombop2
 			print("Player 2 health: " + str(player2health))
@@ -395,6 +401,7 @@ func NewHandleAbility(player):
 			get_node("p1combo").set_text("NONE ABILITY X0")
 			sfx.play("moved-02-dark - Purple ability used")
 			anim.play("p2purpleability")
+			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.RED): #comboable
 			print("red combo activated")
 			player1health -= abilitycombop2
@@ -406,6 +413,7 @@ func NewHandleAbility(player):
 		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
 			p1launcher.Freeze(1.0 * abilitycombop2)
 			sfx.play("winter wind - White ability used")
+			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.YELLOW):
 			p2launcher.Charge()
 			if(p2isdark):

@@ -214,7 +214,7 @@ tracks/1/keys = {
 "values": [ 0.0, 1.0, 0.0 ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=8]
 
 resource/name = "ena attack"
 length = 1.0
@@ -251,7 +251,7 @@ tracks/2/keys = {
 "values": [ 0, 1, 1, 2, 4, 5, 6, 7, 8, 9 ]
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=9]
 
 resource/name = "ena damage"
 length = 1.2
@@ -288,9 +288,8 @@ tracks/2/keys = {
 "values": [ 12 ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=10]
 
-resource/name = "ena idle"
 length = 0.8
 loop = true
 step = 0.1
@@ -325,7 +324,7 @@ tracks/2/keys = {
 "values": [ 4 ]
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=11]
 
 resource/name = "ena lose"
 length = 1.0
@@ -362,9 +361,8 @@ tracks/2/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=12]
 
-resource/name = "ena win"
 length = 1.0
 loop = false
 step = 0.1
@@ -399,7 +397,7 @@ tracks/2/keys = {
 "values": [ 5 ]
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=13]
 
 resource/name = "enap2 attack"
 length = 1.0
@@ -436,7 +434,7 @@ tracks/2/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=14]
 
 resource/name = "enap2 damage"
 length = 1.2
@@ -473,9 +471,8 @@ tracks/2/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=15]
 
-resource/name = "enap2 idle"
 length = 0.8
 loop = true
 step = 0.1
@@ -484,7 +481,7 @@ tracks/0/path = NodePath("enaP2:texture")
 tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = {
-"times": FloatArray( 0 ),
+"times": FloatArray( 0.1 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
 "values": [ ExtResource( 31 ) ]
@@ -494,7 +491,7 @@ tracks/1/path = NodePath("enaP2:hframes")
 tracks/1/interp = 1
 tracks/1/imported = false
 tracks/1/keys = {
-"times": FloatArray( 0 ),
+"times": FloatArray( 0.1 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
 "values": [ 4 ]
@@ -794,7 +791,7 @@ flip_v = true
 
 [node name="ena" type="Sprite" parent="."]
 
-transform/pos = Vector2( 290.718, 985.407 )
+transform/pos = Vector2( 270, 990 )
 transform/scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 23 )
 hframes = 4
@@ -804,11 +801,11 @@ hframes = 4
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-"anims/ena attack" = SubResource( 9 )
-"anims/ena damage" = SubResource( 11 )
-"anims/ena idle" = SubResource( 8 )
-"anims/ena lose" = SubResource( 12 )
-"anims/ena win" = SubResource( 10 )
+"anims/ena attack" = SubResource( 8 )
+"anims/ena damage" = SubResource( 9 )
+"anims/ena idle" = SubResource( 10 )
+"anims/ena lose" = SubResource( 11 )
+"anims/ena win" = SubResource( 12 )
 "next/ena attack" = "ena idle"
 "next/ena damage" = "ena idle"
 playback/active = true
@@ -818,7 +815,7 @@ autoplay = "ena idle"
 
 [node name="enaP2" type="Sprite" parent="."]
 
-transform/pos = Vector2( 1147.38, 984.527 )
+transform/pos = Vector2( 1240, 985 )
 transform/scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 28 )
 hframes = 6
@@ -829,9 +826,9 @@ frame = 5
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-"anims/enap2 attack" = SubResource( 14 )
-"anims/enap2 damage" = SubResource( 15 )
-"anims/enap2 idle" = SubResource( 13 )
+"anims/enap2 attack" = SubResource( 13 )
+"anims/enap2 damage" = SubResource( 14 )
+"anims/enap2 idle" = SubResource( 15 )
 "anims/enap2 lose" = SubResource( 16 )
 "anims/enap2 win" = SubResource( 17 )
 "next/enap2 attack" = "enap2 idle"
