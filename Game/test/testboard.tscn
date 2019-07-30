@@ -832,6 +832,7 @@ root/root = NodePath("..")
 "anims/enap2 lose" = SubResource( 16 )
 "anims/enap2 win" = SubResource( 17 )
 "next/enap2 attack" = "enap2 idle"
+"next/enap2 damage" = "enap2 idle"
 playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
