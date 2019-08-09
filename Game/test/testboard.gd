@@ -61,6 +61,9 @@ var p2isdark = false
 var p2darktime = 5.00 #time that the darkness ability lasts
 var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
 
+var timerpaused = false
+var timerlockout = false
+
 #test
 onready var ray = get_node("RayCast2D")
 var rclick = false
@@ -99,14 +102,15 @@ func _fixed_process(delta):
 		print("player one available spot: " + str(FindAvailableSpot(PLAYER.PLAYER1)))
 		print("player two available spot: " + str(FindAvailableSpot(PLAYER.PLAYER2)))
 	
-	if(Input.is_action_pressed("click")):
-		Click()
+#	if(Input.is_action_pressed("click")):
+#		Click()
 	if(Input.is_action_pressed("rclick")):
 		if(rclick == false):
 			RClick()
 			rclick = true
 	else:
 		rclick = false
+	
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
 	#so we will wait for a half second for them to find their neighbors
 	if(t > .5 and s == false):
@@ -564,19 +568,20 @@ func P2BlueAbility():
 		orbsonboard.push_back(grey)
 
 
-func Click():
-	#P2BlueAbility()
-	var mousepos = get_viewport().get_mouse_pos()
-	ray.set_cast_to(mousepos - ray.get_global_pos())
-	if(ray.get_collider() != null):
-		print(ray.get_collider().get_name())
-	var testorb = ray.get_collider()
-	if(testorb != null):
-		if(testorb.is_in_group("orb")):
-			var group = []
-			testorb.Search(1,COLOUR.NONE,group)
-			print(str(group.size()))
-	GameOver("ITS OVER",PLAYER.PLAYER1)
+#func Click():
+#	#P2BlueAbility()
+#	var mousepos = get_viewport().get_mouse_pos()
+#	ray.set_cast_to(mousepos - ray.get_global_pos())
+#	if(ray.get_collider() != null):
+#		print(ray.get_collider().get_name())
+#	var testorb = ray.get_collider()
+#	if(testorb != null):
+#		if(testorb.is_in_group("orb")):
+#			var group = []
+#			testorb.Search(1,COLOUR.NONE,group)
+#			print(str(group.size()))
+#	GameOver("ITS OVER",PLAYER.PLAYER1)
+
 func RClick():
 	P2BlueAbility()
 	P2BlueAbility()
@@ -707,6 +712,9 @@ func Restart():
 	abilitycombop2 = 0
 	animenap1.play("ena idle")
 	animenap2.play("enap2 idle")
+	get_node("Timer").set_wait_time(300)
+	get_node("Timer").set_active(true)
+	get_node("Timer").start()
 	
 func UpdateHealthLabels():
 	p1launcher.get_node("health").set_text("Health " + str(player1health))
@@ -719,11 +727,15 @@ func GameOver(gameoverstring,winner):
 	elif(winner == PLAYER.PLAYER2):
 		animenap1.play("ena lose")
 		animenap2.play("enap2 win")
+	else:
+		animenap1.play("ena lose")
+		animenap2.play("enap2 lose")
 	get_node("screendim").set_hidden(false)
 	get_node("replaybutton").set_hidden(false)
 	get_node("gameoverlabel").set_text(gameoverstring)
 	get_node("gameoverlabel").set_hidden(false)
 	get_node("replaybutton").set_disabled(false)
+	get_node("Timer").set_active(false)
 	
 
 func _on_replaybutton_pressed():
@@ -732,3 +744,20 @@ func _on_replaybutton_pressed():
 	get_node("gameoverlabel").set_hidden(true)
 	get_node("replaybutton").set_disabled(true)
 	Restart()
+
+
+func _on_Timer_timeout():
+	if(orbsonboardp1.size() < orbsonboardp2.size()):
+		GameOver("Player One wins",PLAYER.PLAYER1)
+	elif(orbsonboardp1.size() > orbsonboardp2.size()):
+		GameOver("Player Two wins",PLAYER.PLAYER2)
+	else:
+		GameOver("Its a Draw",null)
+
+
+func _on_Button_toggled( pressed ):
+	if(pressed):
+		get_node("Button").set_text("Unpause")
+	else:
+		get_node("Button").set_text("Pause")
+	get_node("Timer").set_active(!pressed)

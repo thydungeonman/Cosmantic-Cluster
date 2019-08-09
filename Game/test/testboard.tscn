@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=1]
+[gd_scene load_steps=51 format=1]
 
 [ext_resource path="res://test/testboard.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/a71c466e2535309b4849dda26c8beb1d.jpg" type="Texture" id=2]
@@ -581,6 +581,31 @@ tracks/2/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
+[sub_resource type="GDScript" id=18]
+
+script/source = "extends Label
+
+# class member variables go here, for example:
+# var a = 2
+# var b = \"textvar\"
+var timeleft = 0
+var minleft = 0
+var secleft = 0
+
+func _ready():
+	set_fixed_process(true)
+
+func _fixed_process(delta):
+	timeleft = get_parent().get_time_left()
+	minleft = int(timeleft) / 60
+	secleft = int(timeleft) % 60
+	var timestring = str(minleft) + \" \"
+	if(secleft <= 9):
+		timestring += \"0\"
+	timestring += str(secleft)
+	set_text(timestring)
+	#set_text(str(timeleft))"
+
 [node name="testboard" type="Node2D"]
 
 script/script = ExtResource( 1 )
@@ -838,7 +863,52 @@ playback/speed = 1.0
 blend_times = [  ]
 autoplay = "enap2 idle"
 
+[node name="Timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 300.0
+one_shot = true
+autostart = true
+
+[node name="Label" type="Label" parent="Timer"]
+
+rect/scale = Vector2( 2, 2 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 1
+size_flags/vertical = 1
+margin/left = 905.0
+margin/top = 10.0
+margin/right = 965.0
+margin/bottom = 65.0
+custom_fonts/font = ExtResource( 19 )
+text = "0 00"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script/script = SubResource( 18 )
+
+[node name="Button" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 925.0
+margin/top = 70.0
+margin/right = 1000.0
+margin/bottom = 90.0
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+text = "Pause"
+flat = false
+
 [connection signal="pressed" from="replaybutton" to="." method="_on_replaybutton_pressed"]
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+
+[connection signal="toggled" from="Button" to="." method="_on_Button_toggled"]
 
 
 [editable path="wall"]
