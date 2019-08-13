@@ -95,7 +95,7 @@ func Move(delta):
 	#then checks for a match, removing the correct orbs, activating ability and checking for falls if a match is made
 	move(trajectory * delta)
 	if(get_pos().y > 1080 or get_pos().y < -400):
-		get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
+		#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
 		EnableLauncher()
 		queue_free()
 		print("orb went out of bounds")

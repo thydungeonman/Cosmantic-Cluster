@@ -43,8 +43,8 @@ var p2launcher = null
 var p1flag #flag orbs
 var p2flag
 
-var player1health = 5
-var player2health = 5
+var player1health = 1
+var player2health = 1
 var lastusedcolourp1 = COLOUR.NONE
 var lastusedcolourp2 = COLOUR.NONE
 var abilitycombop1 = 0 #counts the number of times a color is chained
@@ -80,12 +80,6 @@ func _ready():
 	set_fixed_process(true)
 
 func _fixed_process(delta):
-	if(player1health < 1):
-		GameOver("Player two wins",PLAYER.PLAYER2)
-	elif(player2health < 1):
-		GameOver("Player one wins",PLAYER.PLAYER1)
-	
-	
 	
 	if(Input.is_action_pressed("ui_page_up")):
 		p1launcher.Charge()
@@ -367,6 +361,7 @@ func NewHandleAbility(player):
 			p2launcher.DamageAnim()
 			animenap1.play("ena attack")
 			animenap2.play("enap2 damage")
+			IsPlayerDead()
 		elif(lastusedcolourp1 == COLOUR.WHITE): #comboable
 			p2launcher.Freeze(1.0 * abilitycombop1)
 			sfx.play("winter wind - White ability used")
@@ -414,6 +409,7 @@ func NewHandleAbility(player):
 			p1launcher.DamageAnim()
 			animenap1.play("ena damage")
 			animenap2.play("enap2 attack")
+			IsPlayerDead()
 		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
 			p1launcher.Freeze(1.0 * abilitycombop2)
 			sfx.play("winter wind - White ability used")
@@ -722,9 +718,11 @@ func UpdateHealthLabels():
 
 func GameOver(gameoverstring,winner):
 	if(winner == PLAYER.PLAYER1):
+		print("one win")
 		animenap1.play("ena win")
 		animenap2.play("enap2 lose")
 	elif(winner == PLAYER.PLAYER2):
+		print("2 win")
 		animenap1.play("ena lose")
 		animenap2.play("enap2 win")
 	else:
@@ -761,3 +759,9 @@ func _on_Button_toggled( pressed ):
 	else:
 		get_node("Button").set_text("Pause")
 	get_node("Timer").set_active(!pressed)
+
+func IsPlayerDead():
+	if(player1health < 1):
+		GameOver("Player two wins",PLAYER.PLAYER2)
+	elif(player2health < 1):
+		GameOver("Player one wins",PLAYER.PLAYER1)

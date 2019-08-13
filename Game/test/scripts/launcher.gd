@@ -343,6 +343,10 @@ func Reset():
 	nextorb.set_texture(null)
 	shottimer = 0
 	loaded = false
+	laserisactive = false
+	ischarged = false;
+	abilityanim.play("rest")
+	anim.play("rest")
 func DamageAnim():
 	abilityanim.play("damage")
 func HealAnim():

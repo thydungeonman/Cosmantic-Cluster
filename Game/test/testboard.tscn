@@ -22,10 +22,10 @@
 [ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=20]
 [ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=21]
 [ext_resource path="res://icon.png" type="Texture" id=22]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/Ena Idle Temp sprite sheet.png" type="Texture" id=23]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/lose sprite sheet.png" type="Texture" id=23]
 [ext_resource path="res://test/sprites/Ena Sprite Sheet/Attack sprite sheet.png" type="Texture" id=24]
 [ext_resource path="res://test/sprites/Ena Sprite Sheet/damage sprite sheet.png" type="Texture" id=25]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/lose sprite sheet.png" type="Texture" id=26]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/Ena Idle Temp sprite sheet.png" type="Texture" id=26]
 [ext_resource path="res://test/sprites/Ena Sprite Sheet/win sprite sheet.png" type="Texture" id=27]
 [ext_resource path="res://test/sprites/enaP2 Sprite Sheet/lose sprite sheet2.png" type="Texture" id=28]
 [ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Attack sprite sheet2.png" type="Texture" id=29]
@@ -311,7 +311,7 @@ tracks/1/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 23 ) ]
+"values": [ ExtResource( 26 ) ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("ena:hframes")
@@ -338,7 +338,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 26 ) ]
+"values": [ ExtResource( 23 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("ena:hframes")
@@ -819,7 +819,7 @@ flip_v = true
 transform/pos = Vector2( 270, 990 )
 transform/scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 23 )
-hframes = 4
+hframes = 6
 
 [node name="enaplayer" type="AnimationPlayer" parent="."]
 
@@ -844,7 +844,6 @@ transform/pos = Vector2( 1240, 985 )
 transform/scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 28 )
 hframes = 6
-frame = 5
 
 [node name="enaP2player" type="AnimationPlayer" parent="."]
 
