@@ -137,7 +137,7 @@ func LoadOrb(delta):
 
 func GetAimControlsP1(delta):
 	if(Input.is_action_pressed("p1_aim_left")):
-		print(speed)
+		#print(speed)
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
@@ -147,7 +147,7 @@ func GetAimControlsP1(delta):
 		#print(str(x) + " " + str(tan(x)))
 		sfx.play("mrown1__tick launcher aiming left or right")
 	elif(Input.is_action_pressed("p1_aim_right")):
-		print(speed)
+		#print(speed)
 		speed += PI/300
 		speed = clamp(speed,minspeed,maxspeed)
 		x += speed
@@ -161,7 +161,7 @@ func GetAimControlsP1(delta):
 
 func GetAimControlsP2(delta):
 	if(Input.is_action_pressed("p2_aim_left")):
-		print(speed)
+		#print(speed)
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
@@ -171,7 +171,7 @@ func GetAimControlsP2(delta):
 		#print(str(x) + " " + str(tan(x)))
 		sfx.play("mrown1__tick launcher aiming left or right")
 	elif(Input.is_action_pressed("p2_aim_right")):
-		print(speed)
+		#print(speed)
 		speed += PI/300
 		speed = clamp(speed,minspeed,maxspeed)
 		x += speed
