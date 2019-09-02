@@ -7,7 +7,8 @@ var stop = false
 var nexttrajectory = Vector2(0,0)
 var next = null
 var last = null
-var limit = 22
+var limit = 70
+onready var sprite = get_node("Sprite")
 
 func _ready():
 	set_fixed_process(true)
@@ -20,72 +21,47 @@ func ExtendLine(trajectory):
 	if(number > limit):
 		#EndLine()
 		return
-	
-	#move(trajectory)
-	#print("trajectory: " + str(trajectory))
+		
 	set_global_pos(get_global_pos() + trajectory)
-	if(is_colliding()):
-		if(get_collider().is_in_group("wall")):
-			nexttrajectory = trajectory
-			nexttrajectory.x *= -1
-		elif(get_collider().is_in_group("orb")):
-			stop = true
-			return
-			#EndLine()
-	else:
-		next = preload("res://test/scenes/aimingreticule.tscn").instance()
-		add_child(next)
-		next.number = number + 1
+	next = preload("res://test/scenes/aimingreticule.tscn").instance()
+	add_child(next)
+	next.number = number + 1
+	if(next != null):
 		next.ExtendLine(trajectory)
+	if(number == 0):
+		CutShort()
+
+func CutShort():
+	if(number != 25):
+		next.CutShort()
+	else:
+		EndLine()
+
+func CheckCollision():
+	if(is_colliding()):
+		if(get_collider().is_in_group("orb") or get_collider().is_in_group("wall")):
+			EndLine()
+			return
+	else:
+		if(next != null):
+			next.CheckCollision()
 
 func ModifyLine(trajectory):
+	if(number > limit):
+		#EndLine()
+		return
 	#print("trajectory: " + str(trajectory))
+	sprite.show()
 	set_global_pos(get_parent().get_global_pos() + trajectory)
-	set_cast_to(trajectory/5)
+	set_cast_to(trajectory)
 	force_raycast_update()
-	if(is_colliding()):
-		if(get_collider().is_in_group("wall")):
-			#trajectory.x *= -1.15
-			get_parent().next = null
-			EndLine()
-			return
-		elif(get_collider().is_in_group("orb")):
-			stop = true
-			get_parent().next = null
-			EndLine()
-			return
-		
-	if(next == null):
-		next = preload("res://test/scenes/aimingreticule.tscn").instance()
-		add_child(next)
-		next.number = number + 1
-		next.AdjustLine(trajectory)
-	else:
-		next.ModifyLine(trajectory)
+	next.ModifyLine(trajectory)
+	if(number == 0):
+		CheckCollision()
+
 
 func EndLine():
 	if(next != null):
 		next.EndLine()
-	queue_free()
-
-
-func AdjustLine(trajectory):
-	#move(trajectory)
-	#print("trajectory: " + str(trajectory))
-	set_global_pos(get_global_pos() + trajectory)
-	if(is_colliding()):
-		if(get_collider().is_in_group("wall")):
-			nexttrajectory = trajectory
-			nexttrajectory.x *= -1
-			get_parent().next = null
-			EndLine()
-			return
-		elif(get_collider().is_in_group("orb")):
-			stop = true
-			return
-			#EndLine()
-	else:
-		next = preload("res://test/scenes/aimingreticule.tscn").instance()
-		add_child(next)
-		next.number = number + 1
-		next.ExtendLine(trajectory)
+	sprite.hide()
+	

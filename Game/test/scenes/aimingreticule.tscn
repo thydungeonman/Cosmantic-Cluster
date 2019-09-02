@@ -7,9 +7,8 @@
 "aim",
 ]]
 
-transform/pos = Vector2( -0.0538073, 0.0134518 )
 enabled = true
-cast_to = Vector2( 0, -1 )
+cast_to = Vector2( 0, -2 )
 layer_mask = 1
 type_mask = 3
 script/script = ExtResource( 1 )

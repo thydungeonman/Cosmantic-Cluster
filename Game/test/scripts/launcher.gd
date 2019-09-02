@@ -56,14 +56,14 @@ var laserisactive = false
 
 onready var aim = get_node("Particles2D")
 onready var container = get_node("container")
-var reticule = null
+var next = null
 
 func _ready():
 	set_fixed_process(true)
 	#aim.set_param(0,270 - rad2deg(x))
-	reticule = preload("res://test/scenes/aimingreticule.tscn").instance()
-	add_child(reticule)
-	reticule.set_pos(Vector2(0,20))
+	next = preload("res://test/scenes/aimingreticule.tscn").instance()
+	add_child(next)
+	next.set_pos(Vector2(0,20))
 	AimReticule()
 	
 
@@ -332,10 +332,11 @@ func ActivateLaser():
 
 func AimReticule():
 	var reticuletrajectory = Vector2((trajectory.x * cos(x))/100,(trajectory.y * sin(x))/100)
-	reticule.ExtendLine(reticuletrajectory)
+	next.ExtendLine(reticuletrajectory)
+	
 func AdjustReticule():
 	var reticuletrajectory = Vector2((trajectory.x * cos(x))/100,(trajectory.y * sin(x))/100)
-	reticule.ModifyLine(reticuletrajectory)
+	next.ModifyLine(reticuletrajectory)
 	
 func Reset():
 	orb.queue_free()
