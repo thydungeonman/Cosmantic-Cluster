@@ -733,6 +733,8 @@ func GameOver(gameoverstring,winner):
 	get_node("gameoverlabel").set_text(gameoverstring)
 	get_node("gameoverlabel").set_hidden(false)
 	get_node("replaybutton").set_disabled(false)
+	get_node("quitbutton").set_hidden(false)
+	get_node("quitbutton").set_disabled(false)
 	get_node("Timer").set_active(false)
 	
 
@@ -741,6 +743,8 @@ func _on_replaybutton_pressed():
 	get_node("replaybutton").set_hidden(true)
 	get_node("gameoverlabel").set_hidden(true)
 	get_node("replaybutton").set_disabled(true)
+	get_node("quitbutton").set_hidden(true)
+	get_node("quitbutton").set_disabled(true)
 	Restart()
 
 
