@@ -288,6 +288,8 @@ func AddToPlayer(): #this function adds the orb to the boards list of orbs and t
 		get_parent().orbsonboardp1.push_back(self)
 	elif(onboard == PLAYER.PLAYER2):
 		get_parent().orbsonboardp2.push_back(self)
+#	elif(onboard == PLAYER.AI):
+#		get_parent().orbsonboardai.push_back(self)
 
 func RemoveFromPlayer():
 	if(onboard == PLAYER.PLAYER1):
@@ -298,6 +300,10 @@ func RemoveFromPlayer():
 		var index = get_parent().orbsonboardp2.find(self)
 		if(index != -1):
 			get_parent().orbsonboardp2.remove(index)
+#	elif(onboard == PLAYER.AI):
+#		var index = get_parent().orbsonboardai.find(self)
+#		if(index != -1):
+#			get_parent().orbsonboardai.remove(index)
 
 #this function raycasts in each direction, grabbing the closest body and area
 #it then casts again only looking for bodies since if the orb is inside of an area it will only detect areas since they are the closest

@@ -22,7 +22,7 @@ onready var abilityanim = get_node("AbilityAnimationPlayer")
 onready var nextorb = get_node("nextorb") # the sprite of the upcoming orb
 var upcomingorb #this holds an enumeration for the upcoming orb
 
-var trajectory = Vector2(-1500,-1500)
+var trajectory = Vector2(-1500,-1500) #vector that orb is to be fired at
 var x = (PI)/2 #starting angle of launcher
 var speed = PI/240
 var minspeed = PI/1000
@@ -55,6 +55,9 @@ var laserisactive = false
 onready var aim = get_node("Particles2D")
 onready var container = get_node("container")
 var next = null
+var clicked = false
+var clickedpos = Vector2(30,30)
+var aiming = false
 
 func _ready():
 	set_fixed_process(true)
@@ -66,17 +69,16 @@ func _ready():
 	
 
 func _fixed_process(delta):
+	if(Input.is_action_pressed("click")):
+		clickedpos = get_local_mouse_pos()
+		aiming = true
 	LoadOrb(delta)
-	if(player == PLAYER.PLAYER1 and !isfrozen):
-		GetAimControlsP1(delta)
-	if(player == PLAYER.PLAYER2 and !isfrozen):
-		GetAimControlsP2(delta)
+	if(aiming):
+		aiming = !AimAtPos(clickedpos)
+	
+	
 	if(isfrozen):
 		Defrost(delta)
-	if(player == PLAYER.PLAYER1 and loaded):
-		GetFireControlsP1(delta)
-	if(player == PLAYER.PLAYER2 and loaded):
-		GetFireControlsP2(delta)
 	
 	#LASER =========================================================>O
 	if(Input.is_action_pressed("laser")):
@@ -133,145 +135,158 @@ func LoadOrb(delta):
 			orb.inlauncher = true
 			print("loaded new orb")
 
-func GetAimControlsP1(delta):
-	if(Input.is_action_pressed("p1_aim_left")):
-		#print(speed)
+func AimAtPos(position):#position must be local to the launcher
+	#move reticule closer to position
+	#if not close enough after one increment, return false, else return true
+	var target = -Vector2(-1500,0).angle_to(position)
+	if(target < x):
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
-		x = clamp(x,lowerlimit,upperlimit)     
-		aim.set_param(0,270 - rad2deg(x))
+		x = clamp(x,lowerlimit,upperlimit)  
 		AdjustReticule()
-		print(str(x) + " " + str(tan(x)))
-		print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
-		print(get_global_mouse_pos())
-		print(get_local_mouse_pos())
-		sfx.play("mrown1__tick launcher aiming left or right")
-	elif(Input.is_action_pressed("p1_aim_right")):
-		#print(speed)
+	elif(target > x): 
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x += speed
-		x = clamp(x,lowerlimit,upperlimit)
-		aim.set_param(0,270 - rad2deg(x))
+		x = clamp(x,lowerlimit,upperlimit) 
 		AdjustReticule()
-		print(str(x) + " " + str(tan(x)))
-		
-		print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
-		print(get_global_mouse_pos())
-		print(get_local_mouse_pos())
-		sfx.play("mrown1__tick launcher aiming left or right")
-	else:
-		speed = minspeed
+	print(str(target) + " " + str(x))
+	return (abs(target - x) <.01) #is the trajectory close enough to the target
 
-func GetAimControlsP2(delta):
-	if(Input.is_action_pressed("p2_aim_left")):
-		#print(speed)
-		speed += PI/1500
-		speed = clamp(speed,minspeed,maxspeed)
-		x -= speed
-		x = clamp(x,lowerlimit,upperlimit)
-		aim.set_param(0,270 - rad2deg(x))
-		AdjustReticule()
-		#print(str(x) + " " + str(tan(x)))
-		sfx.play("mrown1__tick launcher aiming left or right")
-	elif(Input.is_action_pressed("p2_aim_right")):
-		#print(speed)
-		speed += PI/1500
-		speed = clamp(speed,minspeed,maxspeed)
-		x += speed
-		x = clamp(x,lowerlimit,upperlimit)
-		aim.set_param(0,270 - rad2deg(x))
-		AdjustReticule()
-		#print(str(x) + " " + str(tan(x)))
-		sfx.play("mrown1__tick launcher aiming left or right")
-	else:
-		speed = minspeed
 
-func GetFireControlsP1(delta):
-	if(Input.is_action_pressed("p1_fire") and loaded == true): #if the key is pressed and the launcher is loaded
-		if(!firing and canshoot):
-			Fire()
-			firing = true
-			loaded = false
-			shottimer = 0.0
-			#get_parent().orbsonboard.push_front(orb)
-			#get_parent().orbsonboardp1.push_front(orb)
-			Disable()
-	else:
-		firing = false
-	if(Input.is_action_pressed("p1_store") and !container.IsFull()):
-		if(storing == false):
-			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
-			get_parent().remove_child(orb)
-			print(str(get_parent().orbsonboard.size()))
-			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
-			print(str(get_parent().orbsonboard.size()))
-			container.TakeOrb(orb)
-			loaded = false
-			storing = true
-			sfx.play("bump - orb saved for later")
-	else:
-		storing = false
-	
-	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty() and !swapped):
-		if(swapping == false):
-			print(str(orb))
-			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
-			get_parent().remove_child(orb)
-			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
-			orb = container.Swap(orb)
-			get_parent().add_child(orb)
-			orb.set_pos(get_global_pos())
-			#get_parent().orbsonboard.push_front(orb)
-			swapping = true
-			swapped = true
-			sfx.play("hurt-c-02 - orb switch")
-			print(str(orb))
-	else:
-		swapping = false
-
-func GetFireControlsP2(delta):
-	if(Input.is_action_pressed("p2_fire") and loaded == true): #if the key is pressed and the launcher is loaded
-		if(!firing and canshoot):
-			Fire()
-			firing = true
-			loaded = false
-			shottimer = 0.0
-			#get_parent().orbsonboard.push_front(orb)
-			#get_parent().orbsonboardp2.push_front(orb)
-			Disable()
-			
-	else:
-		firing = false
-	if(Input.is_action_pressed("p2_store") and !container.IsFull()):
-		if(storing == false):
-			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
-			get_parent().remove_child(orb)
-			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
-			container.TakeOrb(orb)
-			loaded = false
-			storing = true
-			sfx.play("bump - orb saved for later")
-	else:
-		storing = false
-	
-	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty() and !swapped):
-		if(swapping == false):
-			print(str(orb))
-			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
-			get_parent().remove_child(orb)
-			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
-			orb = container.Swap(orb)
-			get_parent().add_child(orb)
-			orb.set_pos(get_global_pos())
-			#get_parent().orbsonboard.push_front(orb)
-			swapping = true
-			swapped = true
-			print(str(orb))
-			sfx.play("hurt-c-02 - orb switch")
-	else:
-		swapping = false
+#func GetAimControlsP1(delta):
+#	if(Input.is_action_pressed("p1_aim_left")):
+#		#print(speed)
+#		speed += PI/1500
+#		speed = clamp(speed,minspeed,maxspeed)
+#		x -= speed
+#		x = clamp(x,lowerlimit,upperlimit)     
+#		aim.set_param(0,270 - rad2deg(x))
+#		AdjustReticule()
+#		#print(str(x) + " " + str(tan(x)))
+#		sfx.play("mrown1__tick launcher aiming left or right")
+#	elif(Input.is_action_pressed("p1_aim_right")):
+#		#print(speed)
+#		speed += PI/300
+#		speed = clamp(speed,minspeed,maxspeed)
+#		x += speed
+#		x = clamp(x,lowerlimit,upperlimit)
+#		aim.set_param(0,270 - rad2deg(x))
+#		AdjustReticule()
+#		#print(str(x) + " " + str(tan(x)))
+#		sfx.play("mrown1__tick launcher aiming left or right")
+#	else:
+#		speed = minspeed
+#
+#func GetAimControlsP2(delta):
+#	if(Input.is_action_pressed("p2_aim_left")):
+#		#print(speed)
+#		speed += PI/1500
+#		speed = clamp(speed,minspeed,maxspeed)
+#		x -= speed
+#		x = clamp(x,lowerlimit,upperlimit)
+#		aim.set_param(0,270 - rad2deg(x))
+#		AdjustReticule()
+#		#print(str(x) + " " + str(tan(x)))
+#		sfx.play("mrown1__tick launcher aiming left or right")
+#	elif(Input.is_action_pressed("p2_aim_right")):
+#		#print(speed)
+#		speed += PI/300
+#		speed = clamp(speed,minspeed,maxspeed)
+#		x += speed
+#		x = clamp(x,lowerlimit,upperlimit)
+#		aim.set_param(0,270 - rad2deg(x))
+#		AdjustReticule()
+#		#print(str(x) + " " + str(tan(x)))
+#		sfx.play("mrown1__tick launcher aiming left or right")
+#	else:
+#		speed = minspeed
+#
+#func GetFireControlsP1(delta):
+#	if(Input.is_action_pressed("p1_fire") and loaded == true): #if the key is pressed and the launcher is loaded
+#		if(!firing and canshoot):
+#			Fire()
+#			firing = true
+#			loaded = false
+#			shottimer = 0.0
+#			#get_parent().orbsonboard.push_front(orb)
+#			#get_parent().orbsonboardp1.push_front(orb)
+#			Disable()
+#	else:
+#		firing = false
+#	if(Input.is_action_pressed("p1_store") and !container.IsFull()):
+#		if(storing == false):
+#			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+#			get_parent().remove_child(orb)
+#			print(str(get_parent().orbsonboard.size()))
+#			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+#			print(str(get_parent().orbsonboard.size()))
+#			container.TakeOrb(orb)
+#			loaded = false
+#			storing = true
+#			sfx.play("bump - orb saved for later")
+#	else:
+#		storing = false
+#	
+#	if(Input.is_action_pressed("p1_swap") and !container.IsEmpty() and !swapped):
+#		if(swapping == false):
+#			print(str(orb))
+#			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+#			get_parent().remove_child(orb)
+#			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+#			orb = container.Swap(orb)
+#			get_parent().add_child(orb)
+#			orb.set_pos(get_global_pos())
+#			#get_parent().orbsonboard.push_front(orb)
+#			swapping = true
+#			swapped = true
+#			sfx.play("hurt-c-02 - orb switch")
+#			print(str(orb))
+#	else:
+#		swapping = false
+#
+#func GetFireControlsP2(delta):
+#	if(Input.is_action_pressed("p2_fire") and loaded == true): #if the key is pressed and the launcher is loaded
+#		if(!firing and canshoot):
+#			Fire()
+#			firing = true
+#			loaded = false
+#			shottimer = 0.0
+#			#get_parent().orbsonboard.push_front(orb)
+#			#get_parent().orbsonboardp2.push_front(orb)
+#			Disable()
+#			
+#	else:
+#		firing = false
+#	if(Input.is_action_pressed("p2_store") and !container.IsFull()):
+#		if(storing == false):
+#			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+#			get_parent().remove_child(orb)
+#			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+#			container.TakeOrb(orb)
+#			loaded = false
+#			storing = true
+#			sfx.play("bump - orb saved for later")
+#	else:
+#		storing = false
+#	
+#	if(Input.is_action_pressed("p2_swap") and !container.IsEmpty() and !swapped):
+#		if(swapping == false):
+#			print(str(orb))
+#			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+#			get_parent().remove_child(orb)
+#			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+#			orb = container.Swap(orb)
+#			get_parent().add_child(orb)
+#			orb.set_pos(get_global_pos())
+#			#get_parent().orbsonboard.push_front(orb)
+#			swapping = true
+#			swapped = true
+#			print(str(orb))
+#			sfx.play("hurt-c-02 - orb switch")
+#	else:
+#		swapping = false
 
 
 func Fire():

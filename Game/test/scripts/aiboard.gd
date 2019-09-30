@@ -1,6 +1,7 @@
 extends Node2D
 
 
+
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
@@ -21,9 +22,7 @@ onready var anim = get_node("AnimationPlayer")
 onready var animenap1 = get_node("enaplayer")
 onready var animenap2 = get_node("enaP2player")
 
-var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width+
-
-
+var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width
 
 var fallcheckarray = []
 var orbsonboard = [] 
@@ -42,8 +41,8 @@ var p2launcher = null
 var p1flag #flag orbs
 var p2flag
 
-var player1health = 5
-var player2health = 5
+var player1health = 1
+var player2health = 1
 var lastusedcolourp1 = COLOUR.NONE
 var lastusedcolourp2 = COLOUR.NONE
 var abilitycombop1 = 0 #counts the number of times a color is chained
@@ -70,7 +69,7 @@ var rclick = false
 func _ready():
 	#music.play(0)
 	
-	GenerateP2Launcher()
+	GenerateAILauncher()
 	GeneratePlayer1Flag()
 	GeneratePlayer2Flag()
 	GenerateBoardP1()
@@ -244,12 +243,19 @@ func GenerateEvenRow(xoffset, yoffset, width, player):
 			orb.player = orb.PLAYER.PLAYER2
 		orbsonboard.push_front(orb)
 
-func GenerateP2Launcher():
-	p2launcher = preload("res://test/scenes/launcher.tscn").instance()
+func GenerateAILauncher():
+	p2launcher = preload("res://test/scenes/ailauncher.tscn").instance()
 	add_child(p2launcher)
 	p2launcher.set_name("p2launcher")
 	p2launcher.player = p2launcher.PLAYER.PLAYER2
 	p2launcher.set_pos(Vector2(1447,980))
+#
+#func GenerateP2Launcher():
+#	p2launcher = preload("res://test/scenes/launcher.tscn").instance()
+#	add_child(p2launcher)
+#	p2launcher.set_name("p2launcher")
+#	p2launcher.player = p2launcher.PLAYER.PLAYER2
+#	p2launcher.set_pos(Vector2(1447,980))
 
 func GenerateP1Launcher():
 	var launcher = preload("res://test/scenes/launcher.tscn").instance()

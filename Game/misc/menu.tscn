@@ -5,7 +5,7 @@
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "extends Button
+script/source = "extends Node2D
 
 # class member variables go here, for example:
 # var a = 2
@@ -17,11 +17,17 @@ func _ready():
 	pass
 
 
+func _on_Button_pressed():
+	get_tree().change_scene(\"res://test/aiboard.tscn\")
+
+
 func _on_Button1_pressed():
 	get_tree().change_scene(\"res://test/testboard.tscn\")
 "
 
 [node name="Node2D" type="Node2D"]
+
+script/script = SubResource( 1 )
 
 [node name="Button" type="Button" parent="."]
 
@@ -56,7 +62,6 @@ enabled_focus_mode = 2
 shortcut = null
 text = "2p Vs"
 flat = false
-script/script = SubResource( 1 )
 
 [node name="Button2" type="Button" parent="."]
 
@@ -98,6 +103,8 @@ transform/pos = Vector2( 955, 570 )
 z/z = -1
 texture = ExtResource( 2 )
 
-[connection signal="pressed" from="Button1" to="Button1" method="_on_Button1_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+
+[connection signal="pressed" from="Button1" to="." method="_on_Button1_pressed"]
 
 
