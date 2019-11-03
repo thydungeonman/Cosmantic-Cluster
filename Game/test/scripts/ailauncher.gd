@@ -74,7 +74,12 @@ func _fixed_process(delta):
 		aiming = true
 	LoadOrb(delta)
 	if(aiming):
-		aiming = !AimAtPos(clickedpos)
+		aiming = !AimAtBouncePos(clickedpos)
+		if(!aiming):
+			Fire()
+			firing = true
+			loaded = false
+			shottimer = 0.0
 	
 	
 	if(isfrozen):
@@ -154,6 +159,47 @@ func AimAtPos(position):#position must be local to the launcher
 	print(str(target) + " " + str(x))
 	return (abs(target - x) <.01) #is the trajectory close enough to the target
 
+func AimAtBouncePos(position):
+	#use a two step process
+	#first adjust for the y. The shot must always be at a lower y than the orb thats being aimed at
+	# then after that adjust for the x. The correct angle must be within the remaining degrees
+	
+	#roughly the top 45 percent of the remaining degrees will cover orbs of the same y value
+	
+	#first aim 8.5 degrees left of the orb acting as if the orb was at x = 87
+	#then multiply the current angle by cos(x/500) where x is the x value of the orb you want to hit
+	var target = -Vector2(-1500,0).angle_to(Vector2(position.x-30,position.y+60))
+	if(target < x):
+		speed += PI/1500
+		speed = clamp(speed,minspeed,maxspeed)
+		x -= speed
+		x = clamp(x,lowerlimit,upperlimit)  
+		AdjustReticule()
+	elif(target > x): 
+		speed += PI/1500
+		speed = clamp(speed,minspeed,maxspeed)
+		x += speed
+		x = clamp(x,lowerlimit,upperlimit) 
+		AdjustReticule()
+	print(str(target) + " " + str(x))
+	return (abs(target - x) <.01) #is the trajectory close enough to the target
+
+func AimAtAngle(angle):
+	
+	if(angle < x):
+		speed += PI/1500
+		speed = clamp(speed,minspeed,maxspeed)
+		x -= speed
+		x = clamp(x,lowerlimit,upperlimit)  
+		AdjustReticule()
+	elif(angle > x): 
+		speed += PI/1500
+		speed = clamp(speed,minspeed,maxspeed)
+		x += speed
+		x = clamp(x,lowerlimit,upperlimit) 
+		AdjustReticule()
+	print(str(angle) + " " + str(x))
+	return (abs(angle - x) <.01) #is the trajectory close enough to the target
 
 #func GetAimControlsP1(delta):
 #	if(Input.is_action_pressed("p1_aim_left")):

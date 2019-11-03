@@ -175,11 +175,17 @@ func Move(delta):
 						get_parent().anim.play("yellowability")
 						sfx.play("electric-zap - Yellow abilty used removed orbs")
 						var killorbs = []
+						var greyorbs = []
 						for orb in matchingorbs:  #get all of the orbs with the same colour as the match 2 orbs out
 							killorbs = orb.Search(2,colour,killorbs)
+						for orb in matchingorbs:
+							greyorbs = orb.Search(2,COLOUR.GREY,greyorbs)
 						var extraleftovers = []
 						for orb in matchingorbs:  #remove the original match orbs 
 							killorbs.remove(killorbs.find(orb))
+						for orb in greyorbs:
+							print(orb)
+							orb.TakeDamage()
 						var extraleftovers = []
 						for orb in killorbs:
 							extraleftovers = orb.Search(1,COLOUR.NONE,extraleftovers)
@@ -283,7 +289,7 @@ func MovingDie():
 	queue_free()
 
 func AddToPlayer(): #this function adds the orb to the boards list of orbs and the players list of orbs
-	get_parent().orbsonboard.push_back(self)
+	get_parent().orbsonboard.push_front(self)
 	if(onboard == PLAYER.PLAYER1):
 		get_parent().orbsonboardp1.push_back(self)
 	elif(onboard == PLAYER.PLAYER2):
@@ -451,6 +457,7 @@ func CountNeighbors():
 #returns all orbs that are a specific colour
 #searching for COLOUR.NONE will return all orbs
 #searching deeper than one level will also return the original orb
+#the group is needed so that orbs are not added twice
 func Search(level, searchcolour, group):
 	level -= 1
 	if(level >= 0):
@@ -522,6 +529,7 @@ func Warp(spot):
 		MovingDie()
 
 func PrintNeighbors():
+	print(str(get_global_pos()))
 	print(str(self.get_name()) + " " + str(self))
 	print("Colour: " + str(colour))
 	print("touching wall left: " +str(touchingwallleft) + " touching wall right: " + str(touchingwallright))

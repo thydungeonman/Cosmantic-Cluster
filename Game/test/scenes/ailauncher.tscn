@@ -7,4 +7,11 @@
 
 script/script = ExtResource( 2 )
 
+[node name="RayCast2D" type="RayCast2D" parent="."]
+
+enabled = true
+cast_to = Vector2( 0, 50 )
+layer_mask = 1
+type_mask = 3
+
 

@@ -630,6 +630,7 @@ transform/pos = Vector2( 473, 980 )
 
 [node name="wall" parent="." instance=ExtResource( 4 )]
 
+editor/display_folded = true
 transform/pos = Vector2( 8, 560.84 )
 
 [node name="Sprite" parent="wall"]
@@ -687,7 +688,7 @@ transform/pos = Vector2( 1449.58, -170 )
 stream/stream = ExtResource( 9 )
 stream/play = false
 stream/loop = true
-stream/volume_db = -0.2
+stream/volume_db = -3.0
 stream/autoplay = false
 stream/paused = false
 stream/loop_restart_time = 0.0
@@ -890,6 +891,7 @@ autoplay = "enap2 idle"
 
 [node name="Timer" type="Timer" parent="."]
 
+editor/display_folded = true
 process_mode = 1
 wait_time = 300.0
 one_shot = true

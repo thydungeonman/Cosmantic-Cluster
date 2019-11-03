@@ -16,6 +16,8 @@ var colour = COLOUR.RED
 var player
 var leftovers = []
 
+var greyorbs = []
+
 
 func _ready():
 	set_fixed_process(true)
@@ -35,6 +37,9 @@ func Move(delta):
 			if(orb.is_in_group("orb")):
 				if(orb.colour == colour):
 					orb.anim.play("burn")
+				if(orb.colour == COLOUR.GREY and !greyorbs.has(orb)):
+					greyorbs.push_back(orb)
+					orb.TakeDamage()
 
 func Bounce():
 	if(get_pos().y <= y):

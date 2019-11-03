@@ -577,14 +577,15 @@ texture = ExtResource( 12 )
 
 visibility/visible = false
 visibility/opacity = 0.0
-transform/pos = Vector2( 252.029, 1.63905 )
+transform/pos = Vector2( 269.029, 2.63905 )
 transform/scale = Vector2( 3, 3 )
 texture = ExtResource( 15 )
 
 [node name="glowheal" type="Sprite" parent="."]
 
+visibility/visible = false
 visibility/opacity = 0.0
-transform/pos = Vector2( 248.377, 12.8114 )
+transform/pos = Vector2( 270.377, 12.8114 )
 transform/scale = Vector2( 3, 3 )
 texture = ExtResource( 16 )
 

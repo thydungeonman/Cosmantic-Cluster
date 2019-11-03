@@ -27,6 +27,7 @@ var x = (PI)/2 #starting angle of launcher
 var speed = PI/240
 var minspeed = PI/1000
 var maxspeed = PI/170
+var standardmaxspeed = PI/170
 
 var upperlimit = PI - 0.14
 var lowerlimit = .14
@@ -67,9 +68,9 @@ func _ready():
 
 func _fixed_process(delta):
 	LoadOrb(delta)
-	if(player == PLAYER.PLAYER1 and !isfrozen):
+	if(player == PLAYER.PLAYER1):
 		GetAimControlsP1(delta)
-	if(player == PLAYER.PLAYER2 and !isfrozen):
+	if(player == PLAYER.PLAYER2):
 		GetAimControlsP2(delta)
 	if(isfrozen):
 		Defrost(delta)
@@ -142,10 +143,10 @@ func GetAimControlsP1(delta):
 		x = clamp(x,lowerlimit,upperlimit)     
 		aim.set_param(0,270 - rad2deg(x))
 		AdjustReticule()
-		print(str(x) + " " + str(tan(x)))
-		print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
-		print(get_global_mouse_pos())
-		print(get_local_mouse_pos())
+		print(str(rad2deg(x)) + " " + str(tan(x)))
+		#print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
+		#print(get_global_mouse_pos())
+		#print(get_local_mouse_pos())
 		sfx.play("mrown1__tick launcher aiming left or right")
 	elif(Input.is_action_pressed("p1_aim_right")):
 		#print(speed)
@@ -155,11 +156,11 @@ func GetAimControlsP1(delta):
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		AdjustReticule()
-		print(str(x) + " " + str(tan(x)))
+		print(str(rad2deg(x)) + " " + str(tan(x)))
 		
-		print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
-		print(get_global_mouse_pos())
-		print(get_local_mouse_pos())
+		#print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
+		#print(get_global_mouse_pos())
+		#print(get_local_mouse_pos())
 		sfx.play("mrown1__tick launcher aiming left or right")
 	else:
 		speed = minspeed
@@ -307,16 +308,19 @@ func Fire():
 		swapped = false
 		sfx.play("jump-c-05 - orb launched")
 
-func Freeze(duration):
+func Freeze(duration,tier):
+	maxspeed = ((4.0-tier)/4.0) * standardmaxspeed
+	print("max speeds")
+	print(maxspeed)
+	print(standardmaxspeed)
 	isfrozen = true
 	frozentime = duration
-	speed = 0
 	anim.play("freeze")
 
 func Defrost(delta):
 	frozentimer += delta
 	if(frozentimer >= frozentime):
-		speed = PI/170
+		speed = standardmaxspeed
 		isfrozen = false
 		frozentimer = 0.00
 		frozentime = 1.0

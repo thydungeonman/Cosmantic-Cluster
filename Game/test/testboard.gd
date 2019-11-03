@@ -68,7 +68,7 @@ onready var ray = get_node("RayCast2D")
 var rclick = false
 
 func _ready():
-	#music.play(0)
+	music.play(0)
 	
 	GenerateP2Launcher()
 	GeneratePlayer1Flag()
@@ -329,16 +329,40 @@ func NewHandleAbility(player):
 	
 	if(player == PLAYER.PLAYER1):
 		if(lastusedcolourp1 == COLOUR.BLACK): #comboable
-			p2darktime = 5.0 + ((abilitycombop1 - 1) * 3)
+			p2darktime = abilitycombop1 * 3
+			if(abilitycombop1 > 2):
+				p2darktime += (abilitycombop1 - 2)
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.BLUE): #comboable
-			for i in range(abilitycombop1):
+			if(abilitycombop1 > 8):
+				abilitycombop1 = 8
+			var times = abilitycombop1 * 3
+			if(abilitycombop1 == 1):
+				times -=2
+			elif(abilitycombop1 == 2):
+				times -= 3
+			else:
+				times -= 4
+			
+			for i in range(times):
 				P1BlueAbility()
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.GREEN): #comboable
-			player1health += abilitycombop1
+			if(abilitycombop1 > 8):
+				abilitycombop1 = 8
+			var increase = abilitycombop1*3
+			if(abilitycombop1 == 1 || abilitycombop1 == 7):
+				increase -= 2
+			elif(abilitycombop1 == 2 || abilitycombop1 == 6):
+				increase -= 3
+			elif(abilitycombop1 == 8):
+				increase -= 1
+			else:
+				increase -= 4
+			
+			player1health += increase
 			print("Player 1 health: " + str(player1health))
 			UpdateHealthLabels()
 			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
@@ -354,15 +378,45 @@ func NewHandleAbility(player):
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.RED): #comboable
 			print("red combo activated")
-			player2health -= abilitycombop1
+			
+			if(abilitycombop1 > 8):
+				abilitycombop1 = 8
+			var increase = abilitycombop1*3
+			if(abilitycombop1 == 1 || abilitycombop1 == 8):
+				increase -= 2
+			elif(abilitycombop1 == 2 || abilitycombop1 == 7):
+				increase -= 3
+			else:
+				increase -= 4
+			player2health -= increase
+			
 			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 			p2launcher.DamageAnim()
 			animenap1.play("ena attack")
 			animenap2.play("enap2 damage")
+			print(increase)
 			IsPlayerDead()
 		elif(lastusedcolourp1 == COLOUR.WHITE): #comboable
-			p2launcher.Freeze(1.0 * abilitycombop1)
+			if(abilitycombop1 > 8):
+				abilitycombop1 = 8
+				
+			var freezetime = abilitycombop1 * 3
+			if(abilitycombop1 == 6):
+				freezetime += 1
+			elif(abilitycombop1 == 7):
+				freezetime += 2
+			elif(abilitycombop1 == 8):
+				freezetime += 4
+			
+			var tier = floor(abilitycombop1/2.0)
+			if(abilitycombop1 == 3):
+				tier = 2.0
+			if(abilitycombop1 == 1):
+				tier = 1.0
+			print(tier)
+			p2launcher.Freeze(freezetime,tier)
+			
 			sfx.play("winter wind - White ability used")
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.YELLOW):
@@ -377,16 +431,41 @@ func NewHandleAbility(player):
 	
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == COLOUR.BLACK): #comboable
-			p1darktime = 5.0 + ((abilitycombop2 - 1) * 3)
+			p1darktime = abilitycombop2 * 3
+			if(abilitycombop2 > 2):
+				p1darktime += (abilitycombop2 - 2)
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.BLUE): #comboable
-			for i in range(abilitycombop2):
+			if(abilitycombop2 > 8):
+				abilitycombop2 = 8
+			var times = abilitycombop2 * 3
+			if(abilitycombop2 == 1):
+				times -=2
+			elif(abilitycombop2 == 2):
+				times -= 3
+			else:
+				times -= 4
+			
+			for i in range(times):
 				P2BlueAbility()
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.GREEN): #comboable
-			player2health += abilitycombop2
+			
+			if(abilitycombop2 > 8):
+				abilitycombop2 = 8
+			var increase = abilitycombop2*3
+			if(abilitycombop2 == 1 || abilitycombop2 == 7):
+				increase -= 2
+			elif(abilitycombop2 == 2 || abilitycombop2 == 6):
+				increase -= 3
+			elif(abilitycombop2 == 8):
+				increase -= 1
+			else:
+				increase -= 4
+			
+			player2health += increase
 			print("Player 2 health: " + str(player2health))
 			UpdateHealthLabels()
 			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
@@ -402,7 +481,17 @@ func NewHandleAbility(player):
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.RED): #comboable
 			print("red combo activated")
-			player1health -= abilitycombop2
+			
+			if(abilitycombop2 > 8):
+				abilitycombop2 = 8
+			var increase = abilitycombop2*3
+			if(abilitycombop2 == 1 || abilitycombop2 == 8):
+				increase -= 2
+			elif(abilitycombop2 == 2 || abilitycombop2 == 7):
+				increase -= 3
+			else:
+				increase -= 4
+			player1health -= increase
 			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 			p1launcher.DamageAnim()
@@ -410,7 +499,24 @@ func NewHandleAbility(player):
 			animenap2.play("enap2 attack")
 			IsPlayerDead()
 		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
-			p1launcher.Freeze(1.0 * abilitycombop2)
+			if(abilitycombop2 > 8):
+				abilitycombop2 = 8
+				
+			var freezetime = abilitycombop2 * 3
+			if(abilitycombop2 == 6):
+				freezetime += 1
+			elif(abilitycombop2 == 7):
+				freezetime += 2
+			elif(abilitycombop2 == 8):
+				freezetime += 4
+			
+			var tier = floor(abilitycombop2/2.0)
+			if(abilitycombop2 == 3):
+				tier = 2.0
+			if(abilitycombop2 == 1):
+				tier = 1.0
+			print(tier)
+			p1launcher.Freeze(freezetime,tier)
 			sfx.play("winter wind - White ability used")
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.YELLOW):
@@ -427,7 +533,6 @@ func NewHandleAbility(player):
 
 
 func HandleAbility(colour,player):
-
 	print(str(colour))
 	print("activating ablity")
 	
