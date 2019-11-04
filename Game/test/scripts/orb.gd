@@ -276,7 +276,8 @@ func Die():
 			get_parent().GameOver("Player two wins",PLAYER.PLAYER2)
 		elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
 			get_parent().GameOver("Player one wins",PLAYER.PLAYER1)
-		
+	get_parent().CheckPlayerBoard(player)
+	
 	
 	queue_free()
 

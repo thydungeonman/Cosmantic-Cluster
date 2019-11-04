@@ -320,7 +320,7 @@ func Freeze(duration,tier):
 func Defrost(delta):
 	frozentimer += delta
 	if(frozentimer >= frozentime):
-		speed = standardmaxspeed
+		maxspeed = standardmaxspeed
 		isfrozen = false
 		frozentimer = 0.00
 		frozentime = 1.0

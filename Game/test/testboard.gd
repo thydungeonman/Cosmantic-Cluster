@@ -873,3 +873,11 @@ func IsPlayerDead():
 		GameOver("Player two wins",PLAYER.PLAYER2)
 	elif(player2health < 1):
 		GameOver("Player one wins",PLAYER.PLAYER1)
+
+func CheckPlayerBoard(player):
+	if(player == PLAYER.PLAYER1):
+		if(orbsonboardp1.size() == 0):
+			GameOver("Player One Wins!",PLAYER.PLAYER1)
+	elif(player == PLAYER.PLAYER2):
+		if(orbsonboardp2.size() == 0):
+			GameOver("Player Two Wins!",PLAYER.PLAYER2)
