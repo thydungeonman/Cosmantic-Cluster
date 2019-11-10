@@ -26,10 +26,10 @@ var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width+
 
 
 var fallcheckarray = []
-var orbsonboard = [] 
+var orbsonboard = []
 var orbsonboardp1 = [] #if either is empty, the game is over
-var orbsonboardp2 = [] 
-var s = false 
+var orbsonboardp2 = []
+var s = false
 var t  = 0.0 #timer variable to delay the raycasts of the orbs when generated, works with s
 
 var leftoverorbs = []
@@ -209,8 +209,12 @@ func GenerateOddRow(xoffset, yoffset, width, player):
 		orb.set_pos(Vector2(xoffset + width*i, yoffset))
 		if(player == 1):
 			orb.player = orb.PLAYER.PLAYER1
+			orb.onboard = orb.PLAYER.PLAYER1
+			orbsonboardp1.push_front(orb)
 		elif(player == 2):
 			orb.player = orb.PLAYER.PLAYER2
+			orb.onboard = orb.PLAYER.PLAYER2
+			orbsonboardp2.push_front(orb)
 		orbsonboard.push_front(orb)
 
 func GenerateEvenRow(xoffset, yoffset, width, player):
@@ -240,8 +244,12 @@ func GenerateEvenRow(xoffset, yoffset, width, player):
 		orb.set_pos(Vector2(xoffset + width*i, yoffset))
 		if(player == 1):
 			orb.player = orb.PLAYER.PLAYER1
+			orb.onboard = orb.PLAYER.PLAYER1
+			orbsonboardp1.push_front(orb)
 		elif(player == 2):
 			orb.player = orb.PLAYER.PLAYER2
+			orb.onboard = orb.PLAYER.PLAYER2
+			orbsonboardp2.push_front(orb)
 		orbsonboard.push_front(orb)
 
 func GenerateP2Launcher():
@@ -258,6 +266,8 @@ func GenerateP1Launcher():
 	launcher.set_pos(Vector2(465,1040))
 
 func HandleAbilityCombo(colour,player):
+	print("player1 " + str(orbsonboardp1.size()))
+	print("player2 " + str(orbsonboardp2.size()))
 	var combo = 0
 	print(str(lastusedcolourp1))
 	if(player == PLAYER.PLAYER1):
@@ -645,7 +655,10 @@ func P1BlueAbility():
 				grey.set_pos(orb.bottomleftspot)
 		grey.HookUp()
 		grey.player = PLAYER.PLAYER2
+		grey.onboard = orb.PLAYER.PLAYER2
+		orbsonboardp2.push_front(grey)
 		orbsonboard.push_back(grey)
+		
 
 func P2BlueAbility():
 	var orb = FindAvailableSpot(PLAYER.PLAYER1)
@@ -665,7 +678,9 @@ func P2BlueAbility():
 				grey.set_pos(orb.bottomleftspot)
 		grey.HookUp()
 		grey.player = PLAYER.PLAYER1
+		grey.onboard = orb.PLAYER.PLAYER1
 		orbsonboard.push_back(grey)
+		orbsonboardp1.push_front(grey)
 
 
 #func Click():
@@ -859,6 +874,8 @@ func _on_Timer_timeout():
 		GameOver("Player Two wins",PLAYER.PLAYER2)
 	else:
 		GameOver("Its a Draw",null)
+	print("player1 " + str(orbsonboardp1.size()))
+	print("player2 " + str(orbsonboardp2.size()))
 
 
 func _on_Button_toggled( pressed ):

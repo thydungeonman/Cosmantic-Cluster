@@ -143,7 +143,7 @@ func GetAimControlsP1(delta):
 		x = clamp(x,lowerlimit,upperlimit)     
 		aim.set_param(0,270 - rad2deg(x))
 		AdjustReticule()
-		print(str(rad2deg(x)) + " " + str(tan(x)))
+		#print(str(rad2deg(x)) + " " + str(tan(x)))
 		#print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
 		#print(get_global_mouse_pos())
 		#print(get_local_mouse_pos())
@@ -156,7 +156,7 @@ func GetAimControlsP1(delta):
 		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		AdjustReticule()
-		print(str(rad2deg(x)) + " " + str(tan(x)))
+		#print(str(rad2deg(x)) + " " + str(tan(x)))
 		
 		#print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
 		#print(get_global_mouse_pos())

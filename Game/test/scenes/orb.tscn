@@ -379,6 +379,7 @@ max_lines_visible = -1
 config/amount = 174
 config/lifetime = 1.0
 config/time_scale = 1.5
+config/emitting = false
 config/process_mode = 1
 config/half_extents = Vector2( 35, 35 )
 params/direction = 0.0
@@ -405,6 +406,7 @@ color/color = Color( 0.892206, 0.992188, 0.00775146, 1 )
 
 config/amount = 30
 config/lifetime = 0.7
+config/emitting = false
 config/process_mode = 1
 config/half_extents = Vector2( 30, 30 )
 params/direction = 88.62
