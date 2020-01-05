@@ -531,6 +531,7 @@ func Warp(spot):
 
 func PrintNeighbors():
 	print(str(get_global_pos()))
+	print(str(get_pos() - get_parent().get_node("p2launcher").get_global_pos()))
 	print(str(self.get_name()) + " " + str(self))
 	print("Colour: " + str(colour))
 	print("touching wall left: " +str(touchingwallleft) + " touching wall right: " + str(touchingwallright))

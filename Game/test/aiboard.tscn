@@ -19,7 +19,7 @@ autoplay = ""
 
 [node name="Timer" parent="."]
 
-editor/display_folded = true
+editor/display_folded = false
 
 
 [editable path="wall"]

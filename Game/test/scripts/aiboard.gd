@@ -37,6 +37,7 @@ var orb; #the newest orb
 
 onready var p1launcher = get_node("p1launcher")
 var p2launcher = null
+var p2launcherpos = Vector2(1447,980)
 
 var p1flag #flag orbs
 var p2flag
@@ -248,7 +249,7 @@ func GenerateAILauncher():
 	add_child(p2launcher)
 	p2launcher.set_name("p2launcher")
 	p2launcher.player = p2launcher.PLAYER.PLAYER2
-	p2launcher.set_pos(Vector2(1447,980))
+	p2launcher.set_pos(p2launcherpos)
 #
 #func GenerateP2Launcher():
 #	p2launcher = preload("res://test/scenes/launcher.tscn").instance()

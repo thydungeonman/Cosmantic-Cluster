@@ -59,6 +59,8 @@ var clicked = false
 var clickedpos = Vector2(30,30)
 var aiming = false
 
+onready var midwallpos = get_parent().get_node("middlewall").get_pos()
+
 func _ready():
 	set_fixed_process(true)
 	#aim.set_param(0,270 - rad2deg(x))
@@ -70,11 +72,18 @@ func _ready():
 
 func _fixed_process(delta):
 	if(Input.is_action_pressed("click")):
-		clickedpos = get_local_mouse_pos()
+		clickedpos = get_global_mouse_pos()
+		#clickedpos.x = -419
+		#clickedpos = clickedpos.linear_interpolate(Vector2(-419,0),.5)
+		#print("linear interpolate " + str(clickedpos.linear_interpolate(get_local_mouse_pos(),1)))
+		#clickedpos.y += 90
+		print("clicked pos = " + str(clickedpos - get_pos()))
 		aiming = true
+		clickedpos = Mirror(clickedpos)
+		print("mirrored  pos = " + str(clickedpos))
 	LoadOrb(delta)
 	if(aiming):
-		aiming = !AimAtBouncePos(clickedpos)
+		aiming = !AimAtPos(clickedpos)
 		if(!aiming):
 			Fire()
 			firing = true
@@ -168,22 +177,40 @@ func AimAtBouncePos(position):
 	
 	#first aim 8.5 degrees left of the orb acting as if the orb was at x = 87
 	#then multiply the current angle by cos(x/500) where x is the x value of the orb you want to hit
-	var target = -Vector2(-1500,0).angle_to(Vector2(position.x-30,position.y+60))
-	if(target < x):
-		speed += PI/1500
-		speed = clamp(speed,minspeed,maxspeed)
-		x -= speed
-		x = clamp(x,lowerlimit,upperlimit)  
-		AdjustReticule()
-	elif(target > x): 
-		speed += PI/1500
-		speed = clamp(speed,minspeed,maxspeed)
-		x += speed
-		x = clamp(x,lowerlimit,upperlimit) 
-		AdjustReticule()
-	print(str(target) + " " + str(x))
-	return (abs(target - x) <.01) #is the trajectory close enough to the target
+	
+#	var target = -Vector2(-1500,0).angle_to(Vector2(position.x-30,position.y+60))
+#	if(target < x):
+#		speed += PI/1500
+#		speed = clamp(speed,minspeed,maxspeed)
+#		x -= speed
+#		x = clamp(x,lowerlimit,upperlimit)  
+#		AdjustReticule()
+#	elif(target > x): 
+#		speed += PI/1500
+#		speed = clamp(speed,minspeed,maxspeed)
+#		x += speed
+#		x = clamp(x,lowerlimit,upperlimit) 
+#		AdjustReticule()
+#	print(str(target) + " " + str(x))
+#	return (abs(target - x) <.01) #is the trajectory close enough to the target
+	
+	#screw that, new plan
+	#to figure the angle needed for a bounce shot, simply aim at the orb in a reflected position
+	var difference = 960 - position.x
+	var target = -Vector2(-1500,0).angle_to(Vector2(position.x,position.y))
+	print("pos is " + str(position))
+	pass
 
+#only works for the right side player ie p2 or the AI
+func Mirror(position,side = 0): #side = 0 for mirroring along the center line, 1 for the right side
+	if(side != 0 and side != 1):
+		side = 0
+	var difference = position.x - 960 - 67 #centerwall x pos = 960 then minus roughly half an orb and half the middle wall
+	var mirrorx = 960 - difference
+	var mirrorpos = Vector2(mirrorx,position.y)
+	return mirrorpos - get_pos()
+	pass
+	
 func AimAtAngle(angle):
 	
 	if(angle < x):
