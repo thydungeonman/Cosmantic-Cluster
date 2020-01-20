@@ -52,6 +52,9 @@ var frozentimer = 0.00
 var lasing = false
 var laserisactive = false
 
+onready var centercast = get_node("RayCastCenter/")
+onready var leftcast = get_node("RayCastCenter/RayCastLeft")
+onready var rightcast = get_node("RayCastCenter/RayCastRight")
 onready var aim = get_node("Particles2D")
 onready var container = get_node("container")
 var next = null
@@ -73,13 +76,9 @@ func _ready():
 func _fixed_process(delta):
 	if(Input.is_action_pressed("click")):
 		clickedpos = get_global_mouse_pos()
-		#clickedpos.x = -419
-		#clickedpos = clickedpos.linear_interpolate(Vector2(-419,0),.5)
-		#print("linear interpolate " + str(clickedpos.linear_interpolate(get_local_mouse_pos(),1)))
-		#clickedpos.y += 90
 		print("clicked pos = " + str(clickedpos - get_pos()))
 		aiming = true
-		clickedpos = Mirror(clickedpos)
+		CheckAim(clickedpos)
 		print("mirrored  pos = " + str(clickedpos))
 	LoadOrb(delta)
 	if(aiming):
@@ -202,13 +201,22 @@ func AimAtBouncePos(position):
 	pass
 
 #only works for the right side player ie p2 or the AI
-func Mirror(position,side = 0): #side = 0 for mirroring along the center line, 1 for the right side
+#position is the clicked position or the orb position 
+#side = 0 for mirroring along the center line, 1 for the right side
+func Mirror(position,side = 0): 
 	if(side != 0 and side != 1):
 		side = 0
-	var difference = position.x - 960 - 67 #centerwall x pos = 960 then minus roughly half an orb and half the middle wall
-	var mirrorx = 960 - difference
-	var mirrorpos = Vector2(mirrorx,position.y)
-	return mirrorpos - get_pos()
+	if(side == 0):
+		var difference = position.x - 960 - 67 #centerwall x pos = 960 then minus roughly half an orb plus half the middle wall
+		var mirrorx = 960 - difference
+		var mirrorpos = Vector2(mirrorx,position.y)
+		return mirrorpos - get_pos()
+	elif(side == 1):
+		var difference = 1912 - position.x 
+		var mirrorx = 1912 + difference
+		var mirrorpos = Vector2(mirrorx,position.y)
+		return mirrorpos - get_pos()
+	
 	pass
 	
 func AimAtAngle(angle):
@@ -445,3 +453,56 @@ func DamageAnim():
 	abilityanim.play("damage")
 func HealAnim():
 	abilityanim.play("heal")
+
+#calculate trajectory to hit opponents flag orb 
+#determine which orbs are in the way and what colours they are
+#raycast will have to shift left and right to simulate the size of an orb
+#dig through and destroy opponents flag orb
+
+#throw away an unneeded orb
+func ThrowAway():
+	pass
+
+#swap or store orb
+func Swap():
+	pass
+
+#calculate tragecotry to hit opponents flag orb
+func FindPath():
+	pass
+
+#determine which orbs are along the flag orb trajectory
+#making sure to clear enough room for a whole orb to pass through
+func FindPathOrbs():
+	pass
+
+#throwaway and swap until desired orb is loaded
+func SwapUntil():
+	pass
+
+#run through the bottom layer of orbs
+#will be used too know where to throwaway orbs
+func CheckBottomLayer():
+	pass
+
+#make sure to clear enough room for a whole orb to hit target
+func CheckAim(position):
+	var localpos = position - get_pos()
+	var hyp = sqrt(localpos.x * localpos.x + localpos.y * localpos.y) * -1
+	var hypvector = Vector2(0,hyp)
+	centercast.set_cast_to(hypvector)
+	leftcast.set_cast_to(hypvector)
+	rightcast.set_cast_to(hypvector)
+	centercast.set_rot(centercast.get_pos().angle_to_point(position - get_pos()))
+#	centercast.set_cast_to(position - get_pos())
+#	leftcast.set_cast_to(position - get_pos())
+#	rightcast.set_cast_to(position - get_pos())
+#	centercast.force_raycast_update()
+#	rightcast.force_raycast_update()
+#	leftcast.force_raycast_update()
+#	centercast.set_cast_to(orb.get_pos() - get_pos())
+#	leftcast.set_cast_to(orb.get_pos() - get_pos() + leftcast.get_pos())
+#	rightcast.set_cast_to(orb.get_pos() - get_pos() + rightcast.get_pos())
+	centercast.force_raycast_update()
+	rightcast.force_raycast_update()
+	leftcast.force_raycast_update()

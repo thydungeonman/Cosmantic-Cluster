@@ -7,11 +7,27 @@
 
 script/script = ExtResource( 2 )
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="RayCastCenter" type="RayCast2D" parent="."]
 
 enabled = true
 cast_to = Vector2( 0, 50 )
 layer_mask = 1
 type_mask = 3
+
+[node name="RayCastRight" type="RayCast2D" parent="RayCastCenter"]
+
+transform/pos = Vector2( 35, 0 )
+enabled = false
+cast_to = Vector2( 0, 50 )
+layer_mask = 1
+type_mask = 15
+
+[node name="RayCastLeft" type="RayCast2D" parent="RayCastCenter"]
+
+transform/pos = Vector2( -35, 0 )
+enabled = false
+cast_to = Vector2( 0, 50 )
+layer_mask = 1
+type_mask = 15
 
 
