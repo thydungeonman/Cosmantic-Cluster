@@ -14,6 +14,7 @@ const GREEN = "res://test/sprites/green orb.png"
 const WHITE = "res://test/sprites/white orb.png"
 const RED = "res://test/sprites/red orb.png"
 
+#sprites
 onready var orb1 = get_node("orb1")
 onready var orb2 = get_node("orb2")
 onready var orb3 = get_node("orb3")
@@ -29,11 +30,13 @@ func IsFull():
 func IsEmpty():
 	return orbs.size() == 0
 
+#give container an orb to store before its full
 func TakeOrb(neworb):
 	if(orbs.size() < 4):
 		orbs.push_back(neworb)
 		DisplayOrbs()
 
+#swap an orb with the full container
 func Swap(neworb):
 	orbs.push_back(neworb)
 	var oldorb = orbs[0]
@@ -55,3 +58,6 @@ func Reset():
 	orb2.set_texture(null)
 	orb3.set_texture(null)
 	orbs.clear()
+
+func GetOrbs():
+	return orbs

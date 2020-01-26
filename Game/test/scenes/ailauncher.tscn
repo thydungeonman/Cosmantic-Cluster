@@ -9,6 +9,7 @@ script/script = ExtResource( 2 )
 
 [node name="RayCastCenter" type="RayCast2D" parent="."]
 
+editor/display_folded = true
 enabled = true
 cast_to = Vector2( 0, 50 )
 layer_mask = 1

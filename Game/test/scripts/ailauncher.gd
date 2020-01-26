@@ -15,12 +15,12 @@ const GREEN = "res://test/scenes/greenorb.tscn"
 const WHITE = "res://test/scenes/whiteorb.tscn"
 const RED = "res://test/scenes/redorb.tscn"
 
-var player = PLAYER.PLAYER1
+var player = PLAYER.PLAYER2
 onready var sfx = get_node("SamplePlayer")
 onready var anim = get_node("LauncherAnimationPlayer")
 onready var abilityanim = get_node("AbilityAnimationPlayer")
 onready var nextorb = get_node("nextorb") # the sprite of the upcoming orb
-var upcomingorb #this holds an enumeration for the upcoming orb
+var upcomingorb #this holds an enumeration for the upcoming orb ie the colour
 
 var trajectory = Vector2(-1500,-1500) #vector that orb is to be fired at
 var x = (PI)/2 #starting angle of launcher
@@ -40,7 +40,7 @@ var firing = false
 var loaded = false
 var orb
 var storing = false
-var swapping = false 
+var swapping = false
 var swapped = false #the player can only swap once
 
 var ischarged = false
@@ -62,11 +62,11 @@ var clicked = false
 var clickedpos = Vector2(30,30)
 var aiming = false
 
-onready var midwallpos = get_parent().get_node("middlewall").get_pos()
+#onready var midwallpos = get_parent().get_node("middlewall").get_pos()
+var bottomorbs = []
 
 func _ready():
 	set_fixed_process(true)
-	#aim.set_param(0,270 - rad2deg(x))
 	next = preload("res://test/scenes/aimingreticule.tscn").instance()
 	add_child(next)
 	next.set_pos(Vector2(0,20))
@@ -74,22 +74,25 @@ func _ready():
 	
 
 func _fixed_process(delta):
-	if(Input.is_action_pressed("click")):
-		clickedpos = get_global_mouse_pos()
-		print("clicked pos = " + str(clickedpos - get_pos()))
-		aiming = true
-		CheckAim(clickedpos)
-		print("mirrored  pos = " + str(clickedpos))
+#	if(Input.is_action_pressed("click")):
+#		clickedpos = get_global_mouse_pos()
+#		print("clicked pos = " + str(clickedpos - get_pos()))
+#		aiming = true
+#		CheckAim(clickedpos)
+#		print("mirrored  pos = " + str(clickedpos))
+#		Store(orb)
+	#print(aiming)
+	if(!aiming and loaded):
+		CheckBottomLayer()
+	
 	LoadOrb(delta)
 	if(aiming):
-		aiming = !AimAtPos(clickedpos)
+		aiming = !AimAtPos(clickedpos - get_pos())
 		if(!aiming):
 			Fire()
 			firing = true
 			loaded = false
 			shottimer = 0.0
-	
-	
 	if(isfrozen):
 		Defrost(delta)
 	
@@ -108,25 +111,25 @@ func _fixed_process(delta):
 
 func LoadOrb(delta):
 	if(upcomingorb == null):
-				randomize()
-				var rand = randi() % 8
-				if(rand == 0):
-					upcomingorb = preload(YELLOW).instance()
-				elif(rand == 1):
-					upcomingorb = preload(BLUE).instance()
-				elif(rand == 2):
-					upcomingorb = preload(RED).instance()
-				elif(rand == 3):
-					upcomingorb = preload(ORANGE).instance()
-				elif(rand == 4):
-					upcomingorb = preload(PURPLE).instance()
-				elif(rand == 5):
-					upcomingorb = preload(GREEN).instance()
-				elif(rand == 6):
-					upcomingorb = preload(BLACK).instance()
-				elif(rand == 7):
-					upcomingorb = preload(WHITE).instance()
-				nextorb.set_texture(upcomingorb.get_node("Sprite").get_texture())
+		randomize()
+		var rand = randi() % 8
+		if(rand == 0):
+			upcomingorb = preload(YELLOW).instance()
+		elif(rand == 1):
+			upcomingorb = preload(BLUE).instance()
+		elif(rand == 2):
+			upcomingorb = preload(RED).instance()
+		elif(rand == 3):
+			upcomingorb = preload(ORANGE).instance()
+		elif(rand == 4):
+			upcomingorb = preload(PURPLE).instance()
+		elif(rand == 5):
+			upcomingorb = preload(GREEN).instance()
+		elif(rand == 6):
+			upcomingorb = preload(BLACK).instance()
+		elif(rand == 7):
+			upcomingorb = preload(WHITE).instance()
+		nextorb.set_texture(upcomingorb.get_node("Sprite").get_texture())
 	
 	shottimer += delta
 	if(shottimer > .5):
@@ -156,15 +159,15 @@ func AimAtPos(position):#position must be local to the launcher
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
-		x = clamp(x,lowerlimit,upperlimit)  
+		x = clamp(x,lowerlimit,upperlimit)
 		AdjustReticule()
-	elif(target > x): 
+	elif(target > x):
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x += speed
-		x = clamp(x,lowerlimit,upperlimit) 
+		x = clamp(x,lowerlimit,upperlimit)
 		AdjustReticule()
-	print(str(target) + " " + str(x))
+	#print(str(target) + " " + str(x))
 	return (abs(target - x) <.01) #is the trajectory close enough to the target
 
 func AimAtBouncePos(position):
@@ -203,7 +206,7 @@ func AimAtBouncePos(position):
 #only works for the right side player ie p2 or the AI
 #position is the clicked position or the orb position 
 #side = 0 for mirroring along the center line, 1 for the right side
-func Mirror(position,side = 0): 
+func Mirror(position,side = 0):
 	if(side != 0 and side != 1):
 		side = 0
 	if(side == 0):
@@ -212,7 +215,7 @@ func Mirror(position,side = 0):
 		var mirrorpos = Vector2(mirrorx,position.y)
 		return mirrorpos - get_pos()
 	elif(side == 1):
-		var difference = 1912 - position.x 
+		var difference = 1912 - position.x
 		var mirrorx = 1912 + difference
 		var mirrorpos = Vector2(mirrorx,position.y)
 		return mirrorpos - get_pos()
@@ -225,13 +228,13 @@ func AimAtAngle(angle):
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
-		x = clamp(x,lowerlimit,upperlimit)  
+		x = clamp(x,lowerlimit,upperlimit)
 		AdjustReticule()
-	elif(angle > x): 
+	elif(angle > x):
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x += speed
-		x = clamp(x,lowerlimit,upperlimit) 
+		x = clamp(x,lowerlimit,upperlimit)
 		AdjustReticule()
 	print(str(angle) + " " + str(x))
 	return (abs(angle - x) <.01) #is the trajectory close enough to the target
@@ -461,11 +464,37 @@ func HealAnim():
 
 #throw away an unneeded orb
 func ThrowAway():
-	pass
+	clickedpos = Vector2(1880,515)
+	aiming = true
 
-#swap or store orb
-func Swap():
-	pass
+#swap  orb with container
+func Swap(orb):
+	print(str(orb))
+	orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+	get_parent().remove_child(orb)
+	#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
+	orb = container.Swap(orb)
+	get_parent().add_child(orb)
+	orb.set_pos(get_global_pos())
+	#get_parent().orbsonboard.push_front(orb)
+	swapping = true
+	swapped = true
+	sfx.play("hurt-c-02 - orb switch")
+	print(str(orb))
+
+#store orb in container
+func Store(orb):
+	if(!container.IsFull()):
+		orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it doesn't stay in the same spot and collide with new orbs
+		get_parent().remove_child(orb)
+		container.TakeOrb(orb)
+		loaded = false
+		storing = true
+		sfx.play("bump - orb saved for later")
+		
+#get list of stored orbs from the container
+func GetStoredOrbs():
+	return container.GetOrbs()
 
 #calculate tragecotry to hit opponents flag orb
 func FindPath():
@@ -483,7 +512,16 @@ func SwapUntil():
 #run through the bottom layer of orbs
 #will be used too know where to throwaway orbs
 func CheckBottomLayer():
-	pass
+	print("checking orbs")
+	bottomorbs = get_parent().FindBottomLayer()
+	for borb in bottomorbs:
+		print(borb)
+		if(borb.colour == orb.colour):
+			clickedpos = borb.get_pos()
+			aiming = true
+			return #bail at the first match for now, later prioritize orbs
+				#in front of the enemly flag orb trajectory
+	ThrowAway()
 
 #make sure to clear enough room for a whole orb to hit target
 func CheckAim(position):
@@ -494,15 +532,6 @@ func CheckAim(position):
 	leftcast.set_cast_to(hypvector)
 	rightcast.set_cast_to(hypvector)
 	centercast.set_rot(centercast.get_pos().angle_to_point(position - get_pos()))
-#	centercast.set_cast_to(position - get_pos())
-#	leftcast.set_cast_to(position - get_pos())
-#	rightcast.set_cast_to(position - get_pos())
-#	centercast.force_raycast_update()
-#	rightcast.force_raycast_update()
-#	leftcast.force_raycast_update()
-#	centercast.set_cast_to(orb.get_pos() - get_pos())
-#	leftcast.set_cast_to(orb.get_pos() - get_pos() + leftcast.get_pos())
-#	rightcast.set_cast_to(orb.get_pos() - get_pos() + rightcast.get_pos())
 	centercast.force_raycast_update()
 	rightcast.force_raycast_update()
 	leftcast.force_raycast_update()

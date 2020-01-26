@@ -38,7 +38,7 @@ var leftpress = false
 var shottimer = 0.0 #goes up to half a second then loads another orb into the launcher
 var canshoot = true
 var firing = false
-var loaded = false
+var loaded = false #must be false for the launcher to be loaded
 var orb
 var storing = false
 var swapping = false 
@@ -247,7 +247,7 @@ func GetFireControlsP2(delta):
 		firing = false
 	if(Input.is_action_pressed("p2_store") and !container.IsFull()):
 		if(storing == false):
-			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+			orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it doesn't stay in the same spot and collide with new orbs
 			get_parent().remove_child(orb)
 			#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
 			container.TakeOrb(orb)

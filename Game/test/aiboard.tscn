@@ -21,5 +21,9 @@ autoplay = ""
 
 editor/display_folded = false
 
+[node name="Position2D" type="Position2D" parent="."]
+
+transform/pos = Vector2( 1875, 515 )
+
 
 [editable path="wall"]
