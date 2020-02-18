@@ -62,6 +62,15 @@ var clicked = false
 var clickedpos = Vector2(30,30)
 var aiming = false
 
+var foundtarget = false
+var checkedlayer = false
+var state = 0
+
+var waittime = 1
+var waitcounter = 0.0
+
+var madeswap = false
+
 #onready var midwallpos = get_parent().get_node("middlewall").get_pos()
 var bottomorbs = []
 
@@ -78,23 +87,39 @@ func _fixed_process(delta):
 #		clickedpos = get_global_mouse_pos()
 #		print("clicked pos = " + str(clickedpos - get_pos()))
 #		aiming = true
-#		CheckAim(clickedpos)
+#		#CheckAim(clickedpos)
 #		print("mirrored  pos = " + str(clickedpos))
 #		Store(orb)
 	#print(aiming)
-	if(!aiming and loaded):
+	if(state == 5):
+		waitcounter += delta
+		if waitcounter > waittime:
+			state = 0
+			waitcounter = 0.0
+
+	if(state == 0 and loaded):#(!checkedlayer and loaded):#(!aiming and loaded):
 		CheckBottomLayer()
-	
+		
+	if(state == 1):
+		CheckAim(clickedpos)
 	LoadOrb(delta)
-	if(aiming):
-		aiming = !AimAtPos(clickedpos - get_pos())
-		if(!aiming):
-			Fire()
-			firing = true
-			loaded = false
-			shottimer = 0.0
+	if(state == 2):
+		aiming = AimAtPos(clickedpos - get_pos())
+		if(aiming):
+			state = 3
+	if(state == 3):
+		Fire()
+		firing = true
+		loaded = false
+		shottimer = 0.0
+		state = 0
 	if(isfrozen):
 		Defrost(delta)
+	if(state == 4):
+		if(!madeswap):
+			Swap(orb)
+			madeswap = true
+		state = 5
 	
 	#LASER =========================================================>O
 	if(Input.is_action_pressed("laser")):
@@ -168,8 +193,9 @@ func AimAtPos(position):#position must be local to the launcher
 		x = clamp(x,lowerlimit,upperlimit)
 		AdjustReticule()
 	#print(str(target) + " " + str(x))
-	return (abs(target - x) <.01) #is the trajectory close enough to the target
-
+	if(abs(target - x) <.01): #is the trajectory close enough to the target
+		state = 3
+		
 func AimAtBouncePos(position):
 	#use a two step process
 	#first adjust for the y. The shot must always be at a lower y than the orb thats being aimed at
@@ -236,7 +262,7 @@ func AimAtAngle(angle):
 		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
 		AdjustReticule()
-	print(str(angle) + " " + str(x))
+	#print(str(angle) + " " + str(x))
 	return (abs(angle - x) <.01) #is the trajectory close enough to the target
 
 #func GetAimControlsP1(delta):
@@ -377,7 +403,7 @@ func Fire():
 	# if yellow ablility = true
 	# spawn lightning area and child to orb
 	# when orb stops check bool in orb and then activate lightning
-	print(str(orb))
+	#print(str(orb))
 	if(laserisactive):
 		var laser = preload("res://test/scenes/laser.tscn").instance()
 		var c = orb.colour
@@ -405,6 +431,7 @@ func Fire():
 			abilityanim.play("rest")
 		swapped = false
 		sfx.play("jump-c-05 - orb launched")
+	print("fired an oeb")
 
 func Freeze(duration):
 	isfrozen = true
@@ -469,6 +496,7 @@ func ThrowAway():
 
 #swap  orb with container
 func Swap(orb):
+	print("swapped: " + str(swapped))
 	print(str(orb))
 	orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
 	get_parent().remove_child(orb)
@@ -476,11 +504,13 @@ func Swap(orb):
 	orb = container.Swap(orb)
 	get_parent().add_child(orb)
 	orb.set_pos(get_global_pos())
+	orb.inlauncher = true
 	#get_parent().orbsonboard.push_front(orb)
 	swapping = true
 	swapped = true
 	sfx.play("hurt-c-02 - orb switch")
 	print(str(orb))
+	print("MADE A SWAP")
 
 #store orb in container
 func Store(orb):
@@ -515,13 +545,23 @@ func CheckBottomLayer():
 	print("checking orbs")
 	bottomorbs = get_parent().FindBottomLayer()
 	for borb in bottomorbs:
-		print(borb)
+		#print(borb)
 		if(borb.colour == orb.colour):
 			clickedpos = borb.get_pos()
-			aiming = true
+			foundtarget = true
+			state = 1
+			#aiming = true
 			return #bail at the first match for now, later prioritize orbs
 				#in front of the enemly flag orb trajectory
-	ThrowAway()
+	if(container.IsFull()):
+#		if(!swapped):
+#			state = 4
+#			pass
+#		else:
+		state = 2
+		ThrowAway()
+	else:
+		Store(orb)
 
 #make sure to clear enough room for a whole orb to hit target
 func CheckAim(position):
@@ -535,3 +575,18 @@ func CheckAim(position):
 	centercast.force_raycast_update()
 	rightcast.force_raycast_update()
 	leftcast.force_raycast_update()
+	
+	if(localpos.x < 0): # left side shot
+		if(rightcast.get_collider() != null):
+			if(rightcast.get_collider().get_pos() != centercast.get_collider().get_pos()):
+				clickedpos.x -=2
+			else:
+				aiming = true
+				state = 2
+	if(localpos.x > 0): # right side shot
+		if(leftcast.get_collider() != null):
+			if(leftcast.get_collider().get_pos() != centercast.get_collider().get_pos()):
+				clickedpos.x +=2
+			else:
+				aiming = true
+				state = 2

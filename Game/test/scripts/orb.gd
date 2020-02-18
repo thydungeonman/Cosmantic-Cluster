@@ -13,7 +13,7 @@ var inlauncher = false #if an orb is neither in the launcher nor moving then it 
 onready var width = get_node("Sprite").get_texture().get_width() * get_node("Sprite").get_scale().x #maybe should be renamed to diameter
 onready var ray = get_node("RayCast2D")
 var matchingorbs = []
-var leftoverorbs = [] #these orbs are the ones that were touching the orbs that were just matched 
+var leftoverorbs = [] #these orbs are the ones that were touching the orbs that were just matched
 var crossreforbs = [] # these orbs are the ones that were found while looking for the top
 # they will be cross referenced with the leftover orbs so that no orb is looked through twice to find the top
 onready var pos = get_pos()
@@ -120,7 +120,7 @@ func Move(delta):
 				AddToPlayer()
 				sfx.play("beer-bottles - orbs collide together")
 				ismoving = false
-				print("playing sfx")
+				#print("playing sfx")
 				var positiondifference = get_pos() - collider.get_pos()
 				positiondifference = positiondifference.normalized()
 				var dotproductnorth = positiondifference.dot(Vector2(0,-1))
@@ -130,34 +130,34 @@ func Move(delta):
 				
 				if((dotproductnorth <= -.33 and dotproductnorth >= -1) and (dotproductwest <= 1 and dotproductwest > 0)): #collided on bottomleft
 					set_pos(collider.bottomleftspot)
-					collider.bottomleft = self 
+					collider.bottomleft = self
 					topright = collider
-					print("hit top right")
+					#print("hit top right")
 				elif((dotproductnorth <= -.33 and dotproductnorth >= -1) and (dotproductwest <= 0 and dotproductwest >= -1)): #collided on bottom right side
 					set_pos(collider.bottomrightspot)
 					collider.bottomright = self
 					topleft = collider
-					print("hit top left")
+					#print("hit top left")
 				elif((dotproductnorth <= .33 and dotproductnorth > -.33) and (dotproductwest <= 1 and dotproductwest > 0)):#left
 					set_pos(collider.leftspot)
 					collider.left = self
 					right = collider
-					print("hit right")
+					#print("hit right")
 				elif((dotproductnorth <= .33 and dotproductnorth > -.33) and (dotproductwest <= 0 and dotproductwest >= -1)):#right
 					set_pos(collider.rightspot)
 					collider.right = self
 					left = collider
-					print("hit left")
+					#print("hit left")
 				elif((dotproductnorth <= 1 and dotproductnorth >.33) and (dotproductwest <= 1 and dotproductwest > 0)):#topleft
 					set_pos(collider.topleftspot)
 					collider.topleft = self
 					bottomright = collider
-					print("hit bottom right")
+					#print("hit bottom right")
 				elif((dotproductnorth <= 1 and dotproductnorth >.33) and (dotproductwest <= 0 and dotproductwest >= -1)):#topright
 					set_pos(collider.toprightspot)
 					collider.topright = self
 					bottomleft = collider
-					print("hit bottom left")
+					#print("hit bottom left")
 					
 				EnableLauncher()
 				GetNeighboringPositions()
@@ -181,7 +181,7 @@ func Move(delta):
 						for orb in matchingorbs:
 							greyorbs = orb.Search(2,COLOUR.GREY,greyorbs)
 						var extraleftovers = []
-						for orb in matchingorbs:  #remove the original match orbs 
+						for orb in matchingorbs:  #remove the original match orbs
 							killorbs.remove(killorbs.find(orb))
 						for orb in greyorbs:
 							print(orb)
@@ -208,7 +208,7 @@ func Move(delta):
 					
 					
 					for orb in matchingorbs:
-						print(orb.get_name())
+						#print(orb.get_name())
 						orb.anim.play("blink")
 						if(orb.isflag):
 							if(orb.player == PLAYER.PLAYER1):
@@ -234,7 +234,7 @@ func click():
 	#var dotproductnorth = positiondifference.dot(Vector2(0,-1))
 	#var dotproductwest = positiondifference.dot(Vector2(-1,0))
 
-func Unhook(): 
+func Unhook():
 	#unhooks an orbs neighbors from itself and it from its neighbors
 	if(topleft != null and topleft.is_in_group("orb")):
 		topleft.bottomright = null
@@ -266,7 +266,7 @@ func Die():
 	Search(2,COLOUR.NONE,leftovers)
 	if(leftovers.size() > 0):
 		leftovers.remove(leftovers.find(self))
-	print("leftover size: " + str(leftovers.size()))
+	#print("leftover size: " + str(leftovers.size()))
 	get_parent().leftoverorbs = leftovers
 	Unhook()
 	get_parent().CheckFall()
@@ -387,7 +387,7 @@ func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2
 #the topmost orbs neighbor an area that is in the group "top"
 #this function takes an array or orbs that have already been checked and then checks to see if it has the top as itn neighbor
 #if its neighbor is not the top, that neighbor will then check if it neighbors the top and so on
-func LookForTop(crossreforbs): 
+func LookForTop(crossreforbs):
 	crossreforbs.push_back(self)
 	if(topleft != null and !topleft.is_in_group("wall")):
 		#print("topleft")
@@ -427,7 +427,7 @@ func LookForTop(crossreforbs):
 				return true
 				
 	falling = true
-	print(str(get_name()) + " did not find top")
+	#print(str(get_name()) + " did not find top")
 	return false
 
 
@@ -526,7 +526,7 @@ func Warp(spot):
 	elif(onboard == PLAYER.PLAYER2):
 		onboard = PLAYER.PLAYER1
 	if(is_colliding()):
-		print("Died in the warp")
+		#print("Died in the warp")
 		MovingDie()
 
 func PrintNeighbors():

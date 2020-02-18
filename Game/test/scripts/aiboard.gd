@@ -42,8 +42,8 @@ var p2launcherpos = Vector2(1447,980)
 var p1flag #flag orbs
 var p2flag
 
-var player1health = 1
-var player2health = 1
+var player1health = 5
+var player2health = 5
 var lastusedcolourp1 = COLOUR.NONE
 var lastusedcolourp2 = COLOUR.NONE
 var abilitycombop1 = 0 #counts the number of times a color is chained
@@ -79,7 +79,7 @@ func _ready():
 	set_fixed_process(true)
 
 func _fixed_process(delta):
-	print(orbsonboardp2.size())
+	#print(orbsonboardp2.size())
 	if(Input.is_action_pressed("ui_page_up")):
 		p1launcher.Charge()
 		p2launcher.Charge()
@@ -530,7 +530,7 @@ func NewHandleAbility(player):
 				tier = 2.0
 			if(abilitycombop2 == 1):
 				tier = 1.0
-			print(tier)
+			#print(tier)
 			p1launcher.Freeze(freezetime,tier)
 			sfx.play("winter wind - White ability used")
 			animenap2.play("enap2 attack")
