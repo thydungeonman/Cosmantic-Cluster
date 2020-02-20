@@ -58,6 +58,7 @@ onready var container = get_node("container")
 var next = null
 
 func _ready():
+	print(orb)
 	set_fixed_process(true)
 	#aim.set_param(0,270 - rad2deg(x))
 	next = preload("res://test/scenes/aimingreticule.tscn").instance()
@@ -113,12 +114,12 @@ func LoadOrb(delta):
 				elif(rand == 7):
 					upcomingorb = preload(WHITE).instance()
 				nextorb.set_texture(upcomingorb.get_node("Sprite").get_texture())
-	
 	shottimer += delta
-	if(shottimer > .5):
+	if(shottimer > 2.0):
 		if(loaded == false):
 			orb = upcomingorb #make the switch
 			upcomingorb = null
+			print(orb)
 			nextorb.set_texture(null)
 			
 			get_parent().add_child(orb)

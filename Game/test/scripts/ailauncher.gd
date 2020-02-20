@@ -70,6 +70,7 @@ var waittime = 1
 var waitcounter = 0.0
 
 var madeswap = false
+var didstore = false
 
 #onready var midwallpos = get_parent().get_node("middlewall").get_pos()
 var bottomorbs = []
@@ -83,7 +84,16 @@ func _ready():
 	
 
 func _fixed_process(delta):
-#	if(Input.is_action_pressed("click")):
+	if(Input.is_action_pressed("click")):
+		if(!madeswap):
+			orb = Swap(orb)
+		madeswap = true
+	if(Input.is_action_pressed("rclick")):
+		if(!didstore):
+			Store(orb)
+		didstore = true
+	if(Input.is_action_pressed("ui_accept")):
+		state = 0
 #		clickedpos = get_global_mouse_pos()
 #		print("clicked pos = " + str(clickedpos - get_pos()))
 #		aiming = true
@@ -91,18 +101,19 @@ func _fixed_process(delta):
 #		print("mirrored  pos = " + str(clickedpos))
 #		Store(orb)
 	#print(aiming)
+	LoadOrb(delta)
+	#print(orb)
 	if(state == 5):
 		waitcounter += delta
 		if waitcounter > waittime:
 			state = 0
 			waitcounter = 0.0
-
+	#print(orb)
 	if(state == 0 and loaded):#(!checkedlayer and loaded):#(!aiming and loaded):
 		CheckBottomLayer()
 		
 	if(state == 1):
 		CheckAim(clickedpos)
-	LoadOrb(delta)
 	if(state == 2):
 		aiming = AimAtPos(clickedpos - get_pos())
 		if(aiming):
@@ -113,13 +124,14 @@ func _fixed_process(delta):
 		loaded = false
 		shottimer = 0.0
 		state = 0
+		madeswap = false
 	if(isfrozen):
 		Defrost(delta)
 	if(state == 4):
 		if(!madeswap):
-			Swap(orb)
+			orb = Swap(orb)
 			madeswap = true
-		state = 5
+		state = 0
 	
 	#LASER =========================================================>O
 	if(Input.is_action_pressed("laser")):
@@ -492,25 +504,28 @@ func HealAnim():
 #throw away an unneeded orb
 func ThrowAway():
 	clickedpos = Vector2(1880,515)
-	aiming = true
+	aiming = false
 
 #swap  orb with container
-func Swap(orb):
+func Swap(oldorb):
 	print("swapped: " + str(swapped))
-	print(str(orb))
-	orb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
-	get_parent().remove_child(orb)
+	print(str(oldorb))
+	print(GetStoredOrbs())
+	oldorb.set_pos(Vector2(0,-200)) #move the orb to the ether else it stays in the same spot and collides with new orbs
+	get_parent().remove_child(oldorb)
 	#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
-	orb = container.Swap(orb)
-	get_parent().add_child(orb)
-	orb.set_pos(get_global_pos())
-	orb.inlauncher = true
+	var neworb = container.Swap(oldorb)
+	get_parent().add_child(neworb)
+	neworb.set_pos(get_global_pos())
+	neworb.inlauncher = true
 	#get_parent().orbsonboard.push_front(orb)
 	swapping = true
 	swapped = true
 	sfx.play("hurt-c-02 - orb switch")
-	print(str(orb))
+	print(str(neworb))
 	print("MADE A SWAP")
+	print(GetStoredOrbs())
+	return neworb
 
 #store orb in container
 func Store(orb):
@@ -550,18 +565,19 @@ func CheckBottomLayer():
 			clickedpos = borb.get_pos()
 			foundtarget = true
 			state = 1
-			#aiming = true
 			return #bail at the first match for now, later prioritize orbs
 				#in front of the enemly flag orb trajectory
 	if(container.IsFull()):
-#		if(!swapped):
-#			state = 4
-#			pass
-#		else:
-		state = 2
-		ThrowAway()
+		if(!madeswap):
+			orb = Swap(orb)
+			madeswap = true
+			state = 5
+		else:
+			state = 2
+			ThrowAway()
 	else:
 		Store(orb)
+		state = 5
 
 #make sure to clear enough room for a whole orb to hit target
 func CheckAim(position):
@@ -581,12 +597,12 @@ func CheckAim(position):
 			if(rightcast.get_collider().get_pos() != centercast.get_collider().get_pos()):
 				clickedpos.x -=2
 			else:
-				aiming = true
+				aiming = false
 				state = 2
 	if(localpos.x > 0): # right side shot
 		if(leftcast.get_collider() != null):
 			if(leftcast.get_collider().get_pos() != centercast.get_collider().get_pos()):
 				clickedpos.x +=2
 			else:
-				aiming = true
+				aiming = false
 				state = 2

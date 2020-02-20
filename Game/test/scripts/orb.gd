@@ -111,7 +111,7 @@ func Move(delta):
 			trajectory.y *= -1
 		elif(collider.is_in_group("orb")):
 			if(collider.inlauncher):
-				get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
+				#get_parent().orbsonboard.remove(get_parent().orbsonboard.find(self))
 				EnableLauncher()
 				queue_free()
 				print("hit launcher orb")
