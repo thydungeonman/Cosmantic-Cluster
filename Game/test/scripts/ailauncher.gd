@@ -64,7 +64,14 @@ var aiming = false
 
 var foundtarget = false
 var checkedlayer = false
-var state = 0
+var state = 5
+#0 = find bottom orb that matches loaded orb
+#1 = check aim
+#2 = aim laucher at target
+#3 = fire orb
+#4 = swap orb
+#5 = wait 
+
 
 var waittime = 1
 var waitcounter = 0.0
@@ -74,6 +81,7 @@ var didstore = false
 
 #onready var midwallpos = get_parent().get_node("middlewall").get_pos()
 var bottomorbs = []
+var target # orb to be aimed at
 
 func _ready():
 	set_fixed_process(true)
@@ -84,6 +92,7 @@ func _ready():
 	
 
 func _fixed_process(delta):
+	print(get_parent().orbsonboardp2.size())
 	if(Input.is_action_pressed("click")):
 		if(!madeswap):
 			orb = Swap(orb)
@@ -110,7 +119,8 @@ func _fixed_process(delta):
 			waitcounter = 0.0
 	#print(orb)
 	if(state == 0 and loaded):#(!checkedlayer and loaded):#(!aiming and loaded):
-		CheckBottomLayer()
+		target = CheckBottomLayer()
+		print(target)
 		
 	if(state == 1):
 		CheckAim(clickedpos)
@@ -169,7 +179,7 @@ func LoadOrb(delta):
 		nextorb.set_texture(upcomingorb.get_node("Sprite").get_texture())
 	
 	shottimer += delta
-	if(shottimer > .5):
+	if(shottimer > 1):
 		if(loaded == false):
 			orb = upcomingorb #make the switch
 			upcomingorb = null
@@ -243,7 +253,7 @@ func AimAtBouncePos(position):
 
 #only works for the right side player ie p2 or the AI
 #position is the clicked position or the orb position 
-#side = 0 for mirroring along the center line, 1 for the right side
+#side = 0 for a left side bounce shot, 1 for the right side
 func Mirror(position,side = 0):
 	if(side != 0 and side != 1):
 		side = 0
@@ -503,7 +513,11 @@ func HealAnim():
 
 #throw away an unneeded orb
 func ThrowAway():
-	clickedpos = Vector2(1880,515)
+	randomize()
+	var randspot = int(randi() % 800) + 1000
+	clickedpos = Vector2(randspot,515)
+	print("THROWAWAY")
+	print(clickedpos)
 	aiming = false
 
 #swap  orb with container
@@ -557,27 +571,48 @@ func SwapUntil():
 #run through the bottom layer of orbs
 #will be used too know where to throwaway orbs
 func CheckBottomLayer():
-	print("checking orbs")
+	var borbs = []
+	print("CHECKING ORBS")
 	bottomorbs = get_parent().FindBottomLayer()
 	for borb in bottomorbs:
 		#print(borb)
 		if(borb.colour == orb.colour):
-			clickedpos = borb.get_pos()
-			foundtarget = true
-			state = 1
-			return #bail at the first match for now, later prioritize orbs
-				#in front of the enemly flag orb trajectory
+			borbs.push_back(borb)
+			
+	if(borbs.size() == 1):
+		print("ONE BORB")
+		clickedpos = borbs[0].get_pos()
+		foundtarget = true
+		state = 1
+		return borbs[0]
+	elif(borbs.size() > 1):
+		print("MULTIPLE BORBS")
+		for borb in borbs:
+			var ar = []
+			print(borb.Search(1,borb.colour,ar).size())
+			if(borb.Search(1,borb.colour,ar).size() >= 1):
+				print("FOUND GOOD MATCH")
+				for i in ar:
+					print(i)
+				clickedpos = borb.get_pos()
+				foundtarget = true
+				state = 1
+				return borb
+		clickedpos = borbs[0].get_pos()
+		foundtarget = true
+		state = 1
+		return borbs[0]
 	if(container.IsFull()):
 		if(!madeswap):
 			orb = Swap(orb)
 			madeswap = true
-			state = 5
+			state = 0
 		else:
 			state = 2
 			ThrowAway()
 	else:
 		Store(orb)
-		state = 5
+		state = 0
 
 #make sure to clear enough room for a whole orb to hit target
 func CheckAim(position):
@@ -592,17 +627,39 @@ func CheckAim(position):
 	rightcast.force_raycast_update()
 	leftcast.force_raycast_update()
 	
-	if(localpos.x < 0): # left side shot
-		if(rightcast.get_collider() != null):
-			if(rightcast.get_collider().get_pos() != centercast.get_collider().get_pos()):
+	if(localpos.x <= 0): # left side shot
+			if(!centercast.is_colliding() and !rightcast.is_colliding()):
+				Mirror(target.get_global_pos(),0)
+				#ThrowAway()
+				#aiming = false
+				state = 2
+				return
+			elif(centercast.get_collider() != target or rightcast.get_collider() != target):
 				clickedpos.x -=2
-			else:
+				clickedpos.y += 2
+				print("ADJUST LEFT")
+				return
+			else: #both are equal to target
 				aiming = false
 				state = 2
-	if(localpos.x > 0): # right side shot
-		if(leftcast.get_collider() != null):
-			if(leftcast.get_collider().get_pos() != centercast.get_collider().get_pos()):
+				return
+	elif(localpos.x > 0): # right side shot
+			if(!centercast.is_colliding() and !leftcast.is_colliding()):
+				Mirror(target.get_global_pos(),1)
+				aiming = false
+				state = 2
+				return
+			elif(centercast.get_collider() != target or leftcast.get_collider() != target):
 				clickedpos.x +=2
+				clickedpos.y += 2
+				print("ADJUST RIGHT")
+				return
 			else:
+				print("COLLIDERS")
+				print(centercast.get_collider())
+				print(leftcast.get_collider())
 				aiming = false
 				state = 2
+			return
+	print("Something is weird")
+	# if can not raycast at target, aimcheck on bounce shot positions

@@ -25,5 +25,9 @@ editor/display_folded = false
 
 transform/pos = Vector2( 1875, 515 )
 
+[node name="Position2D 2" type="Position2D" parent="."]
+
+transform/pos = Vector2( 1010, 520 )
+
 
 [editable path="wall"]

@@ -587,7 +587,10 @@ func PrintNeighbors():
 	
 
 func _on_orb_mouse_enter():
-	PrintNeighbors()
+	var as = []
+	if(Search(1,colour,as).size()> 0):
+		print("its good")
+	#PrintNeighbors()
 
 func DoCasts():
 	#raycasts to local neighboring positions to find neighboring orbs and then hooks them up

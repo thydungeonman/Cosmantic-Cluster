@@ -12,22 +12,22 @@ script/script = ExtResource( 2 )
 enabled = true
 cast_to = Vector2( 0, 50 )
 layer_mask = 1
-type_mask = 3
+type_mask = 2
 
 [node name="RayCastRight" type="RayCast2D" parent="RayCastCenter"]
 
-transform/pos = Vector2( 34, 0 )
-enabled = false
+transform/pos = Vector2( 41, 0 )
+enabled = true
 cast_to = Vector2( 0, 50 )
 layer_mask = 1
-type_mask = 15
+type_mask = 2
 
 [node name="RayCastLeft" type="RayCast2D" parent="RayCastCenter"]
 
-transform/pos = Vector2( -34, 0 )
-enabled = false
+transform/pos = Vector2( -41, 0 )
+enabled = true
 cast_to = Vector2( 0, 50 )
 layer_mask = 1
-type_mask = 15
+type_mask = 2
 
 
