@@ -68,7 +68,7 @@ onready var ray = get_node("RayCast2D")
 var rclick = false
 
 func _ready():
-	music.play(0)
+#	music.play(0)
 	
 	GenerateP2Launcher()
 	GeneratePlayer1Flag()

@@ -35,13 +35,13 @@ var lowerlimit = .14
 var rightpress = false
 var leftpress = false
 
-var shottimer = 0.0 #goes up to half a second then loads another orb into the launcher
+var shottimer = 0.5 #goes up to half a second then loads another orb into the launcher
 var canshoot = true
 var firing = false
 var loaded = false #must be false for the launcher to be loaded
 var orb
 var storing = false
-var swapping = false 
+var swapping = false
 var swapped = false #the player can only swap once
 
 var ischarged = false
@@ -95,27 +95,27 @@ func _fixed_process(delta):
 
 func LoadOrb(delta):
 	if(upcomingorb == null):
-				randomize()
-				var rand = randi() % 8
-				if(rand == 0):
-					upcomingorb = preload(YELLOW).instance()
-				elif(rand == 1):
-					upcomingorb = preload(BLUE).instance()
-				elif(rand == 2):
-					upcomingorb = preload(RED).instance()
-				elif(rand == 3):
-					upcomingorb = preload(ORANGE).instance()
-				elif(rand == 4):
-					upcomingorb = preload(PURPLE).instance()
-				elif(rand == 5):
-					upcomingorb = preload(GREEN).instance()
-				elif(rand == 6):
-					upcomingorb = preload(BLACK).instance()
-				elif(rand == 7):
-					upcomingorb = preload(WHITE).instance()
-				nextorb.set_texture(upcomingorb.get_node("Sprite").get_texture())
+		randomize()
+		var rand = randi() % 8
+		if(rand == 0):
+			upcomingorb = preload(YELLOW).instance()
+		elif(rand == 1):
+			upcomingorb = preload(BLUE).instance()
+		elif(rand == 2):
+			upcomingorb = preload(RED).instance()
+		elif(rand == 3):
+			upcomingorb = preload(ORANGE).instance()
+		elif(rand == 4):
+			upcomingorb = preload(PURPLE).instance()
+		elif(rand == 5):
+			upcomingorb = preload(GREEN).instance()
+		elif(rand == 6):
+			upcomingorb = preload(BLACK).instance()
+		elif(rand == 7):
+			upcomingorb = preload(WHITE).instance()
+		nextorb.set_texture(upcomingorb.get_node("Sprite").get_texture())
 	shottimer += delta
-	if(shottimer > 2.0):
+	if(shottimer > 1.0):
 		if(loaded == false):
 			orb = upcomingorb #make the switch
 			upcomingorb = null
@@ -141,7 +141,7 @@ func GetAimControlsP1(delta):
 		speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
-		x = clamp(x,lowerlimit,upperlimit)     
+		x = clamp(x,lowerlimit,upperlimit)
 		aim.set_param(0,270 - rad2deg(x))
 		AdjustReticule()
 		#print(str(rad2deg(x)) + " " + str(tan(x)))

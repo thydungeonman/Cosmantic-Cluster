@@ -59,6 +59,8 @@ onready var lrightspot = Vector2(width ,0)
 onready var lbottomleftspot = Vector2(-width,width) * Vector2(1.07337749,1.8417709).normalized()
 onready var lbottomrightspot = Vector2(width,width) * Vector2(1.07337749,1.8417709).normalized()
 
+var timespathedupon = 0
+
 func _ready():
 	set_fixed_process(true)
 	#get_node("Label").set_text(str(get_name()))
@@ -651,7 +653,6 @@ func DoCasts():
 
 func Sparkle():
 	get_node("sparkles").set_emitting(true)
-	print("sparkles")
 
 func StopSparkle():
 	get_node("sparkles").set_emitting(false)
@@ -674,3 +675,56 @@ func SignalGameOver(): #used when an orb goes over the death line
 func BecomeEthereal():
 	set_layer_mask(2)
 	set_collision_mask(2)
+
+func PathToTop(crossreforbs):
+	crossreforbs.push_back(self)
+	if(topleft != null and !topleft.is_in_group("wall")):
+		#print("topleft")
+		if(!crossreforbs.has(topleft)):
+			if(topleft.is_in_group("top") or (!topleft.is_in_group("top") and topleft.PathToTop(crossreforbs))):
+				#print(str(get_name()) + " found top on topleft")
+				if(topleft.is_in_group("orb")):
+					topleft.timespathedupon += 1
+				return true
+	if(topright != null and !topright.is_in_group("wall")):
+		#print("topright")
+		if(!crossreforbs.has(topright)):
+			if(topright.is_in_group("top") or (!topright.is_in_group("top") and topright.PathToTop(crossreforbs))):
+				#print(str(get_name()) + " found top on topright")
+				if(topright.is_in_group("orb")):
+					topright.timespathedupon += 1
+				return true
+	if(left != null and !left.is_in_group("wall")):
+		#print("left")
+		if(!crossreforbs.has(left)):
+			if(left.is_in_group("top") or (!left.is_in_group("top") and left.PathToTop(crossreforbs))):
+				#print(str(get_name()) + " found top on left")
+				if(left.is_in_group("orb")):
+					left.timespathedupon += 1
+				return true
+	if(right != null and !right.is_in_group("wall")):
+		#print("right")
+		if(!crossreforbs.has(right)):
+			if(right.is_in_group("top") or (!right.is_in_group("top") and right.PathToTop(crossreforbs))):
+				#print(str(get_name()) + " found top on right")
+				if(right.is_in_group("orb")):
+					right.timespathedupon += 1
+				return true
+	if(bottomleft != null and !bottomleft.is_in_group("wall")):
+		#print("bottomleft")
+		if(!crossreforbs.has(bottomleft)):
+			if(bottomleft.is_in_group("top") or (!bottomleft.is_in_group("top") and bottomleft.PathToTop(crossreforbs))):
+				#print(str(get_name()) + " found top on bottomleft")
+				if(bottomleft.is_in_group("orb")):
+					bottomleft.timespathedupon += 1
+				return true
+	if(bottomright != null and !bottomright.is_in_group("wall")):
+		#print("bottomright")
+		if(!crossreforbs.has(bottomright)):
+			if(bottomright.is_in_group("top") or (!bottomright.is_in_group("top") and bottomright.PathToTop(crossreforbs))):
+				#print(str(get_name()) + " found top on bottomright")
+				if(bottomright.is_in_group("orb")):
+					bottomright.timespathedupon += 1
+				return true
+				
+	return false

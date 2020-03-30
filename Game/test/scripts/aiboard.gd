@@ -25,10 +25,10 @@ onready var animenap2 = get_node("enaP2player")
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width
 
 var fallcheckarray = []
-var orbsonboard = [] 
+var orbsonboard = []
 var orbsonboardp1 = [] #if either is empty, the game is over
-var orbsonboardp2 = [] 
-var s = false 
+var orbsonboardp2 = []
+var s = false
 var t  = 0.0 #timer variable to delay the raycasts of the orbs when generated, works with s
 
 var leftoverorbs = []
@@ -138,7 +138,7 @@ func GenerateBoardP1():
 		elif(i%2 == 0):
 			GenerateEvenRow(xoffset, yoffset, orbwidth,1)
 		yoffset += orbwidth * Vector2(1.07337749,1.8417709).normalized().y;
-		print(str(orbwidth))
+#		print(str(orbwidth))
 
 func GenerateBoardP2():
 	#generate board based off of the width of the screen and the width of an orb
@@ -161,15 +161,15 @@ func GenerateBoardP2():
 
 
 func CheckFall(): #will most likely take one or more kinematic bodies that are the neighboring orbs of the ones that were just matched and killed
-	print("checking fall" + " " + str(leftoverorbs.size()))
+#	print("checking fall" + " " + str(leftoverorbs.size()))
 	var orbfell = false
 	for i in leftoverorbs:
-		print(i.get_name())
+#		print(i.get_name())
 		i.set_opacity(1)
 		if i != null:
-			print("start")
+#			print("start")
 			var s = i.LookForTop(crossreforbs)
-			print("end")
+#			print("end")
 			if s == false:
 				for badorb in crossreforbs:
 					orbfell = true
@@ -180,7 +180,7 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 			crossreforbs.clear()
 	if(orbfell):
 		sfx.play("punch sound - falling orbs")
-		print("sfx played")
+#		print("sfx played")
 	
 
 func GenerateOddRow(xoffset, yoffset, width, player):
@@ -704,14 +704,8 @@ func P2BlueAbility():
 #	GameOver("ITS OVER",PLAYER.PLAYER1)
 
 func RClick():
-	P2BlueAbility()
-	P2BlueAbility()
-	P2BlueAbility()
-	P1BlueAbility()
-	P1BlueAbility()
-	P1BlueAbility()
-	#GameOver()
-	pass
+	print("rclick")
+	FindGap()
 
 func FindAvailableSpot(player):
 	#finds the first available spot for a gray orb to be spawned for the player that is passed to the function
@@ -916,3 +910,71 @@ func FindBottomLayer():
 		if (orb.bottomleft == null and orb.bottomright == null):
 			bottomorbs.push_back(orb)
 	return bottomorbs
+
+func FindPeninsula(targetcolour):
+	var t = null
+	var potentials = []
+	for orb in orbsonboardp2:
+		if(orb.CountNeighbors() < 3):
+			potentials.push_back(orb)
+	
+	for orb in potentials:
+		var crossreforbs = []
+		orb.PathToTop(crossreforbs)
+	for orb in orbsonboardp2:
+		orb.get_node("pathed").show()
+		orb.get_node("pathed").set_text(str(orb.timespathedupon))
+		if(orb.timespathedupon >= 2 and orb.colour == targetcolour):
+			t = orb
+			for orb in orbsonboardp2:
+				orb.timespathedupon = 0
+			return t
+	
+	for orb in orbsonboardp2:
+		orb.timespathedupon = 0
+		
+	for orb in orbsonboardp2:
+		if orb.colour == COLOUR.GREY:
+			t = orb
+			return t
+	
+	for orb in orbsonboardp2:
+		if orb.colour == targetcolour:
+			t = orb
+			return t
+	return t
+
+#find a gap in the orbs on the board to throwaway unneeded orbs
+func FindGap():
+	var positions = []
+	var pos = null
+	for orb in orbsonboardp2:
+		if(orb.topleft != null and orb.topright != null):
+			if (orb.topleft.is_in_group("top") or orb.topright.is_in_group("top")) and orb.left == null:
+				pos = orb.get_pos()
+				pos.x -= 90
+				positions.push_back(pos)
+			elif (orb.topleft.is_in_group("top") or orb.topright.is_in_group("top")) and orb.right == null:
+				pos = orb.get_pos()
+				pos.x += 90
+				positions.push_back(pos)
+	if(positions.size() > 0):
+		for posi in positions:
+			var localpos = posi - p2launcher.get_pos()
+			var hyp = sqrt(localpos.x * localpos.x + localpos.y * localpos.y) * -1
+			var hypvector = Vector2(0,hyp)
+			p2launcher.centercast.set_cast_to(hypvector)
+			p2launcher.leftcast.set_cast_to(hypvector)
+			p2launcher.rightcast.set_cast_to(hypvector)
+			p2launcher.centercast.set_rot(p2launcher.centercast.get_pos().angle_to_point(posi - p2launcher.get_pos()))
+			p2launcher.centercast.force_raycast_update()
+			p2launcher.rightcast.force_raycast_update()
+			p2launcher.leftcast.force_raycast_update()
+			if(!p2launcher.centercast.is_colliding() and !p2launcher.rightcast.is_colliding() and !p2launcher.leftcast.is_colliding()):
+				print("ULTRA SUPERIOR !!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				return posi
+			else:
+				pos = null
+	
+	
+	return pos

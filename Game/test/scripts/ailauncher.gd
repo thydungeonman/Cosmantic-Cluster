@@ -64,7 +64,7 @@ var aiming = false
 
 var foundtarget = false
 var checkedlayer = false
-var state = 5
+var state =  5
 #0 = find bottom orb that matches loaded orb
 #1 = check aim
 #2 = aim laucher at target
@@ -92,15 +92,15 @@ func _ready():
 	
 
 func _fixed_process(delta):
-	print(get_parent().orbsonboardp2.size())
+#	print(get_parent().orbsonboardp2.size())
 	if(Input.is_action_pressed("click")):
 		if(!madeswap):
 			orb = Swap(orb)
 		madeswap = true
-	if(Input.is_action_pressed("rclick")):
-		if(!didstore):
-			Store(orb)
-		didstore = true
+#	if(Input.is_action_pressed("rclick")):
+#		if(!didstore):
+#			Store(orb)
+#		didstore = true
 	if(Input.is_action_pressed("ui_accept")):
 		state = 0
 #		clickedpos = get_global_mouse_pos()
@@ -123,7 +123,8 @@ func _fixed_process(delta):
 		print(target)
 		
 	if(state == 1):
-		CheckAim(clickedpos)
+		while(state == 1):
+			CheckAim(clickedpos)
 	if(state == 2):
 		aiming = AimAtPos(clickedpos - get_pos())
 		if(aiming):
@@ -513,6 +514,12 @@ func HealAnim():
 
 #throw away an unneeded orb
 func ThrowAway():
+	var pos = get_parent().FindGap()
+	if pos != null:
+		clickedpos = pos
+		aiming = false
+		print("SUPERIOR THROWAWAY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		return
 	randomize()
 	var randspot = int(randi() % 800) + 1000
 	clickedpos = Vector2(randspot,515)
@@ -571,6 +578,16 @@ func SwapUntil():
 #run through the bottom layer of orbs
 #will be used too know where to throwaway orbs
 func CheckBottomLayer():
+	if(laserisactive):
+		var t = get_parent().FindPeninsula(orb.colour)
+		if(t != null):
+			print("FOUND TARGET ORB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+			print(t)
+			clickedpos = t.get_pos()
+			foundtarget = true
+			state = 2
+			return t
+		print("DIDNT FIND TARGET ORB  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	var borbs = []
 	print("CHECKING ORBS")
 	bottomorbs = get_parent().FindBottomLayer()
@@ -630,14 +647,15 @@ func CheckAim(position):
 	if(localpos.x <= 0): # left side shot
 			if(!centercast.is_colliding() and !rightcast.is_colliding()):
 				Mirror(target.get_global_pos(),0)
-				#ThrowAway()
+				print("BOUNCE SHOT")
+				#ThrowAway()																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	
 				#aiming = false
 				state = 2
 				return
 			elif(centercast.get_collider() != target or rightcast.get_collider() != target):
 				clickedpos.x -=2
 				clickedpos.y += 2
-				print("ADJUST LEFT")
+#				print("ADJUST LEFT")
 				return
 			else: #both are equal to target
 				aiming = false
@@ -646,13 +664,14 @@ func CheckAim(position):
 	elif(localpos.x > 0): # right side shot
 			if(!centercast.is_colliding() and !leftcast.is_colliding()):
 				Mirror(target.get_global_pos(),1)
+				print("BOUNCE SHOT")
 				aiming = false
 				state = 2
 				return
 			elif(centercast.get_collider() != target or leftcast.get_collider() != target):
 				clickedpos.x +=2
 				clickedpos.y += 2
-				print("ADJUST RIGHT")
+#				print("ADJUST RIGHT")
 				return
 			else:
 				print("COLLIDERS")
