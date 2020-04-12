@@ -94,16 +94,16 @@ func _ready():
 
 func _fixed_process(delta):
 #	print(get_parent().orbsonboardp2.size())
-	if(Input.is_action_pressed("click")):
-		if(!madeswap):
-			orb = Swap(orb)
-		madeswap = true
+#	if(Input.is_action_pressed("click")):
+#		if(!madeswap):
+#			orb = Swap(orb)
+#		madeswap = true
 #	if(Input.is_action_pressed("rclick")):
 #		if(!didstore):
 #			Store(orb)
 #		didstore = true
-	if(Input.is_action_pressed("ui_accept")):
-		state = 0
+#	if(Input.is_action_pressed("ui_accept")):
+#		state = 0
 #		clickedpos = get_global_mouse_pos()
 #		print("clicked pos = " + str(clickedpos - get_pos()))
 #		aiming = true
