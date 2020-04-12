@@ -665,6 +665,8 @@ func P1BlueAbility():
 		grey.onboard = orb.PLAYER.PLAYER2
 		orbsonboardp2.push_front(grey)
 		orbsonboard.push_back(grey)
+		if grey.WentOverDeathLine():
+			grey.SignalGameOver()
 
 func P2BlueAbility():
 	var orb = FindAvailableSpot(PLAYER.PLAYER1)
@@ -687,6 +689,8 @@ func P2BlueAbility():
 		grey.onboard = orb.PLAYER.PLAYER1
 		orbsonboard.push_back(grey)
 		orbsonboardp1.push_front(grey)
+		if grey.WentOverDeathLine():
+			grey.SignalGameOver()
 
 
 #func Click():

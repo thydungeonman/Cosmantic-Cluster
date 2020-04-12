@@ -24,9 +24,10 @@ var upcomingorb #this holds an enumeration for the upcoming orb ie the colour
 
 var trajectory = Vector2(-1500,-1500) #vector that orb is to be fired at
 var x = (PI)/2 #starting angle of launcher
-var speed = PI/240
+var speed = PI/240 
 var minspeed = PI/1000
 var maxspeed = PI/170
+var standardmaxspeed = PI/170
 
 var upperlimit = PI - 0.14
 var lowerlimit = .14
@@ -456,10 +457,13 @@ func Fire():
 		sfx.play("jump-c-05 - orb launched")
 	print("fired an oeb")
 
-func Freeze(duration):
+func Freeze(duration,tier):
+	maxspeed = ((4.0-tier)/4.0) * standardmaxspeed
+	print("max speeds")
+	print(maxspeed)
+	print(standardmaxspeed)
 	isfrozen = true
 	frozentime = duration
-	speed = 0
 	anim.play("freeze")
 
 func Defrost(delta):
@@ -520,9 +524,27 @@ func ThrowAway():
 		aiming = false
 		print("SUPERIOR THROWAWAY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		return
-	randomize()
-	var randspot = int(randi() % 800) + 1000
-	clickedpos = Vector2(randspot,515)
+	
+	var isroom = false
+	while(!isroom):
+		randomize()
+		var randspot = int(randi() % 800) + 1000
+		clickedpos = Vector2(randspot,615)
+		var localpos = clickedpos - get_pos()
+		var hyp = sqrt(localpos.x * localpos.x + localpos.y * localpos.y) * -1
+		var hypvector = Vector2(0,hyp)
+		centercast.set_cast_to(hypvector)
+		leftcast.set_cast_to(hypvector)
+		rightcast.set_cast_to(hypvector)
+		centercast.set_rot(centercast.get_pos().angle_to_point(clickedpos - get_pos()))
+		centercast.force_raycast_update()
+		rightcast.force_raycast_update()
+		leftcast.force_raycast_update()
+		if(!leftcast.is_colliding() and !centercast.is_colliding() and !rightcast.is_colliding()):
+			isroom = true
+		else:
+			isroom = false
+	
 	print("THROWAWAY")
 	print(clickedpos)
 	aiming = false
