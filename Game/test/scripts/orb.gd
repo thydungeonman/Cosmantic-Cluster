@@ -21,7 +21,7 @@ onready var inversescale = 1/get_scale().x
 onready var anim = get_node("AnimationPlayer")
 onready var sfx = get_node("SamplePlayer2D")
 
-var onboard #whos board the orb is on
+var onboard #whos side of the board the orb is on
 
 var touchingwallleft = false
 var touchingwallright = false
@@ -36,6 +36,7 @@ var colour = COLOUR.NONE
 var warped = false #changes to true after sent through a warp
 
 var isflag = false #should be a better way to do this
+var istouchingflag = false 
 
 #neighboring orbs  Kinematic bodies
 var topleft
@@ -160,7 +161,8 @@ func Move(delta):
 					collider.topright = self
 					bottomleft = collider
 					#print("hit bottom left")
-					
+				if(collider.is_in_group("flag")):
+					istouchingflag = true
 				EnableLauncher()
 				GetNeighboringPositions()
 				GetNeighbors()
@@ -283,6 +285,16 @@ func Die():
 	
 	queue_free()
 
+
+func GetLeftovers():
+	#grabs the surrounding orbs and sets them as leftovers for checking falls
+	var leftovers = []
+	Search(2,COLOUR.NONE,leftovers)
+	if(leftovers.size() > 0):
+		leftovers.remove(leftovers.find(self))
+	#print("leftover size: " + str(leftovers.size()))
+	get_parent().leftoverorbs = leftovers
+	
 func MovingDie():
 	var index = get_parent().orbsonboard.find(self)
 	if(index != -1):
@@ -602,6 +614,8 @@ func DoCasts():
 		topleft = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().bottomright = self
+		if(ray.get_collider().is_in_group("flag")):
+			istouchingflag = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
 	ray.set_cast_to(lleftspot)
@@ -613,6 +627,8 @@ func DoCasts():
 				touchingwallleft = true
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().right = self
+		if(ray.get_collider().is_in_group("flag")):
+			istouchingflag = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
 	ray.set_cast_to(lbottomrightspot)
@@ -621,6 +637,8 @@ func DoCasts():
 		bottomright = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().topleft = self
+		if(ray.get_collider().is_in_group("flag")):
+			istouchingflag = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
 	
@@ -630,6 +648,8 @@ func DoCasts():
 		topright = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().bottomleft = self
+		if(ray.get_collider().is_in_group("flag")):
+			istouchingflag = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 			
 	ray.set_cast_to(lbottomleftspot)
@@ -638,6 +658,8 @@ func DoCasts():
 		bottomleft = ray.get_collider()
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().topright = self
+		if(ray.get_collider().is_in_group("flag")):
+			istouchingflag = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 			
 	ray.set_cast_to(lrightspot)
@@ -649,6 +671,8 @@ func DoCasts():
 				touchingwallright = true
 		if(ray.get_collider().is_in_group("orb")):
 			ray.get_collider().left = self
+		if(ray.get_collider().is_in_group("flag")):
+			istouchingflag = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 
 func Sparkle():

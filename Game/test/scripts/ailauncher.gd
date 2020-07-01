@@ -24,7 +24,7 @@ var upcomingorb #this holds an enumeration for the upcoming orb ie the colour
 
 var trajectory = Vector2(-1500,-1500) #vector that orb is to be fired at
 var x = (PI)/2 #starting angle of launcher
-var speed = PI/240 
+var speed = PI/240
 var minspeed = PI/1000
 var maxspeed = PI/170
 var standardmaxspeed = PI/170
@@ -60,7 +60,7 @@ onready var aim = get_node("Particles2D")
 onready var container = get_node("container")
 var next = null
 var clicked = false
-var clickedpos = Vector2(30,30)
+var clickedpos = Vector2(30,30) #global
 var aiming = false
 
 var foundtarget = false
@@ -72,6 +72,7 @@ var state =  5
 #3 = fire orb
 #4 = swap orb
 #5 = wait 
+#6 = stop
 
 
 var waittime = 1
@@ -83,6 +84,11 @@ var didstore = false
 #onready var midwallpos = get_parent().get_node("middlewall").get_pos()
 var bottomorbs = []
 var target # orb to be aimed at
+
+var playerflagpos = Vector2()
+var playerflagcolour
+
+var aiflagcolour
 
 func _ready():
 	set_fixed_process(true)
@@ -113,6 +119,7 @@ func _fixed_process(delta):
 	#print(aiming)
 	LoadOrb(delta)
 	#print(orb)
+	
 	if(state == 5):
 		waitcounter += delta
 		if waitcounter > waittime:
@@ -120,8 +127,13 @@ func _fixed_process(delta):
 			waitcounter = 0.0
 	#print(orb)
 	if(state == 0 and loaded):#(!checkedlayer and loaded):#(!aiming and loaded):
-		target = CheckBottomLayer()
-		print(target)
+		if(CheckFlagShot()):
+			foundtarget = true
+			clickedpos = playerflagpos
+			state = 2
+		else:
+			target = FullScan()#CheckBottomLayer()
+			print(target)
 		
 	if(state == 1):
 		while(state == 1):
@@ -139,23 +151,23 @@ func _fixed_process(delta):
 		madeswap = false
 	if(isfrozen):
 		Defrost(delta)
-	if(state == 4):
+	if(state == 4 and loaded):
 		if(!madeswap):
 			orb = Swap(orb)
 			madeswap = true
 		state = 0
 	
 	#LASER =========================================================>O
-	if(Input.is_action_pressed("laser")):
-		if(!lasing):
-			var las = preload("res://test/scenes/laser.tscn").instance()
-			get_parent().add_child(las)
-			las.set_pos(get_pos())
-			las.Charge(trajectory,x)
-			las.Fire()
-			lasing = true
-	else:
-		lasing = false
+#	if(Input.is_action_pressed("laser")):
+#		if(!lasing):
+#			var las = preload("res://test/scenes/laser.tscn").instance()
+#			get_parent().add_child(las)
+#			las.set_pos(get_pos())
+#			las.Charge(trajectory,x)
+#			las.Fire()
+#			lasing = true
+#	else:
+#		lasing = false
 	
 
 func LoadOrb(delta):
@@ -522,7 +534,7 @@ func ThrowAway():
 	if pos != null:
 		clickedpos = pos
 		aiming = false
-		print("SUPERIOR THROWAWAY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+#		print("SUPERIOR THROWAWAY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		return
 	
 	var isroom = false
@@ -599,6 +611,8 @@ func SwapUntil():
 
 #run through the bottom layer of orbs
 #will be used too know where to throwaway orbs
+#need to figure out how to blacklist orbs and unblackist them when an orb is fired
+#run through checking the orbs and if a bad one is returned just blacklist it and run through the rest
 func CheckBottomLayer():
 	if(laserisactive):
 		var t = get_parent().FindPeninsula(orb.colour)
@@ -667,40 +681,164 @@ func CheckAim(position):
 	leftcast.force_raycast_update()
 	
 	if(localpos.x <= 0): # left side shot
-			if(!centercast.is_colliding() and !rightcast.is_colliding()):
-				Mirror(target.get_global_pos(),0)
-				print("BOUNCE SHOT")
-				#ThrowAway()																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	
+		if(!centercast.is_colliding() and !rightcast.is_colliding()):
+			Mirror(target.get_global_pos(),0)
+			print("BOUNCE SHOT")
+				#ThrowAway()
 				#aiming = false
-				state = 2
-				return
-			elif(centercast.get_collider() != target or rightcast.get_collider() != target):
-				clickedpos.x -=2
-				clickedpos.y += 2
-#				print("ADJUST LEFT")
-				return
-			else: #both are equal to target
-				aiming = false
-				state = 2
-				return
-	elif(localpos.x > 0): # right side shot
-			if(!centercast.is_colliding() and !leftcast.is_colliding()):
-				Mirror(target.get_global_pos(),1)
-				print("BOUNCE SHOT")
-				aiming = false
-				state = 2
-				return
-			elif(centercast.get_collider() != target or leftcast.get_collider() != target):
-				clickedpos.x +=2
-				clickedpos.y += 2
-#				print("ADJUST RIGHT")
-				return
-			else:
-				print("COLLIDERS")
-				print(centercast.get_collider())
-				print(leftcast.get_collider())
-				aiming = false
-				state = 2
+			state = 2
 			return
+		elif(centercast.get_collider() != target or rightcast.get_collider() != target):
+			clickedpos.x -=2
+			clickedpos.y += 2
+#				print("ADJUST LEFT")
+			return
+		else: #both are equal to target
+			aiming = false
+			state = 2
+			return
+	elif(localpos.x > 0): # right side shot
+		if(!centercast.is_colliding() and !leftcast.is_colliding()):
+			Mirror(target.get_global_pos(),1)
+			print("BOUNCE SHOT")
+			aiming = false
+			state = 2
+			return
+		elif(centercast.get_collider() != target or leftcast.get_collider() != target):
+			clickedpos.x +=2
+			clickedpos.y += 2
+#				print("ADJUST RIGHT")
+			return
+		else:
+			print("COLLIDERS")
+			print(centercast.get_collider())
+			print(leftcast.get_collider())
+			aiming = false
+			state = 2
+		return
 	print("Something is weird")
 	# if can not raycast at target, aimcheck on bounce shot positions
+
+func CheckFlagShot():
+	var localpos = playerflagpos - get_pos()
+	var hyp = sqrt(localpos.x * localpos.x + localpos.y * localpos.y) * -1
+	var hypvector = Vector2(0,hyp)
+	centercast.set_cast_to(hypvector)
+	leftcast.set_cast_to(hypvector)
+	rightcast.set_cast_to(hypvector)
+	centercast.set_rot(centercast.get_pos().angle_to_point(playerflagpos - get_pos()))
+	centercast.force_raycast_update()
+	rightcast.force_raycast_update()
+	leftcast.force_raycast_update()
+	if((centercast.is_colliding() == false and leftcast.is_colliding() == false and rightcast.is_colliding() == false) and orb.colour == playerflagcolour):
+		print("CAN MAKE GOOD FLAG SHOT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		print(orb.colour)
+		print(playerflagcolour)
+		return true
+	#if can hit player flag orb and have matching orb always take the shot
+	#if cannot hit player flag orb but can hit an orb that touches the player flag orb and matches colour, take the shot
+
+
+func FullScan():
+	#brute force scan of all orbs that can be hit from the ailauncher
+	#start aiming at the top left corner of the aiboard and move one or more pixels at a time until youre at the right side
+	#or rotate the currentpoint vector
+	var scanner
+	var currentpoint = Vector2(-1000,-50)
+	var i = 0
+	var list = []
+	var pointdict = {}
+	
+	var lastorb = null
+	var currentorb = null
+	var borbs = []
+	if(laserisactive):
+		var t = get_parent().FindPeninsula(orb.colour)
+		if(t != null):
+			print("FOUND TARGET ORB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+			print(t)
+			clickedpos = t.get_pos()
+			foundtarget = true
+			state = 2
+			return t
+		print("DIDNT FIND TARGET ORB  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	scanner = preload("res://test/scenes/scanner.tscn").instance()
+	add_child(scanner)
+	scanner.add_collision_exception_with(orb)
+	while (i != 50):
+		
+#		scanner.set_pos(currentpoint)
+		scanner.move(currentpoint)
+		if(scanner.is_colliding()):
+			if(scanner.get_collider().is_in_group("orb")):
+				currentorb = scanner.get_collider()
+				if currentorb != lastorb:
+					pointdict[currentorb] = scanner.get_global_pos()
+				list.push_back(scanner.get_collider())
+#				scanner.get_collider().get_node("Sprite").set_opacity(0)
+				
+		scanner.set_pos(Vector2())
+		currentpoint = currentpoint.rotated(-.1)
+		i += 1
+	var uniquelist = []
+	for i in list:
+		if (!uniquelist.has(i)):
+			uniquelist.push_back(i)
+	scanner.queue_free()
+#	print(uniquelist)
+#	print (pointdict)
+#	return pointdict
+	bottomorbs = pointdict.keys()
+	for borb in bottomorbs:
+		#print(borb)
+		if(borb.colour == orb.colour):
+			borbs.push_back(borb)
+			
+	if(borbs.size() == 1):
+		print("ONE BORB")
+		var targets = []
+		if!(borbs[0].istouchingflag and borbs[0].colour == aiflagcolour):
+			clickedpos = pointdict[borbs[0]]
+			foundtarget = true
+			state = 1
+			return borbs[0]
+		print("BAILING @@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	elif(borbs.size() > 1):
+		print("MULTIPLE BORBS")
+		for borb in borbs:
+			var ar = []
+#			print(borb.Search(1,borb.colour,ar).size())
+			var targets = borb.Search(4,borb.colour,ar)
+			var bail = false
+			for i in targets:
+				if i.is_in_group("flag"):
+					bail = true
+					print("BAILING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+					break
+			if bail:
+				continue
+			if(borb.Search(1,borb.colour,ar).size() >= 1):
+				print("FOUND GOOD MATCH")
+				for i in ar:
+					print(i)
+				clickedpos = pointdict[borb]
+				foundtarget = true
+				state = 1
+				return borb
+		clickedpos = pointdict[borbs[0]]
+		foundtarget = true
+		state = 1
+		return borbs[0]
+	if(container.IsFull()):
+		if(!madeswap):
+			state = 4
+#			orb = Swap(orb)
+#			madeswap = true
+#			state = 0
+		else:
+			state = 2
+			ThrowAway()
+	else:
+		Store(orb)
+		state = 0
+	

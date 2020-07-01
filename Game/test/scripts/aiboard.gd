@@ -75,6 +75,7 @@ func _ready():
 	GeneratePlayer2Flag()
 	GenerateBoardP1()
 	GenerateBoardP2()
+	HelpAI()
 	
 	set_fixed_process(true)
 
@@ -106,7 +107,7 @@ func _fixed_process(delta):
 	
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
 	#so we will wait for a half second for them to find their neighbors
-	if(t > .5 and s == false):
+	if(t > .2 and s == false):
 		for i in orbsonboard:
 			i.GetNeighboringPositions()
 			i.GetNeighbors()
@@ -766,7 +767,8 @@ func GeneratePlayer1Flag():
 	add_child(p1flag)
 	orbsonboard.push_back(p1flag)
 	p1flag.set_pos(Vector2(17 + 70 + (70 * p),40 + 70 + 70 + 70 - (70 * Vector2(1.07337749,1.8417709).normalized().y)))
-
+	print(p1flag.get_pos())
+	print("flag pos")
 func GeneratePlayer2Flag():
 	p2flag = preload("res://test/scenes/flagorb2.tscn").instance()
 	var s = Image()
@@ -834,6 +836,7 @@ func Restart():
 	get_node("Timer").set_wait_time(300)
 	get_node("Timer").set_active(true)
 	get_node("Timer").start()
+	p2launcher.state = 0
 	
 func UpdateHealthLabels():
 	p1launcher.get_node("health").set_text("Health " + str(player1health))
@@ -859,6 +862,7 @@ func GameOver(gameoverstring,winner):
 	get_node("quitbutton").set_hidden(false)
 	get_node("quitbutton").set_disabled(false)
 	get_node("Timer").set_active(false)
+	p2launcher.state = 6 #stop ai
 	
 
 func _on_replaybutton_pressed():
@@ -982,3 +986,13 @@ func FindGap():
 	
 	
 	return pos
+
+func HelpAI():
+	#give the AI the position to aim at to hit the players flag orb
+	var aimpos = p1flag.get_pos()
+	aimpos.x = 1920 - aimpos.x
+	aimpos.y -= 350 #189.5
+	p2launcher.playerflagpos = aimpos
+	print(aimpos)
+	p2launcher.playerflagcolour = p1flag.colour
+	p2launcher.aiflagcolour = p2flag.colour

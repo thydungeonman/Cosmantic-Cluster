@@ -122,9 +122,12 @@ tracks/4/path = NodePath(".")
 tracks/4/interp = 1
 tracks/4/imported = false
 tracks/4/keys = {
-"times": FloatArray(  ),
-"transitions": FloatArray(  ),
-"values": [  ]
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "GetLeftovers"
+} ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -213,12 +216,9 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/imported = false
 tracks/1/keys = {
-"times": FloatArray( 0, 0.6 ),
-"transitions": FloatArray( 1, 1 ),
+"times": FloatArray( 0.6 ),
+"transitions": FloatArray( 1 ),
 "values": [ {
-"args": [  ],
-"method": ""
-}, {
 "args": [  ],
 "method": "Die"
 } ]
