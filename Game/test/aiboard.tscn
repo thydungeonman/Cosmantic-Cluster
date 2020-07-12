@@ -9,6 +9,21 @@
 
 script/script = ExtResource( 2 )
 
+[node name="wall" parent="."]
+
+transform/pos = Vector2( 8, 551.42 )
+transform/scale = Vector2( 1, 1.29438 )
+
+[node name="wall 2" parent="."]
+
+transform/pos = Vector2( 1912, 570.717 )
+transform/scale = Vector2( 1, 1.27241 )
+
+[node name="middlewall" parent="."]
+
+transform/pos = Vector2( 960, 591.474 )
+transform/scale = Vector2( 1, 1.29606 )
+
 [node name="ena" parent="."]
 
 texture = ExtResource( 3 )

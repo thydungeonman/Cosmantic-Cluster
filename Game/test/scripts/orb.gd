@@ -304,6 +304,12 @@ func MovingDie():
 		get_parent().orbsonboard.remove(index)
 	RemoveFromPlayer()
 	EnableLauncher()
+#	var trajectoryangle = trajectory.angle_to(Vector2(0,1))
+#	var dyingsparks = preload("res://test/scenes/dead orb sparks.tscn").instance()
+#	get_parent().add_child(dyingsparks)
+#	dyingsparks.set_global_pos(get_global_pos())
+#	dyingsparks.rotate(trajectoryangle)
+#	dyingsparks.get_node("AnimationPlayer").play("sparkle")
 	queue_free()
 
 func AddToPlayer(): #this function adds the orb to the boards list of orbs and the players list of orbs

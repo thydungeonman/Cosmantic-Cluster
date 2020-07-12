@@ -568,45 +568,16 @@ func ThrowAway():
 	aiming = false
 
 
-func Throwaway2():
-	var scanner
-	var currentpoint = Vector2(-1000,-50)
-	var i = 0
-	var list = []
-	var pointdict = {}
-#	
-#	scanner = preload("res://test/scenes/scanner.tscn").instance()
-#	add_child(scanner)
-#	scanner.add_collision_exception_with(orb)
-#	while (i != 50):
-		
-#		scanner.set_pos(currentpoint)
-#		scanner.move(currentpoint)
-#		if(scanner.is_colliding()):
-#			if(scanner.get_collider().is_in_group("orb")):
-#				currentorb = scanner.get_collider()
-#				if currentorb != lastorb:
-#					pointdict[currentorb] = scanner.get_global_pos()
-#				list.push_back(scanner.get_collider())
-#				scanner.get_collider().get_node("Sprite").set_opacity(0)
-#				
-#		scanner.set_pos(Vector2())
-#		currentpoint = currentpoint.rotated(-.1)
-#		i += 1
-#	var uniquelist = []
-#	for i in list:
-#		if (!uniquelist.has(i)):
-#			uniquelist.push_back(i)
-#	scanner.queue_free()
-#	print(uniquelist)
-#	print (pointdict)
-#	return pointdict
-#	bottomorbs = pointdict.keys()
-#	for borb in bottomorbs:
-#		#print(borb)
-#		if(borb.colour == orb.colour):
-#			borbs.push_back(borb)
-#			
+func Throwaway2(straightshottargets):
+	#Analyse the orbs that can be hit with a straight shot and decide where to 
+	#throw away a unneeded orb
+	#don't aim at: orbs that are in a group of 2,
+	#own flag orb
+	#enemy flag orb
+	#orbs that are very close to launcher
+	var potentialtargets = []
+	for target in straightshottargets:
+		pass
 
 
 #swap  orb with container
