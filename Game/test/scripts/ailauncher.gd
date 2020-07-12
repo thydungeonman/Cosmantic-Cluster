@@ -90,6 +90,8 @@ var playerflagcolour
 
 var aiflagcolour
 
+var scannerlist = []
+
 func _ready():
 	set_fixed_process(true)
 	next = preload("res://test/scenes/aimingreticule.tscn").instance()
@@ -137,7 +139,8 @@ func _fixed_process(delta):
 		
 	if(state == 1):
 		while(state == 1):
-			CheckAim(clickedpos)
+			state = 2
+#			CheckAim(clickedpos)
 	if(state == 2):
 		aiming = AimAtPos(clickedpos - get_pos())
 		if(aiming):
@@ -556,10 +559,55 @@ func ThrowAway():
 			isroom = true
 		else:
 			isroom = false
+		if centercast.is_colliding() and centercast.get_collider().is_in_group("flag") and aiflagcolour == orb.colour:
+			isroom = false
+			print("avoiding disaster **********************************")
 	
 	print("THROWAWAY")
 	print(clickedpos)
 	aiming = false
+
+
+func Throwaway2():
+	var scanner
+	var currentpoint = Vector2(-1000,-50)
+	var i = 0
+	var list = []
+	var pointdict = {}
+#	
+#	scanner = preload("res://test/scenes/scanner.tscn").instance()
+#	add_child(scanner)
+#	scanner.add_collision_exception_with(orb)
+#	while (i != 50):
+		
+#		scanner.set_pos(currentpoint)
+#		scanner.move(currentpoint)
+#		if(scanner.is_colliding()):
+#			if(scanner.get_collider().is_in_group("orb")):
+#				currentorb = scanner.get_collider()
+#				if currentorb != lastorb:
+#					pointdict[currentorb] = scanner.get_global_pos()
+#				list.push_back(scanner.get_collider())
+#				scanner.get_collider().get_node("Sprite").set_opacity(0)
+#				
+#		scanner.set_pos(Vector2())
+#		currentpoint = currentpoint.rotated(-.1)
+#		i += 1
+#	var uniquelist = []
+#	for i in list:
+#		if (!uniquelist.has(i)):
+#			uniquelist.push_back(i)
+#	scanner.queue_free()
+#	print(uniquelist)
+#	print (pointdict)
+#	return pointdict
+#	bottomorbs = pointdict.keys()
+#	for borb in bottomorbs:
+#		#print(borb)
+#		if(borb.colour == orb.colour):
+#			borbs.push_back(borb)
+#			
+
 
 #swap  orb with container
 func Swap(oldorb):
@@ -743,11 +791,26 @@ func FullScan():
 	#brute force scan of all orbs that can be hit from the ailauncher
 	#start aiming at the top left corner of the aiboard and move one or more pixels at a time until youre at the right side
 	#or rotate the currentpoint vector
+	
+	#new plan make a dict of bouncepoints and remainders
+	#the in a new loop give the scanner a collision exception with the wall
+	#and try to move it the remainder of the distance
+	#hopefully it will collide
+	
+	#narrow up the currentpoint range
+	for i in scannerlist:
+		i.queue_free()
+	scannerlist.clear()
+	
 	var scanner
-	var currentpoint = Vector2(-1000,-50)
+	var bouncescanner
+	var currentpoint = Vector2(-1500,-50)
 	var i = 0
-	var list = []
-	var pointdict = {}
+	var list = [] #orbs that can be hit with regular shots
+	var bouncelist = [] #orbs that can be hit with bounce shots
+	var pointdict = {} #points that aim at orbs
+	var bouncedict = {} #points along the wall and reverse trajectory
+	var bouncepointdict = {} #points along the wall and the corresponding orb
 	
 	var lastorb = null
 	var currentorb = null
@@ -762,13 +825,23 @@ func FullScan():
 			state = 2
 			return t
 		print("DIDNT FIND TARGET ORB  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	
+	
 	scanner = preload("res://test/scenes/scanner.tscn").instance()
 	add_child(scanner)
 	scanner.add_collision_exception_with(orb)
-	while (i != 50):
-		
+	
+#	
+	bouncescanner = preload("res://test/scenes/scanner.tscn").instance()
+	add_child(bouncescanner)
+	bouncescanner.add_collision_exception_with(orb)
+	bouncescanner.add_collision_exception_with(scanner)
+	scanner.add_collision_exception_with(bouncescanner)
+	
+	while (i != 70):
 #		scanner.set_pos(currentpoint)
-		scanner.move(currentpoint)
+		var remainder = scanner.move(currentpoint)
+		
 		if(scanner.is_colliding()):
 			if(scanner.get_collider().is_in_group("orb")):
 				currentorb = scanner.get_collider()
@@ -776,19 +849,64 @@ func FullScan():
 					pointdict[currentorb] = scanner.get_global_pos()
 				list.push_back(scanner.get_collider())
 #				scanner.get_collider().get_node("Sprite").set_opacity(0)
+				var spot = scanner.get_global_pos()
+#				var g = preload("res://test/scenes/godot.tscn").instance()
+#				add_child(g)
+#				g.set_global_pos(spot)
+#				scannerlist.push_back(g)
+#				print("one")
+#				print(scanner.get_pos())
+			
+			if(scanner.get_collider().is_in_group("wall")):
+				bouncedict[scanner.get_global_pos()] = remainder
 				
 		scanner.set_pos(Vector2())
-		currentpoint = currentpoint.rotated(-.1)
+#		bouncescanner.set_pos(Vector2())
+		currentpoint = currentpoint.rotated(-.05)
 		i += 1
+	
+	scanner.queue_free()
+	bouncescanner.add_collision_exception_with(get_parent().get_node("wall"))
+	bouncescanner.add_collision_exception_with(get_parent().get_node("wall 2"))
+	bouncescanner.add_collision_exception_with(get_parent().get_node("middlewall"))
+	for key in bouncedict.keys():
+		bouncescanner.set_global_pos(key)
+#		bouncescanner.move(key)
+		bouncescanner.move(Vector2(-bouncedict[key].x,bouncedict[key].y))
+#		var g = preload("res://test/scenes/rgodot.tscn").instance()
+#		var location = bouncescanner.get_global_pos()
+#		add_child(g)
+#		g.set_global_pos(location)
+#		scannerlist.push_back(g)
+		if(bouncescanner.is_colliding()):
+			if(bouncescanner.get_collider().is_in_group("orb")):
+				bouncepointdict[bouncescanner.get_collider()] = key
+#				print(bouncescanner.get_collider().get_name())
+				bouncelist.push_back(bouncescanner.get_collider())
+		bouncescanner.set_pos(Vector2())
+		
+	var uniquebouncelist = []
+	for i in bouncelist:
+		if(!uniquebouncelist.has(i)):
+			uniquebouncelist.push_back(i)
+	bouncescanner.queue_free()
+	
+#	for i in bouncepointdict.values():
+#		print(i)
+	
 	var uniquelist = []
 	for i in list:
 		if (!uniquelist.has(i)):
 			uniquelist.push_back(i)
 	scanner.queue_free()
+	
+	var fulltargetlist = pointdict.keys() + bouncepointdict.keys()
+#	bouncescanner.queue_free()
 #	print(uniquelist)
 #	print (pointdict)
 #	return pointdict
-	bottomorbs = pointdict.keys()
+	bottomorbs = fulltargetlist
+	
 	for borb in bottomorbs:
 		#print(borb)
 		if(borb.colour == orb.colour):
@@ -798,7 +916,10 @@ func FullScan():
 		print("ONE BORB")
 		var targets = []
 		if!(borbs[0].istouchingflag and borbs[0].colour == aiflagcolour):
-			clickedpos = pointdict[borbs[0]]
+			if(pointdict.keys().has(borbs[0])):
+				clickedpos = pointdict[borbs[0]]
+			else:
+				clickedpos = bouncepointdict[borbs[0]]
 			foundtarget = true
 			state = 1
 			return borbs[0]
@@ -821,11 +942,17 @@ func FullScan():
 				print("FOUND GOOD MATCH")
 				for i in ar:
 					print(i)
-				clickedpos = pointdict[borb]
+				if(pointdict.keys().has(borb)):
+					clickedpos = pointdict[borb]
+				else:
+					clickedpos = bouncepointdict[borb]
 				foundtarget = true
 				state = 1
 				return borb
-		clickedpos = pointdict[borbs[0]]
+			if(pointdict.keys().has(borbs[0])):
+				clickedpos = pointdict[borbs[0]]
+			else:
+				clickedpos = bouncepointdict[borbs[0]]
 		foundtarget = true
 		state = 1
 		return borbs[0]
@@ -841,4 +968,3 @@ func FullScan():
 	else:
 		Store(orb)
 		state = 0
-	

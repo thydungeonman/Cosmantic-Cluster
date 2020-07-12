@@ -36,7 +36,8 @@ var colour = COLOUR.NONE
 var warped = false #changes to true after sent through a warp
 
 var isflag = false #should be a better way to do this
-var istouchingflag = false 
+var istouchingflag = false
+var istouchingtop = false
 
 #neighboring orbs  Kinematic bodies
 var topleft
@@ -62,10 +63,12 @@ onready var lbottomrightspot = Vector2(width,width) * Vector2(1.07337749,1.84177
 
 var timespathedupon = 0
 
+var number = 0
+
 func _ready():
 	set_fixed_process(true)
 	#get_node("Label").set_text(str(get_name()))
-	get_node("Label").set_text(str(self))
+	get_node("Label").set_text(get_name())
 	set_process_input(true)
 
 func _input(event):

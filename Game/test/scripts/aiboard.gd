@@ -80,6 +80,12 @@ func _ready():
 	set_fixed_process(true)
 
 func _fixed_process(delta):
+	for b in orbsonboardp2:
+		if(b.istouchingflag):
+			b.get_node("pathed").set_text("yes")
+		else:
+			b.get_node("pathed").set_text("no")
+			b.CountNeighbors()
 	#print(orbsonboardp2.size())
 	if(Input.is_action_pressed("ui_page_up")):
 		p1launcher.Charge()
@@ -887,8 +893,10 @@ func _on_Timer_timeout():
 func _on_Button_toggled( pressed ):
 	if(pressed):
 		get_node("Button").set_text("Unpause")
+		p2launcher.state = 7
 	else:
 		get_node("Button").set_text("Pause")
+		p2launcher.state = 0
 	get_node("Timer").set_active(!pressed)
 
 func IsPlayerDead():
@@ -930,8 +938,8 @@ func FindPeninsula(targetcolour):
 		var crossreforbs = []
 		orb.PathToTop(crossreforbs)
 	for orb in orbsonboardp2:
-		orb.get_node("pathed").show()
-		orb.get_node("pathed").set_text(str(orb.timespathedupon))
+#		orb.get_node("pathed").show()
+#		orb.get_node("pathed").set_text(str(orb.timespathedupon))
 		if(orb.timespathedupon >= 2 and orb.colour == targetcolour):
 			t = orb
 			for orb in orbsonboardp2:

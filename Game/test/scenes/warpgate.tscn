@@ -12,7 +12,7 @@ extents = Vector2( 475.708, 35 )
 [sub_resource type="RectangleShape2D" id=2]
 
 custom_solver_bias = 0.0
-extents = Vector2( 1, 1 )
+extents = Vector2( 2.11464, 1.91683 )
 
 [sub_resource type="SampleLibrary" id=3]
 
