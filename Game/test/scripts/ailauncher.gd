@@ -128,7 +128,7 @@ func _fixed_process(delta):
 			state = 0
 			waitcounter = 0.0
 	#print(orb)
-	if(state == 0 and loaded):#(!checkedlayer and loaded):#(!aiming and loaded):
+	if(state == 0 and loaded and canshoot):#(!checkedlayer and loaded):#(!aiming and loaded):
 		if(CheckFlagShot()):
 			foundtarget = true
 			clickedpos = playerflagpos
@@ -444,6 +444,7 @@ func Fire():
 	# when orb stops check bool in orb and then activate lightning
 	#print(str(orb))
 	if(laserisactive):
+		Disable()
 		var laser = preload("res://test/scenes/laser.tscn").instance()
 		var c = orb.colour
 		orb.queue_free()
@@ -457,6 +458,7 @@ func Fire():
 		sfx.play("laser-shot-silenced - orange ability launched")
 		abilityanim.play("rest")
 	else:
+		Disable()
 		orb.trajectory.x = trajectory.x * cos(x)
 		orb.trajectory.y = trajectory.y * sin(x)
 		orb.get_node("sparkles").set_rot(x- (PI/2))
@@ -568,16 +570,51 @@ func ThrowAway():
 	aiming = false
 
 
-func Throwaway2(straightshottargets):
+func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots):
 	#Analyse the orbs that can be hit with a straight shot and decide where to 
 	#throw away a unneeded orb
 	#don't aim at: orbs that are in a group of 2,
 	#own flag orb
 	#enemy flag orb
 	#orbs that are very close to launcher
+	
+	#don't aim at the enemy flag orb
 	var potentialtargets = []
-	for target in straightshottargets:
-		pass
+	var potential = false
+	if(emptyshots.size() > 0):
+		clickedpos = emptyshots[0]
+		print("TAKING AN EMPTY SHOT")
+		return
+	
+	for target in straightshottargets.keys():
+		var group = []
+		group = target.Search(1,target.colour,group)
+		if(group < 0):
+			continue
+		if(target.isflag):
+			continue
+		if(get_pos().distance_to(target.get_pos()) < 130):
+			print("TOO CLOSE")
+			continue
+		potentialtargets.push_back(target)
+	for target in warpshottargets.keys():
+		var group = []
+		group = target.Search(1,target.colour,group)
+		if(group < 0):
+			continue
+		if(target.isflag):
+			continue
+		if(get_pos().distance_to(target.get_pos()) < 130):
+			print("TOO CLOSE")
+			continue
+		potentialtargets.push_back(target)
+	var shot = randi() % potentialtargets.size()
+	clickedpos = straightshottargets[potentialtargets[shot]]
+	state = 2
+	print(potentialtargets[0].get_name())
+	if(potentialtargets.size() == 0):
+		ThrowAway()
+	
 
 
 #swap  orb with container
@@ -768,20 +805,22 @@ func FullScan():
 	#and try to move it the remainder of the distance
 	#hopefully it will collide
 	
-	#narrow up the currentpoint range
+	
+	
 	for i in scannerlist:
 		i.queue_free()
 	scannerlist.clear()
 	
 	var scanner
 	var bouncescanner
-	var currentpoint = Vector2(-1500,-50)
+	var currentpoint = Vector2(-1200,-50)
 	var i = 0
 	var list = [] #orbs that can be hit with regular shots
 	var bouncelist = [] #orbs that can be hit with bounce shots
 	var pointdict = {} #points that aim at orbs
 	var bouncedict = {} #points along the wall and reverse trajectory
 	var bouncepointdict = {} #points along the wall and the corresponding orb
+	var emptyshots = [] #currentpoints that don't hit an orb, meaning a clear shot at the warp
 	
 	var lastorb = null
 	var currentorb = null
@@ -808,33 +847,45 @@ func FullScan():
 	bouncescanner.add_collision_exception_with(orb)
 	bouncescanner.add_collision_exception_with(scanner)
 	scanner.add_collision_exception_with(bouncescanner)
-	
-	while (i != 70):
-#		scanner.set_pos(currentpoint)
+	var hits = []
+	while (i != 120):
 		var remainder = scanner.move(currentpoint)
-		
+#		var g = preload("res://test/scenes/rgodot.tscn").instance()
+#		var location = currentpoint + get_pos()
+#		add_child(g)
+#		g.set_global_pos(currentpoint)
 		if(scanner.is_colliding()):
 			if(scanner.get_collider().is_in_group("orb")):
 				currentorb = scanner.get_collider()
 				if currentorb != lastorb:
+					var average = Vector2()
+					if(lastorb != null):
+						for hit in hits:
+							average += hit
+						pointdict[lastorb] = average / hits.size()
+					hits = [scanner.get_global_pos()]
 					pointdict[currentorb] = scanner.get_global_pos()
+				else:
+					hits.push_back(scanner.get_global_pos())
 				list.push_back(scanner.get_collider())
 #				scanner.get_collider().get_node("Sprite").set_opacity(0)
 				var spot = scanner.get_global_pos()
-#				var g = preload("res://test/scenes/godot.tscn").instance()
-#				add_child(g)
-#				g.set_global_pos(spot)
-#				scannerlist.push_back(g)
-#				print("one")
-#				print(scanner.get_pos())
 			
 			if(scanner.get_collider().is_in_group("wall")):
 				bouncedict[scanner.get_global_pos()] = remainder
-				
+		else:
+			emptyshots.push_back(currentpoint)
+#			var g = preload("res://test/scenes/rgodot.tscn").instance()
+#			var location = currentpoint + get_pos()
+#			add_child(g)
+#			g.set_global_pos(location)
 		scanner.set_pos(Vector2())
 #		bouncescanner.set_pos(Vector2())
-		currentpoint = currentpoint.rotated(-.05)
+		currentpoint = currentpoint.rotated(-.025)
 		i += 1
+#	print("empty shotsss")
+#	for e in emptyshots:
+#		print(e)
 	
 	scanner.queue_free()
 	bouncescanner.add_collision_exception_with(get_parent().get_node("wall"))
@@ -856,6 +907,30 @@ func FullScan():
 				bouncelist.push_back(bouncescanner.get_collider())
 		bouncescanner.set_pos(Vector2())
 		
+	#DO THE SAME WITH EMPTY SHOTS USING THE CHECKER TO SEE WHERE THEY WILL LAND ON THE OTHER BOARD
+	#orbs hit the warp at y = -100 or -1080 locally
+	#x = y / (currentpoint.y / currentpoint.x)
+	
+	var warppointdict = {}
+	for shot in emptyshots:
+		var localx = -(1080 / (shot.y/shot.x))
+		var realx = localx + get_pos().x
+		scanner.set_global_pos(Vector2(0 + (1920 - realx),0))
+		scanner.move(-shot)
+		if(scanner.is_colliding() and scanner.get_collider().is_in_group("orb")):
+			warppointdict[scanner.get_collider()] = shot + get_pos()
+#			print()
+#			print("scanner pos")
+#			print(scanner.get_global_pos())
+#			print("realx")
+#			print(realx)
+#			print("shot")
+#			print(shot + get_pos())
+#		var g = preload("res://test/scenes/rgodot.tscn").instance()
+#		var location = scanner.get_global_pos()
+#		add_child(g)
+#		g.set_global_pos(location)
+		
 	var uniquebouncelist = []
 	for i in bouncelist:
 		if(!uniquebouncelist.has(i)):
@@ -871,7 +946,7 @@ func FullScan():
 			uniquelist.push_back(i)
 	scanner.queue_free()
 	
-	var fulltargetlist = pointdict.keys() + bouncepointdict.keys()
+	var fulltargetlist = pointdict.keys() + bouncepointdict.keys() + warppointdict.keys()
 #	bouncescanner.queue_free()
 #	print(uniquelist)
 #	print (pointdict)
@@ -889,8 +964,10 @@ func FullScan():
 		if!(borbs[0].istouchingflag and borbs[0].colour == aiflagcolour):
 			if(pointdict.keys().has(borbs[0])):
 				clickedpos = pointdict[borbs[0]]
-			else:
+			elif(bouncepointdict.keys().has(borbs[0])):
 				clickedpos = bouncepointdict[borbs[0]]
+			else:
+				clickedpos = warppointdict[borbs[0]]
 			foundtarget = true
 			state = 1
 			return borbs[0]
@@ -912,18 +989,23 @@ func FullScan():
 			if(borb.Search(1,borb.colour,ar).size() >= 1):
 				print("FOUND GOOD MATCH")
 				for i in ar:
-					print(i)
+					pass
+#					print(i)
 				if(pointdict.keys().has(borb)):
 					clickedpos = pointdict[borb]
-				else:
+				elif(bouncepointdict.keys().has(borb)):
 					clickedpos = bouncepointdict[borb]
+				else:
+					clickedpos = warppointdict[borb]
 				foundtarget = true
 				state = 1
 				return borb
 			if(pointdict.keys().has(borbs[0])):
 				clickedpos = pointdict[borbs[0]]
-			else:
+			elif(bouncepointdict.keys().has(borbs[0])):
 				clickedpos = bouncepointdict[borbs[0]]
+			else:
+				clickedpos = warppointdict[borbs[0]]
 		foundtarget = true
 		state = 1
 		return borbs[0]
@@ -935,7 +1017,8 @@ func FullScan():
 #			state = 0
 		else:
 			state = 2
-			ThrowAway()
+			print("TROWING AWAY AN ORBBBBBB")
+			ThrowAway2(pointdict,bouncepointdict,warppointdict,emptyshots)
 	else:
 		Store(orb)
 		state = 0

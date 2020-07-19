@@ -9,6 +9,10 @@
 
 script/script = ExtResource( 2 )
 
+[node name="background" parent="."]
+
+transform/pos = Vector2( 5, 0 )
+
 [node name="wall" parent="."]
 
 transform/pos = Vector2( 8, 551.42 )
@@ -21,7 +25,7 @@ transform/scale = Vector2( 1, 1.27241 )
 
 [node name="middlewall" parent="."]
 
-transform/pos = Vector2( 960, 591.474 )
+transform/pos = Vector2( 960, 660 )
 transform/scale = Vector2( 1, 1.29606 )
 
 [node name="ena" parent="."]
@@ -45,11 +49,32 @@ editor/display_folded = false
 
 [node name="Position2D" type="Position2D" parent="."]
 
-transform/pos = Vector2( 1875, 515 )
+transform/pos = Vector2( 701.95, 68.9568 )
+transform/scale = Vector2( -0.874603, 1 )
 
 [node name="Position2D 2" type="Position2D" parent="."]
 
 transform/pos = Vector2( 1010, 520 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+transform/pos = Vector2( 735, 310 )
+anchor_mode = 1
+rotating = false
+current = false
+zoom = Vector2( 2, 2 )
+limit/left = -10000000
+limit/top = -10000000
+limit/right = 10000000
+limit/bottom = 10000000
+drag_margin/h_enabled = true
+drag_margin/v_enabled = true
+smoothing/enable = false
+smoothing/speed = 5.0
+drag_margin/left = 0.2
+drag_margin/top = 0.2
+drag_margin/right = 0.2
+drag_margin/bottom = 0.2
 
 
 [editable path="wall"]

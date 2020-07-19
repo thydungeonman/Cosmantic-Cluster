@@ -99,7 +99,7 @@ flat = false
 
 [node name="Sprite" type="Sprite" parent="."]
 
-transform/pos = Vector2( 955, 570 )
+transform/pos = Vector2( 960, 570 )
 z/z = -1
 texture = ExtResource( 2 )
 

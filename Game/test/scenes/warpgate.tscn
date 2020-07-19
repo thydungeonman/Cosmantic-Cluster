@@ -10,7 +10,7 @@
 custom_solver_bias = 0.0
 extents = Vector2( 475.708, 35 )
 
-[sub_resource type="SampleLibrary" id=3]
+[sub_resource type="SampleLibrary" id=2]
 
 "samples/teleport-morphy - Orb entering warpgate" = {
 "db": 0.0,
@@ -88,7 +88,7 @@ params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 1
-config/samples = SubResource( 3 )
+config/samples = SubResource( 2 )
 config/pitch_random = 0.0
 
 [node name="checker1" parent="." instance=ExtResource( 4 )]
