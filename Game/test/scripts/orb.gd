@@ -482,7 +482,7 @@ func CountNeighbors():
 #searching for COLOUR.NONE will return all orbs
 #searching deeper than one level will also return the original orb
 #the group is needed so that orbs are not added twice
-func Search(level, searchcolour, group):
+func Search(level, searchcolour, group, exclude = false):
 	level -= 1
 	if(level >= 0):
 		if(topleft != null):
@@ -490,37 +490,43 @@ func Search(level, searchcolour, group):
 				if(topleft.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(topleft)):
 						group.push_back(topleft)
-				topleft.Search(level,searchcolour,group)
+				if(exclude == false or topleft.colour == searchcolour):
+					topleft.Search(level,searchcolour,group)
 		if(topright != null):
 			if(topright.is_in_group("orb")):
 				if(topright.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(topright)):
 						group.push_back(topright)
-				topright.Search(level,searchcolour,group)
+				if(exclude == false or topright.colour == searchcolour):
+					topright.Search(level,searchcolour,group)
 		if(left != null):
 			if(left.is_in_group("orb")):
 				if(left.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(left)):
 						group.push_back(left)
-				left.Search(level,searchcolour,group)
+				if(exclude == false or left.colour == searchcolour):
+					left.Search(level,searchcolour,group)
 		if(right != null):
 			if(right.is_in_group("orb")):
 				if(right.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(right)):
 						group.push_back(right)
-				right.Search(level,searchcolour,group)
+				if(exclude == false or right.colour == searchcolour):
+					right.Search(level,searchcolour,group)
 		if(bottomleft != null):
 			if(bottomleft.is_in_group("orb")):
 				if(bottomleft.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(bottomleft)):
 						group.push_back(bottomleft)
-				bottomleft.Search(level,searchcolour,group)
+				if(exclude == false or bottomleft.colour == searchcolour):
+					bottomleft.Search(level,searchcolour,group)
 		if(bottomright != null):
 			if(bottomright.is_in_group("orb")):
 				if(bottomright.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(bottomright)):
 						group.push_back(bottomright)
-				bottomright.Search(level,searchcolour,group)
+				if(exclude == false or bottomright.colour == searchcolour):
+					bottomright.Search(level,searchcolour,group)
 		return group
 
 

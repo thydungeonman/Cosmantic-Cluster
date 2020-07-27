@@ -579,6 +579,9 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 	#orbs that are very close to launcher
 	
 	#don't aim at the enemy flag orb
+	var fulltargetdict = straightshottargets
+	for key in warpshottargets.keys():
+		fulltargetdict[key] = warpshottargets[key]
 	var potentialtargets = []
 	var potential = false
 	if(emptyshots.size() > 0):
@@ -604,12 +607,12 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 			continue
 		if(target.isflag):
 			continue
-		if(get_pos().distance_to(target.get_pos()) < 130):
+		if(get_pos().distance_to(target.get_pos()) < 160):
 			print("TOO CLOSE")
 			continue
 		potentialtargets.push_back(target)
 	var shot = randi() % potentialtargets.size()
-	clickedpos = straightshottargets[potentialtargets[shot]]
+	clickedpos = fulltargetdict[potentialtargets[shot]]
 	state = 2
 	print(potentialtargets[0].get_name())
 	if(potentialtargets.size() == 0):
@@ -821,6 +824,9 @@ func FullScan():
 	var bouncedict = {} #points along the wall and reverse trajectory
 	var bouncepointdict = {} #points along the wall and the corresponding orb
 	var emptyshots = [] #currentpoints that don't hit an orb, meaning a clear shot at the warp
+	var warpbouncedict = {} #currentpoints and bounced warp positions
+	var warpbouncepointdict = {} #currentpoints and orbs
+	
 	
 	var lastorb = null
 	var currentorb = null
@@ -905,6 +911,49 @@ func FullScan():
 				bouncepointdict[bouncescanner.get_collider()] = key
 #				print(bouncescanner.get_collider().get_name())
 				bouncelist.push_back(bouncescanner.get_collider())
+		else:
+			#grab bounce point and current point
+			#figure out what its x will be when it warps
+			#if its x is outside of the board then reject it
+			
+			#key: global position of where the scanner is when it hits the wall
+			#bouncedict[key] just a trajectory  global trajectory since y is negative going up
+			
+			#tinker with the values or just use the trajectory and wall position
+			#to figure out what the x will be when the y is 100 or so
+			
+			#link trajectory/currentpoint  with warp exit point
+			#move scanner at trajectory.x -trajectory.y
+			#link bounce point with collider
+			
+			var m = (bouncedict[key].y/bouncedict[key].x)
+			var b = key.y
+			var localx = (-100 - (b)) / -m
+			var realx #1868
+			if(m > 0):
+				realx = localx + 1025
+#				var g = preload("res://test/scenes/rgodot.tscn").instance()
+#				add_child(g)
+#				g.set_global_pos(key)
+				if(realx > 1030): #1025
+					pass
+					warpbouncedict[bouncedict[key]] = [Vector2(1920 - realx,0),key]
+			else:
+				realx = localx + 1868
+#				var g = preload("res://test/scenes/rgodot.tscn").instance()
+#				add_child(g)
+#				g.set_global_pos(Vector2(localx,(-100)))
+				if(realx < 1860): #1868
+					pass
+					warpbouncedict[bouncedict[key]] = [Vector2(1920 - realx,0),key]
+#				var g = preload("res://test/scenes/godot.tscn").instance()
+#				var location = bouncescanner.get_global_pos()
+#				add_child(g)
+#				g.set_global_pos(location)
+#				var g = preload("res://test/scenes/godot.tscn").instance()
+#				var location = key
+#				add_child(g)
+#				g.set_global_pos(location)
 		bouncescanner.set_pos(Vector2())
 		
 	#DO THE SAME WITH EMPTY SHOTS USING THE CHECKER TO SEE WHERE THEY WILL LAND ON THE OTHER BOARD
@@ -926,11 +975,27 @@ func FullScan():
 #			print(realx)
 #			print("shot")
 #			print(shot + get_pos())
+
 #		var g = preload("res://test/scenes/rgodot.tscn").instance()
 #		var location = scanner.get_global_pos()
 #		add_child(g)
 #		g.set_global_pos(location)
-		
+	for key in warpbouncedict.keys():
+		scanner.set_global_pos(warpbouncedict[key][0])
+		scanner.move(Vector2(key.x,-key.y))
+		if(scanner.is_colliding()):
+			if(scanner.get_collider().is_in_group("orb")):
+				warpbouncepointdict[scanner.get_collider()] = warpbouncedict[key][1]
+#			var g = preload("res://test/scenes/rgodot.tscn").instance()
+#			var location = scanner.get_global_pos()
+#			add_child(g)
+#			g.set_global_pos(location)
+	
+	for key in warpbouncepointdict.keys():
+		print(key.get_name())
+	
+	
+	
 	var uniquebouncelist = []
 	for i in bouncelist:
 		if(!uniquebouncelist.has(i)):
@@ -946,14 +1011,16 @@ func FullScan():
 			uniquelist.push_back(i)
 	scanner.queue_free()
 	
-	var fulltargetlist = pointdict.keys() + bouncepointdict.keys() + warppointdict.keys()
-#	bouncescanner.queue_free()
-#	print(uniquelist)
-#	print (pointdict)
-#	return pointdict
-	bottomorbs = fulltargetlist
+	var fulltargetlist = pointdict.keys() + warppointdict.keys()
+	for key in bouncepointdict.keys():
+		if(!fulltargetlist.has(key)):
+			fulltargetlist.push_back(key)
+	for key in warpbouncepointdict.keys():
+		if(!fulltargetlist.has(key)):
+			fulltargetlist.push_back(key)
 	
-	for borb in bottomorbs:
+	
+	for borb in fulltargetlist:
 		#print(borb)
 		if(borb.colour == orb.colour):
 			borbs.push_back(borb)
@@ -961,13 +1028,26 @@ func FullScan():
 	if(borbs.size() == 1):
 		print("ONE BORB")
 		var targets = []
-		if!(borbs[0].istouchingflag and borbs[0].colour == aiflagcolour):
+		
+		
+		var bail1 = false
+		if(borbs[0].colour == aiflagcolour):
+			var group = []
+			group = borbs[0].Search(5,borbs[0].colour,group,true)
+			for touchingorb in group:
+				if(touchingorb.istouchingflag or touchingorb.isflag):
+					bail1 = true 
+					print("SUPREME ULTRA BAILINGLLLDKFJSDKFJSLDF")
+					break
+		if(!bail1):
 			if(pointdict.keys().has(borbs[0])):
 				clickedpos = pointdict[borbs[0]]
 			elif(bouncepointdict.keys().has(borbs[0])):
 				clickedpos = bouncepointdict[borbs[0]]
+#			elif(warppointdict.keys().has(borbs[0])):
+#				clickedpos = warppointdict[borbs[0]]
 			else:
-				clickedpos = warppointdict[borbs[0]]
+				clickedpos = warpbouncepointdict[borbs[0]]
 			foundtarget = true
 			state = 1
 			return borbs[0]
@@ -978,25 +1058,27 @@ func FullScan():
 			var ar = []
 #			print(borb.Search(1,borb.colour,ar).size())
 			var targets = borb.Search(4,borb.colour,ar)
-			var bail = false
+			var bail2 = false
 			for i in targets:
 				if i.is_in_group("flag"):
-					bail = true
+					bail2 = true
 					print("BAILING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 					break
-			if bail:
+			if bail2:
 				continue
 			if(borb.Search(1,borb.colour,ar).size() >= 1):
 				print("FOUND GOOD MATCH")
-				for i in ar:
-					pass
+#				for i in ar:
+#					pass
 #					print(i)
 				if(pointdict.keys().has(borb)):
 					clickedpos = pointdict[borb]
 				elif(bouncepointdict.keys().has(borb)):
 					clickedpos = bouncepointdict[borb]
-				else:
+				elif(warppointdict.keys().has(borb)):
 					clickedpos = warppointdict[borb]
+				else:
+					clickedpos = warpbouncepointdict[borb]
 				foundtarget = true
 				state = 1
 				return borb
@@ -1004,11 +1086,14 @@ func FullScan():
 				clickedpos = pointdict[borbs[0]]
 			elif(bouncepointdict.keys().has(borbs[0])):
 				clickedpos = bouncepointdict[borbs[0]]
-			else:
+			elif(warppointdict.keys().has(borbs[0])):
 				clickedpos = warppointdict[borbs[0]]
-		foundtarget = true
-		state = 1
-		return borbs[0]
+			else:
+				clickedpos = warpbouncepointdict[borbs[0]]
+		print("throwing away an orb")
+#		foundtarget = true
+#		state = 1
+#		return borbs[0] #change this
 	if(container.IsFull()):
 		if(!madeswap):
 			state = 4

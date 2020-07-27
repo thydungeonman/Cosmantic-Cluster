@@ -47,11 +47,6 @@ autoplay = ""
 
 editor/display_folded = false
 
-[node name="Position2D" type="Position2D" parent="."]
-
-transform/pos = Vector2( 701.95, 68.9568 )
-transform/scale = Vector2( -0.874603, 1 )
-
 [node name="Position2D 2" type="Position2D" parent="."]
 
 transform/pos = Vector2( 1010, 520 )
@@ -62,7 +57,7 @@ transform/pos = Vector2( 735, 310 )
 anchor_mode = 1
 rotating = false
 current = false
-zoom = Vector2( 2, 2 )
+zoom = Vector2( 3, 3 )
 limit/left = -10000000
 limit/top = -10000000
 limit/right = 10000000
@@ -75,6 +70,11 @@ drag_margin/left = 0.2
 drag_margin/top = 0.2
 drag_margin/right = 0.2
 drag_margin/bottom = 0.2
+
+[node name="Position2D" type="Position2D" parent="."]
+
+transform/pos = Vector2( 1460, -100 )
+transform/scale = Vector2( 0.874603, 1 )
 
 
 [editable path="wall"]
