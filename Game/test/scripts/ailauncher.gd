@@ -101,6 +101,7 @@ func _ready():
 	
 
 func _fixed_process(delta):
+	Click()
 #	print(get_parent().orbsonboardp2.size())
 #	if(Input.is_action_pressed("click")):
 #		if(!madeswap):
@@ -171,6 +172,31 @@ func _fixed_process(delta):
 #			lasing = true
 #	else:
 #		lasing = false
+	
+func Click():
+	if(Input.is_action_pressed("click")):
+		var shot = get_global_mouse_pos()
+		var goodshot = false
+		var lchecker = preload("res://test/scenes/laserchecker.tscn").instance()
+		add_child(lchecker)
+		while goodshot == false:
+			var difference = shot - lchecker.get_global_pos()
+			lchecker.set_rot(0)
+			lchecker.look_at(lchecker.get_global_pos() + difference)
+			var trajectory = shot - get_global_pos()
+			var m = -abs(trajectory.y/trajectory.x)
+			var x = 1900
+			var s = 1900 - 1447
+			
+			if(shot.x < 1447):
+				x = 1000
+			var y = (m*s) + 980
+			print(str(y) + " = " + str(m) + " * " + str(s) + "+ 980" )
+			var lchecker2 = preload("res://test/scenes/laserchecker.tscn").instance()
+			add_child(lchecker2)
+			lchecker2.set_global_pos(Vector2(x,y))
+			lchecker2.look_at(Vector2(x + -difference.x,y + difference.y))
+			goodshot = true
 	
 
 func LoadOrb(delta):
@@ -827,20 +853,29 @@ func FullScan():
 	var warpbouncedict = {} #currentpoints and bounced warp positions
 	var warpbouncepointdict = {} #currentpoints and orbs
 	
-	
 	var lastorb = null
 	var currentorb = null
 	var borbs = []
+	
+	
+	
 	if(laserisactive):
-		var t = get_parent().FindPeninsula(orb.colour)
-		if(t != null):
-			print("FOUND TARGET ORB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-			print(t)
-			clickedpos = t.get_pos()
-			foundtarget = true
-			state = 2
-			return t
-		print("DIDNT FIND TARGET ORB  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+#		if(orb.colour != aiflagcolour):
+#			var t = get_parent().FindPeninsula(orb.colour)
+#			if(t != null):
+#				print("FOUND TARGET ORB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+#				print(t)
+#				clickedpos = t.get_pos()
+#				var lchecker = preload("res://test/scenes/laserchecker.tscn").instance()
+#				#spawn lchecker and check if the shot will hit the flag orb
+#				add_child(lchecker)
+#				lchecker.set_rot(get_angle_to(clickedpos))
+#				foundtarget = true
+#				state = 2
+#				return t
+#		else:
+		laserScan()
+		return
 	
 	
 	scanner = preload("res://test/scenes/scanner.tscn").instance()
@@ -1044,8 +1079,8 @@ func FullScan():
 				clickedpos = pointdict[borbs[0]]
 			elif(bouncepointdict.keys().has(borbs[0])):
 				clickedpos = bouncepointdict[borbs[0]]
-#			elif(warppointdict.keys().has(borbs[0])):
-#				clickedpos = warppointdict[borbs[0]]
+			elif(warppointdict.keys().has(borbs[0])):
+				clickedpos = warppointdict[borbs[0]]
 			else:
 				clickedpos = warpbouncepointdict[borbs[0]]
 			foundtarget = true
@@ -1107,3 +1142,45 @@ func FullScan():
 	else:
 		Store(orb)
 		state = 0
+
+
+func laserScan():
+	var t = get_parent().FindPeninsula(orb.colour)
+	if(t == null):
+		shot = Vector2(1500,300)
+	else:
+		var shot = t.get_pos()
+	var goodshot = false
+	var lchecker = preload("res://test/scenes/laserchecker.tscn").instance()
+	add_child(lchecker)
+	while goodshot == false:
+		var difference = shot - lchecker.get_global_pos()
+		lchecker.set_rot(0)
+		lchecker.look_at(lchecker.get_global_pos() + difference)
+		var trajectory = shot - get_global_pos()
+		var m = -abs(trajectory.y/trajectory.x)
+		var x = 1900
+		var s = 1900 - 1447
+		if(shot.x < 1447):
+			x = 1000
+		var y = (m*s) + 980
+		print(str(y) + " = " + str(m) + " * " + str(s) + "+ 980" )
+		var lchecker2 = preload("res://test/scenes/laserchecker.tscn").instance()
+		add_child(lchecker2)
+		lchecker2.set_global_pos(Vector2(x,y))
+		lchecker2.look_at(Vector2(x + -difference.x,y + difference.y))
+		var goodloop = true
+		for body in lchecker.get_overlapping_bodies() + lchecker2.get_overlapping_bodies():
+			if(body.is_in_group("orb")):
+				if(body.isflag and body.player == PLAYER.PLAYER2):
+					shot.x += 5
+					goodloop = false
+					break
+		lchecker.queue_free()
+		lchecker2.queue_free()
+		if(!goodloop):
+			continue
+		break
+	goodshot = true
+	clickedpos = shot
+	state = 2
