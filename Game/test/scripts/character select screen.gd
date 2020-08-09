@@ -91,7 +91,7 @@ func _process(delta):
 func _fixed_process(delta):
 #	print(str(get_progress(player1currentpath)))
 	
-	if(Input.is_action_pressed("ui_accept")):
+	if(Input.is_action_pressed("ui_enter")):
 		get_tree().change_scene("res://test/testboard.tscn")
 	
 	
