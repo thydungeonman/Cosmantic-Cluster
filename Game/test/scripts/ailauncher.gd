@@ -1145,11 +1145,12 @@ func FullScan():
 
 
 func laserScan():
+	var shot
 	var t = get_parent().FindPeninsula(orb.colour)
 	if(t == null):
-		shot = Vector2(1500,300)
+		t = Vector2(1500,300)
 	else:
-		var shot = t.get_pos()
+		shot = t.get_pos()
 	var goodshot = false
 	var lchecker = preload("res://test/scenes/laserchecker.tscn").instance()
 	add_child(lchecker)
