@@ -27,8 +27,8 @@
 [ext_resource path="res://test/fonts/bigorbit.fnt" type="BitmapFont" id=25]
 [ext_resource path="res://icon.png" type="Texture" id=26]
 [ext_resource path="res://test/fonts/biggothic.fnt" type="BitmapFont" id=27]
-[ext_resource path="res://characters/character art/Ena final.png" type="Texture" id=28]
-[ext_resource path="res://characters/character art/Ethan final.png" type="Texture" id=29]
+[ext_resource path="res://characters/character art small/ena small.png" type="Texture" id=28]
+[ext_resource path="res://characters/character art small/ethan small.png" type="Texture" id=29]
 
 [sub_resource type="Animation" id=1]
 
@@ -326,13 +326,11 @@ max_lines_visible = -1
 [node name="player1choice" type="Sprite" parent="."]
 
 transform/pos = Vector2( 340, 520 )
-transform/scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 28 )
 
 [node name="player2choice" type="Sprite" parent="."]
 
 transform/pos = Vector2( 1615, 520 )
-transform/scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 29 )
 
 [node name="Label" type="Label" parent="."]

@@ -2,16 +2,16 @@ extends Node2D
 
 
 enum CHAR {ENA,ETHAN,ARNIE,MILISSA,TAMBRE,KOTA,GRUMPLE,CHROSNOW,ALISIA,MACCUS,KURTIS,JOKER,JASPER,CARL,GRIFFENHOOD,OSCAR,LUCY,CRANIAL,DAEGEL,SEILITH}
-var spritepaths = ["res://characters/character art/Ena final.png","res://characters/character art/Ethan final.png",
-"res://characters/character art/Amie and Aziz final.png","res://characters/character art/Milissa final.png",
-"res://characters/character art/Tambre final.png","res://characters/character art/Kota final.png",
-"res://characters/character art/Grumple Volcano final.png","res://characters/character art/Chrosnow final.png",
-"res://characters/character art/Alisia final.png","res://characters/character art/Maccus final.png",
-"res://characters/character art/Kurtis final.png","res://characters/character art/Joker final.png",
-"res://characters/character art/Jasper final.png","res://characters/character art/Carl final.png",
-"res://characters/character art/Griffenhood final.png","res://characters/character art/Oscar final.png",
-"res://characters/character art/Lucy final.png","res://characters/character art/Dr. Cranial final.png",
-"res://characters/character art/Daegel final.png","res://characters/character art/Seilith final with glow.png"]
+var spritepaths = ["res://characters/character art small/ena small.png","res://characters/character art small/ethan small.png",
+"res://characters/character art small/amie and aziz small.png","res://characters/character art small/millissa small.png",
+"res://characters/character art small/tambre small.png","res://characters/character art small/kota small.png",
+"res://characters/character art small/grumple v small.png","res://characters/character art small/chrosnow small.png",
+"res://characters/character art small/alisia small.png","res://characters/character art small/maccus small.png",
+"res://characters/character art small/kurtis small.png","res://characters/character art small/joker small.png",
+"res://characters/character art small/jasper small.png","res://characters/character art small/carl small.png",
+"res://characters/character art small/griffenhood final.png","res://characters/character art small/oscar small.png",
+"res://characters/character art small/lucy small.png","res://characters/character art small/dr cranial small.png",
+"res://characters/character art small/daegel small.png","res://characters/character art small/seilith small.png"]
 
 onready var player1choice = get_node("player1choice")
 onready var player2choice = get_node("player2choice")
