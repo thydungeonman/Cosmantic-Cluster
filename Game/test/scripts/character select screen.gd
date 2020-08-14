@@ -71,7 +71,7 @@ func _ready():
 		print(i.get_name())
 		print(i.get_child(0).name)
 		print(i.get_child(0).spritepath)
-		i.get_child(0).sprite = load(i.get_child(0).spritepath)
+#		i.get_child(0).sprite = load(i.get_child(0).spritepath)
 	set_fixed_process(true)
 	set_process(true)
 #	resource_queue.start()
@@ -93,8 +93,6 @@ func _fixed_process(delta):
 	
 	if(Input.is_action_pressed("ui_enter")):
 		get_tree().change_scene("res://test/testboard.tscn")
-	
-	
 	
 	
 	if(Input.is_action_pressed("ui_select")):
@@ -126,7 +124,8 @@ func _fixed_process(delta):
 			for char in characters:
 				if(char.get_child(0).position == player2hover):
 					get_node("p2select").set_global_pos(char.get_child(0).get_global_pos())
-					player2choice.set_texture(char.get_child(0).sprite)
+					var sprite = load(char.get_child(0).spritepath)
+					player2choice.set_texture(sprite)
 					player2name.set_text(char.get_child(0).name)
 					found = true
 					break
@@ -145,7 +144,8 @@ func _fixed_process(delta):
 			for char in characters:
 				if(char.get_child(0).position == player2hover):
 					get_node("p2select").set_global_pos(char.get_child(0).get_global_pos())
-					player2choice.set_texture(char.get_child(0).sprite)
+					var sprite = load(char.get_child(0).spritepath)
+					player2choice.set_texture(sprite)
 					player2name.set_text(char.get_child(0).name)
 					found = true
 					break
@@ -163,7 +163,8 @@ func _fixed_process(delta):
 			for char in characters:
 				if(char.get_child(0).position == player2hover):
 					get_node("p2select").set_global_pos(char.get_child(0).get_global_pos())
-					player2choice.set_texture(char.get_child(0).sprite)
+					var sprite = load(char.get_child(0).spritepath)
+					player2choice.set_texture(sprite)
 					player2name.set_text(char.get_child(0).name)
 					found = true
 					break
@@ -182,7 +183,8 @@ func _fixed_process(delta):
 			for char in characters:
 				if(char.get_child(0).position == player2hover):
 					get_node("p2select").set_global_pos(char.get_child(0).get_global_pos())
-					player2choice.set_texture(char.get_child(0).sprite)
+					var sprite = load(char.get_child(0).spritepath)
+					player2choice.set_texture(sprite)
 					player2name.set_text(char.get_child(0).name)
 					found = true
 					break
@@ -208,7 +210,8 @@ func _fixed_process(delta):
 			for char in characters:
 				if(char.get_child(0).position == player1hover):
 					get_node("p1select").set_global_pos(char.get_child(0).get_global_pos())
-					player1choice.set_texture(char.get_child(0).sprite)
+					var sprite = load(char.get_child(0).spritepath)
+					player1choice.set_texture(sprite)
 					player1name.set_text(char.get_child(0).name)
 					found = true
 					break
@@ -227,7 +230,8 @@ func _fixed_process(delta):
 			for char in characters:
 				if(char.get_child(0).position == player1hover):
 					get_node("p1select").set_global_pos(char.get_child(0).get_global_pos())
-					player1choice.set_texture(char.get_child(0).sprite)
+					var sprite = load(char.get_child(0).spritepath)
+					player1choice.set_texture(sprite)
 					player1name.set_text(char.get_child(0).name)
 					found = true
 					break
@@ -245,7 +249,8 @@ func _fixed_process(delta):
 			for char in characters:
 				if(char.get_child(0).position == player1hover):
 					get_node("p1select").set_global_pos(char.get_child(0).get_global_pos())
-					player1choice.set_texture(char.get_child(0).sprite)
+					var sprite = load(char.get_child(0).spritepath)
+					player1choice.set_texture(sprite)
 					player1name.set_text(char.get_child(0).name)
 					found = true
 					break
@@ -265,7 +270,8 @@ func _fixed_process(delta):
 			for char in characters:
 				if(char.get_child(0).position == player1hover):
 					get_node("p1select").set_global_pos(char.get_child(0).get_global_pos())
-					player1choice.set_texture(char.get_child(0).sprite)
+					var sprite = load(char.get_child(0).spritepath)
+					player1choice.set_texture(sprite)
 					player1name.set_text(char.get_child(0).name)
 					found = true
 					break
