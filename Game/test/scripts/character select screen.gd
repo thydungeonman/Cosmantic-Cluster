@@ -102,8 +102,10 @@ func _fixed_process(delta):
 			else:
 				get_node("Label").set_text("mipmaps: OFF")
 			holding = true
-			for i in characters:
-				i.get_child(0).sprite.set_flags(mipmapson)
+			player1choice.get_texture().set_flags(mipmapson)
+#			for i in characters:
+#				i.get_child(0).sprite.set_flags(mipmapson)
+			
 			mipmapson = !mipmapson
 	else:
 		holding = false
