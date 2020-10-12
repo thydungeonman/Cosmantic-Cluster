@@ -71,12 +71,12 @@ func _ready():
 	#music.play(0)
 	
 	GenerateAILauncher()
-	GeneratePlayer1Flag()
-	GeneratePlayer2Flag()
+
 	GenerateBoardP1()
 	GenerateBoardP2()
+	GeneratePlayer1Flag()
+	GeneratePlayer2Flag()
 	HelpAI()
-	
 	set_fixed_process(true)
 
 func _fixed_process(delta):
@@ -183,7 +183,8 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 					var x = orbsonboard.find(badorb)
 					if(x != -1):
 						orbsonboard.remove(x)
-					badorb.get_node("AnimationPlayer").play("shrink")
+#					badorb.get_node("AnimationPlayer").play("shrink")
+					badorb.get_node("AnimationPlayer").play("fall")
 			crossreforbs.clear()
 	if(orbfell):
 		sfx.play("punch sound - falling orbs")
@@ -901,18 +902,18 @@ func _on_Button_toggled( pressed ):
 
 func IsPlayerDead():
 	if(player1health < 1):
-		GameOver("Player two wins",PLAYER.PLAYER2)
+		GameOver("Player two wins dead",PLAYER.PLAYER2)
 	elif(player2health < 1):
-		GameOver("Player one wins",PLAYER.PLAYER1)
+		GameOver("Player one wins dead",PLAYER.PLAYER1)
 
 #check to see if anyone has cleared their board
 func CheckPlayerBoard(player):
 	if(player == PLAYER.PLAYER1):
 		if(orbsonboardp1.size() == 0):
-			GameOver("Player One Wins!",PLAYER.PLAYER1)
+			GameOver("Player One Wins clear board!",PLAYER.PLAYER1)
 	elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
 		if(orbsonboardp2.size() == 0):
-			GameOver("Player Two Wins!",PLAYER.PLAYER2)
+			GameOver("Player Two Wins clear board!",PLAYER.PLAYER2)
 
 
 #ai helper function
@@ -927,6 +928,8 @@ func FindBottomLayer():
 			bottomorbs.push_back(orb)
 	return bottomorbs
 
+ 
+#find a good spot to fire a laser
 func FindPeninsula(targetcolour):
 	var t = null
 	var potentials = []

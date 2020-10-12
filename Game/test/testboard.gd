@@ -176,7 +176,8 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 					var x = orbsonboard.find(badorb)
 					if(x != -1):
 						orbsonboard.remove(x)
-					badorb.get_node("AnimationPlayer").play("shrink")
+#					badorb.get_node("AnimationPlayer").play("shrink")
+					badorb.get_node("AnimationPlayer").play("fall")
 			crossreforbs.clear()
 	if(orbfell):
 		sfx.play("punch sound - falling orbs")

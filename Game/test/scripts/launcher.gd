@@ -5,6 +5,8 @@ enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 
+var availablecolours = []
+
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
 const BLUE = "res://test/scenes/blueorb.tscn"
@@ -96,23 +98,42 @@ func _fixed_process(delta):
 func LoadOrb(delta):
 	if(upcomingorb == null):
 		randomize()
-		var rand = randi() % 8
-		if(rand == 0):
-			upcomingorb = preload(YELLOW).instance()
-		elif(rand == 1):
-			upcomingorb = preload(BLUE).instance()
-		elif(rand == 2):
-			upcomingorb = preload(RED).instance()
-		elif(rand == 3):
-			upcomingorb = preload(ORANGE).instance()
-		elif(rand == 4):
-			upcomingorb = preload(PURPLE).instance()
-		elif(rand == 5):
-			upcomingorb = preload(GREEN).instance()
-		elif(rand == 6):
-			upcomingorb = preload(BLACK).instance()
-		elif(rand == 7):
-			upcomingorb = preload(WHITE).instance()
+		if(availablecolours.size() > 0):
+			var rand = randi() % availablecolours.size()
+			if(availablecolours[rand] == COLOUR.YELLOW):
+				upcomingorb = preload(YELLOW).instance()
+			elif(availablecolours[rand] == COLOUR.BLUE):
+				upcomingorb = preload(BLUE).instance()
+			elif(availablecolours[rand] == COLOUR.RED):
+				upcomingorb = preload(RED).instance()
+			elif(availablecolours[rand] == COLOUR.ORANGE):
+				upcomingorb = preload(ORANGE).instance()
+			elif(availablecolours[rand] == COLOUR.PURPLE):
+				upcomingorb = preload(PURPLE).instance()
+			elif(availablecolours[rand] == COLOUR.GREEN):
+				upcomingorb = preload(GREEN).instance()
+			elif(availablecolours[rand] == COLOUR.BLACK):
+				upcomingorb = preload(BLACK).instance()
+			elif(availablecolours[rand] == COLOUR.WHITE):
+				upcomingorb = preload(WHITE).instance()
+		else:
+			var rand = randi() % 8
+			if(rand == 0):
+				upcomingorb = preload(YELLOW).instance()
+			elif(rand == 1):
+				upcomingorb = preload(BLUE).instance()
+			elif(rand == 2):
+				upcomingorb = preload(RED).instance()
+			elif(rand == 3):
+				upcomingorb = preload(ORANGE).instance()
+			elif(rand == 4):
+				upcomingorb = preload(PURPLE).instance()
+			elif(rand == 5):
+				upcomingorb = preload(GREEN).instance()
+			elif(rand == 6):
+				upcomingorb = preload(BLACK).instance()
+			elif(rand == 7):
+				upcomingorb = preload(WHITE).instance()
 		nextorb.set_texture(upcomingorb.get_node("Sprite").get_texture())
 	shottimer += delta
 	if(shottimer > 1.0):

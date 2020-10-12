@@ -62,6 +62,7 @@ onready var lbottomleftspot = Vector2(-width,width) * Vector2(1.07337749,1.84177
 onready var lbottomrightspot = Vector2(width,width) * Vector2(1.07337749,1.8417709).normalized()
 
 var timespathedupon = 0
+var isexcluded = false # from looking for top and maybe searching
 
 var number = 0
 
@@ -412,40 +413,40 @@ func CheckMatch(matchingorbs, leftoverorbs): #accepts array of kinematic bodies2
 #if its neighbor is not the top, that neighbor will then check if it neighbors the top and so on
 func LookForTop(crossreforbs):
 	crossreforbs.push_back(self)
-	if(topleft != null and !topleft.is_in_group("wall")):
+	if(topleft != null and !topleft.is_in_group("wall") ):
 		#print("topleft")
 		if(!crossreforbs.has(topleft)):
-			if(topleft.is_in_group("top") or (!topleft.is_in_group("top") and topleft.LookForTop(crossreforbs))):
+			if(topleft.is_in_group("top") or (!topleft.is_in_group("top") and topleft.LookForTop(crossreforbs)) and !topleft.isexcluded):
 				#print(str(get_name()) + " found top on topleft")
 				return true
 	if(topright != null and !topright.is_in_group("wall")):
 		#print("topright")
 		if(!crossreforbs.has(topright)):
-			if(topright.is_in_group("top") or (!topright.is_in_group("top") and topright.LookForTop(crossreforbs))):
+			if(topright.is_in_group("top") or (!topright.is_in_group("top") and topright.LookForTop(crossreforbs)) and !topright.isexcluded):
 				#print(str(get_name()) + " found top on topright")
 				return true
 	if(left != null and !left.is_in_group("wall")):
 		#print("left")
 		if(!crossreforbs.has(left)):
-			if(left.is_in_group("top") or (!left.is_in_group("top") and left.LookForTop(crossreforbs))):
+			if(left.is_in_group("top") or (!left.is_in_group("top") and left.LookForTop(crossreforbs)) and !left.isexcluded):
 				#print(str(get_name()) + " found top on left")
 				return true
 	if(right != null and !right.is_in_group("wall")):
 		#print("right")
 		if(!crossreforbs.has(right)):
-			if(right.is_in_group("top") or (!right.is_in_group("top") and right.LookForTop(crossreforbs))):
+			if(right.is_in_group("top") or (!right.is_in_group("top") and right.LookForTop(crossreforbs)) and !right.isexcluded):
 				#print(str(get_name()) + " found top on right")
 				return true
 	if(bottomleft != null and !bottomleft.is_in_group("wall")):
 		#print("bottomleft")
 		if(!crossreforbs.has(bottomleft)):
-			if(bottomleft.is_in_group("top") or (!bottomleft.is_in_group("top") and bottomleft.LookForTop(crossreforbs))):
+			if(bottomleft.is_in_group("top") or (!bottomleft.is_in_group("top") and bottomleft.LookForTop(crossreforbs)) and !bottomleft.isexcluded):
 				#print(str(get_name()) + " found top on bottomleft")
 				return true
 	if(bottomright != null and !bottomright.is_in_group("wall")):
 		#print("bottomright")
 		if(!crossreforbs.has(bottomright)):
-			if(bottomright.is_in_group("top") or (!bottomright.is_in_group("top") and bottomright.LookForTop(crossreforbs))):
+			if(bottomright.is_in_group("top") or (!bottomright.is_in_group("top") and bottomright.LookForTop(crossreforbs)) and !bottomright.isexcluded):
 				#print(str(get_name()) + " found top on bottomright")
 				return true
 				
@@ -482,6 +483,7 @@ func CountNeighbors():
 #searching for COLOUR.NONE will return all orbs
 #searching deeper than one level will also return the original orb
 #the group is needed so that orbs are not added twice
+#exclude on for there to need to be a path to same coloured orbs
 func Search(level, searchcolour, group, exclude = false):
 	level -= 1
 	if(level >= 0):
@@ -491,49 +493,94 @@ func Search(level, searchcolour, group, exclude = false):
 					if(!group.has(topleft)):
 						group.push_back(topleft)
 				if(exclude == false or topleft.colour == searchcolour):
-					topleft.Search(level,searchcolour,group)
+					topleft.Search(level,searchcolour,group,exclude)
 		if(topright != null):
 			if(topright.is_in_group("orb")):
 				if(topright.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(topright)):
 						group.push_back(topright)
 				if(exclude == false or topright.colour == searchcolour):
-					topright.Search(level,searchcolour,group)
+					topright.Search(level,searchcolour,group,exclude)
 		if(left != null):
 			if(left.is_in_group("orb")):
 				if(left.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(left)):
 						group.push_back(left)
 				if(exclude == false or left.colour == searchcolour):
-					left.Search(level,searchcolour,group)
+					left.Search(level,searchcolour,group,exclude)
 		if(right != null):
 			if(right.is_in_group("orb")):
 				if(right.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(right)):
 						group.push_back(right)
 				if(exclude == false or right.colour == searchcolour):
-					right.Search(level,searchcolour,group)
+					right.Search(level,searchcolour,group,exclude)
 		if(bottomleft != null):
 			if(bottomleft.is_in_group("orb")):
 				if(bottomleft.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(bottomleft)):
 						group.push_back(bottomleft)
 				if(exclude == false or bottomleft.colour == searchcolour):
-					bottomleft.Search(level,searchcolour,group)
+					bottomleft.Search(level,searchcolour,group,exclude)
 		if(bottomright != null):
 			if(bottomright.is_in_group("orb")):
 				if(bottomright.colour == searchcolour or searchcolour == COLOUR.NONE):
 					if(!group.has(bottomright)):
 						group.push_back(bottomright)
 				if(exclude == false or bottomright.colour == searchcolour):
-					bottomright.Search(level,searchcolour,group)
+					bottomright.Search(level,searchcolour,group,exclude)
 		return group
 
 
-#recursive function that searches outward from a group of orbs one level at a time
-#returns all orbs that are a specific colour
-func SearchGroup(level, colour, startgroup):
-	pass
+#recursive function that searches outward from an orb looking for the target orb
+func SearchFor(level,searchcolour,target,exclude = false):
+	level -= 1
+	if(level >= 0):
+		if(topleft != null):
+			if(topleft.is_in_group("orb")):
+				if(topleft == target):
+					return true
+				if(exclude == false or topleft.colour == searchcolour):
+					if(topleft.SearchFor(level,searchcolour,target,exclude)):
+						return true
+		
+		
+		if(topright != null):
+			if(topright.is_in_group("orb")):
+				if(topright == target):
+					return true
+				if(exclude == false or topright.colour == searchcolour):
+					if(topright.SearchFor(level,searchcolour,target,exclude)):
+						return true
+		if(left != null):
+			if(left.is_in_group("orb")):
+				if(left == target):
+					return true
+				if(exclude == false or left.colour == searchcolour):
+					if left.SearchFor(level,searchcolour,target,exclude):
+						return true
+		if(right != null):
+			if(right.is_in_group("orb")):
+				if(right == target):
+					return true
+				if(exclude == false or right.colour == searchcolour):
+					if right.SearchFor(level,searchcolour,target,exclude):
+						return true
+		if(bottomleft != null):
+			if(bottomleft.is_in_group("orb")):
+				if(bottomleft == target):
+					return true
+				if(exclude == false or bottomleft.colour == searchcolour):
+					if bottomleft.SearchFor(level,searchcolour,target,exclude):
+						return true
+		if(bottomright != null):
+			if(bottomright.is_in_group("orb")):
+				if(bottomright == target):
+					return true
+				if(exclude == false or bottomright.colour == searchcolour):
+					if bottomright.SearchFor(level,searchcolour,target,exclude):
+						return true
+	return false
 
 func Charge():
 	#this bool signals that the yellow ability was activated for this orb
@@ -616,10 +663,15 @@ func PrintNeighbors():
 	
 
 func _on_orb_mouse_enter():
-	var as = []
-	if(Search(1,colour,as).size()> 0):
-		print("its good")
-	#PrintNeighbors()
+	print( SearchFor(3,colour,get_parent().p2flag))
+	
+	print("EXCLUDE ON")
+	print(SearchFor(3,colour,get_parent().p2flag,true))
+	
+	print("")
+#	if istouchingtop:
+#		print("its good")
+#	PrintNeighbors()
 
 func DoCasts():
 	#raycasts to local neighboring positions to find neighboring orbs and then hooks them up
@@ -712,8 +764,8 @@ func SignalGameOver(): #used when an orb goes over the death line
 	get_parent().GameOver(s,k)
 
 func BecomeEthereal():
-	set_layer_mask(2)
-	set_collision_mask(2)
+	set_layer_mask_bit(0,false)
+	set_collision_mask_bit(0,false)
 
 func PathToTop(crossreforbs):
 	crossreforbs.push_back(self)
@@ -767,3 +819,11 @@ func PathToTop(crossreforbs):
 				return true
 				
 	return false
+
+
+func spawnFallOrb():
+	var fallorb = preload("res://test/scenes/fallorb2.tscn").instance()
+	get_parent().add_child(fallorb)
+	fallorb.set_global_pos(get_global_pos())
+	fallorb.changeColour(colour)
+	fallorb.setRot(get_node("Sprite").get_rot())

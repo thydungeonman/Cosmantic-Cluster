@@ -42,7 +42,7 @@ func doneloading():
 	var tex = thread.wait_to_finish()
 	lad.set_texture(tex.get_resource())
 func write(u):
-	loader = ResourceLoader.load_interactive(\"res://characters/character art/Oscar final.png\")
+	loader = ResourceLoader.load_interactive(\"res://characters/character art/Shobek final.png\")
 #	call_deferred(\"doneloading\")
 	return loader
 "

@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://test/aiboard.tscn" type="PackedScene" id=1]
+[ext_resource path="res://test/stages/scripts/1-1,2-1.gd" type="Script" id=2]
+
+[node name="1-1,2-1" instance=ExtResource( 1 )]
+
+script/script = ExtResource( 2 )
+
+[node name="ena" parent="."]
+
+transform/pos = Vector2( 660, 985 )
+
+[node name="enaP2" parent="."]
+
+transform/pos = Vector2( 1630, 985 )
+
+[node name="Position2D 2" parent="."]
+
+transform/pos = Vector2( 585, -125 )
+
+
+[editable path="wall"]
