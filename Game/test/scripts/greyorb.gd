@@ -13,12 +13,13 @@ func HookUp():
 	GetNeighbors()
 
 func TakeDamage():
-	if(hits == 0):
+	if(hits == 1):
+		print("grey orb died")
+		sfx.play("cracking-crunching - Grey orb destroyed")
+		Die()
+	elif(hits == 0):
 		anim.play("crack")
 		print("grey orb cracked")
 		hits += 1
 		sfx.play("crack-2 - Grey orb damage")
-	elif(hits == 1):
-		print("grey orb died")
-		sfx.play("cracking-crunching - Grey orb destroyed")
-		Die()
+	

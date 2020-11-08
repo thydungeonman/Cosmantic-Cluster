@@ -56,7 +56,7 @@ func GenerateBoardP1():
 	
 	for i in range(board.size()):
 		pass
-		if(i%2 == 1):
+		if(i%2 == 1): 
 			GenerateEvenRow(xoffset + 35,yoffset,orbwidth,PLAYER.PLAYER1,board[i])
 		else:
 			GenerateEvenRow(xoffset,yoffset,orbwidth,PLAYER.PLAYER1,board[i])
@@ -88,7 +88,7 @@ func GenerateEvenRow(xoffset,yoffset,width,player,row):
 		elif(row[i] == GC.BLANKROW):
 			return
 		elif(row[i] == GC.RAND):
-			randomize()
+#			randomize()
 			var rand = randi() % genavailablecolours.size()
 			orb = GenerateOrb(orb,genavailablecolours[rand])
 		elif(row[i] == GC.FLAG):
@@ -139,7 +139,7 @@ func GeneratePlayer1Flag():
 	p1flag = preload("res://test/scenes/flagorb.tscn").instance()
 	var s = Image()
 	
-	randomize()
+#	randomize()
 	var rand = randi() % genavailablecolours.size()
 	var result = genavailablecolours[rand]
 	if(result == GC.YELLOW):
@@ -168,7 +168,7 @@ func GeneratePlayer1Flag():
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
 	p1flag.get_node("Sprite").get_texture().create_from_image(s)
-	randomize()
+#	randomize()
 	var p = randi() % 11
 	add_child(p1flag)
 	orbsonboard.push_back(p1flag)
@@ -182,7 +182,7 @@ func GeneratePlayer2Flag():
 	p2flag = preload("res://test/scenes/flagorb2.tscn").instance()
 	var s = Image()
 	
-	randomize()
+#	randomize()
 	var rand = randi() % genavailablecolours.size()
 	var result = genavailablecolours[rand]
 	if(result == GC.YELLOW):
@@ -211,7 +211,7 @@ func GeneratePlayer2Flag():
 		p2flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p2flag.colour))
 	p2flag.get_node("Sprite").get_texture().create_from_image(s)
-	randomize()
+#	randomize()
 	var p = randi() % 11
 	add_child(p2flag)
 	orbsonboard.push_back(p2flag)

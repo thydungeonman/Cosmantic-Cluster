@@ -7,6 +7,14 @@
 
 script/script = ExtResource( 2 )
 
+[node name="ena" parent="."]
+
+transform/scale = Vector2( 1.5, 1.5 )
+
+[node name="enaP2" parent="."]
+
+transform/scale = Vector2( 1.5, 1.5 )
+
 [node name="Button 2" type="Button" parent="."]
 
 focus/ignore_mouse = false

@@ -1,4 +1,4 @@
-extends Node2D
+ extends Node2D
 
 
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
@@ -212,7 +212,7 @@ func Click():
 
 func LoadOrb(delta):
 	if(upcomingorb == null):
-		randomize()
+#		randomize()
 		if(availablecolours.size() > 0):
 			var rand = randi() % availablecolours.size()
 			if(availablecolours[rand] == COLOUR.YELLOW):
@@ -276,16 +276,24 @@ func AimAtPos(position):#position must be local to the launcher
 	#if not close enough after one increment, return false, else return true
 	var target = -Vector2(-1500,0).angle_to(position)
 	if(target < x):
-		speed += PI/1500
+		if(abs(target - x) < .03):
+			speed = minspeed
+		else:
+			speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x -= speed
 		x = clamp(x,lowerlimit,upperlimit)
+		
 		AdjustReticule()
 	elif(target > x):
-		speed += PI/1500
+		if(abs(target - x) < .03):
+			speed = minspeed
+		else:
+			speed += PI/1500
 		speed = clamp(speed,minspeed,maxspeed)
 		x += speed
 		x = clamp(x,lowerlimit,upperlimit)
+		
 		AdjustReticule()
 	#print(str(target) + " " + str(x))
 	if(abs(target - x) <.01): #is the trajectory close enough to the target
@@ -600,7 +608,7 @@ func ThrowAway():
 	
 	var isroom = false
 	while(!isroom):
-		randomize()
+#		randomize()
 		var randspot = int(randi() % 800) + 1000
 		clickedpos = Vector2(randspot,615)
 		var localpos = clickedpos - get_pos()
@@ -854,329 +862,6 @@ func CheckFlagShot():
 	#if cannot hit player flag orb but can hit an orb that touches the player flag orb and matches colour, take the shot
 
 
-func FullScan():
-	#brute force scan of all orbs that can be hit from the ailauncher
-	#start aiming at the top left corner of the aiboard and move one or more pixels at a time until youre at the right side
-	#or rotate the currentpoint vector
-	
-	#new plan make a dict of bouncepoints and remainders
-	#the in a new loop give the scanner a collision exception with the wall
-	#and try to move it the remainder of the distance
-	#hopefully it will collide
-	
-	
-	
-	for i in scannerlist:
-		i.queue_free()
-	scannerlist.clear()
-	
-	var scanner
-	var bouncescanner
-	var currentpoint = Vector2(-1200,-50)
-	var i = 0
-	var list = [] #orbs that can be hit with regular shots
-	var bouncelist = [] #orbs that can be hit with bounce shots
-	var pointdict = {} #points that aim at orbs
-	var bouncedict = {} #points along the wall and reverse trajectory
-	var bouncepointdict = {} #points along the wall and the corresponding orb
-	var emptyshots = [] #currentpoints that don't hit an orb, meaning a clear shot at the warp
-	var warpbouncedict = {} #currentpoints and bounced warp positions
-	var warpbouncepointdict = {} #currentpoints and orbs
-	
-	var lastorb = null
-	var currentorb = null
-	var borbs = []
-	
-	
-	
-	if(laserisactive):
-#		if(orb.colour != aiflagcolour):
-#			var t = get_parent().FindPeninsula(orb.colour)
-#			if(t != null):
-#				print("FOUND TARGET ORB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-#				print(t)
-#				clickedpos = t.get_pos()
-#				var lchecker = preload("res://test/scenes/laserchecker.tscn").instance()
-#				#spawn lchecker and check if the shot will hit the flag orb
-#				add_child(lchecker)
-#				lchecker.set_rot(get_angle_to(clickedpos))
-#				foundtarget = true
-#				state = 2
-#				return t
-#		else:
-		laserScan()
-		return
-	
-	
-	scanner = preload("res://test/scenes/scanner.tscn").instance()
-	add_child(scanner)
-	scanner.add_collision_exception_with(orb)
-	
-#	
-	bouncescanner = preload("res://test/scenes/scanner.tscn").instance()
-	add_child(bouncescanner)
-	bouncescanner.add_collision_exception_with(orb)
-	bouncescanner.add_collision_exception_with(scanner)
-	scanner.add_collision_exception_with(bouncescanner)
-	var hits = []
-	while (i != 120):
-		var remainder = scanner.move(currentpoint)
-#		var g = preload("res://test/scenes/rgodot.tscn").instance()
-#		var location = currentpoint + get_pos()
-#		add_child(g)
-#		g.set_global_pos(currentpoint)
-		if(scanner.is_colliding()):
-			if(scanner.get_collider().is_in_group("orb")):
-				currentorb = scanner.get_collider()
-				if currentorb != lastorb:
-					var average = Vector2()
-					if(lastorb != null):
-						for hit in hits:
-							average += hit
-						pointdict[lastorb] = average / hits.size()
-					hits = [scanner.get_global_pos()]
-					pointdict[currentorb] = scanner.get_global_pos()
-				else:
-					hits.push_back(scanner.get_global_pos())
-				list.push_back(scanner.get_collider())
-#				scanner.get_collider().get_node("Sprite").set_opacity(0)
-				var spot = scanner.get_global_pos()
-			
-			if(scanner.get_collider().is_in_group("wall")):
-				bouncedict[scanner.get_global_pos()] = remainder
-		else:
-			emptyshots.push_back(currentpoint)
-#			var g = preload("res://test/scenes/rgodot.tscn").instance()
-#			var location = currentpoint + get_pos()
-#			add_child(g)
-#			g.set_global_pos(location)
-		scanner.set_pos(Vector2())
-#		bouncescanner.set_pos(Vector2())
-		currentpoint = currentpoint.rotated(-.025)
-		i += 1
-#	print("empty shotsss")
-#	for e in emptyshots:
-#		print(e)
-	
-	scanner.queue_free()
-	bouncescanner.add_collision_exception_with(get_parent().get_node("wall"))
-	bouncescanner.add_collision_exception_with(get_parent().get_node("wall 2"))
-	bouncescanner.add_collision_exception_with(get_parent().get_node("middlewall"))
-	for key in bouncedict.keys():
-		bouncescanner.set_global_pos(key)
-#		bouncescanner.move(key)
-		bouncescanner.move(Vector2(-bouncedict[key].x,bouncedict[key].y))
-#		var g = preload("res://test/scenes/rgodot.tscn").instance()
-#		var location = bouncescanner.get_global_pos()
-#		add_child(g)
-#		g.set_global_pos(location)
-#		scannerlist.push_back(g)
-		if(bouncescanner.is_colliding()):
-			if(bouncescanner.get_collider().is_in_group("orb")):
-				bouncepointdict[bouncescanner.get_collider()] = key
-#				print(bouncescanner.get_collider().get_name())
-				bouncelist.push_back(bouncescanner.get_collider())
-		else:
-			#grab bounce point and current point
-			#figure out what its x will be when it warps
-			#if its x is outside of the board then reject it
-			
-			#key: global position of where the scanner is when it hits the wall
-			#bouncedict[key] just a trajectory  global trajectory since y is negative going up
-			
-			#tinker with the values or just use the trajectory and wall position
-			#to figure out what the x will be when the y is 100 or so
-			
-			#link trajectory/currentpoint  with warp exit point
-			#move scanner at trajectory.x -trajectory.y
-			#link bounce point with collider
-			
-			var m = (bouncedict[key].y/bouncedict[key].x)
-			var b = key.y
-			var localx = (-100 - (b)) / -m
-			var realx #1868
-			if(m > 0):
-				realx = localx + 1025
-#				var g = preload("res://test/scenes/rgodot.tscn").instance()
-#				add_child(g)
-#				g.set_global_pos(key)
-				if(realx > 1030): #1025
-					pass
-					warpbouncedict[bouncedict[key]] = [Vector2(1920 - realx,0),key]
-			else:
-				realx = localx + 1868
-#				var g = preload("res://test/scenes/rgodot.tscn").instance()
-#				add_child(g)
-#				g.set_global_pos(Vector2(localx,(-100)))
-				if(realx < 1860): #1868
-					pass
-					warpbouncedict[bouncedict[key]] = [Vector2(1920 - realx,0),key]
-#				var g = preload("res://test/scenes/godot.tscn").instance()
-#				var location = bouncescanner.get_global_pos()
-#				add_child(g)
-#				g.set_global_pos(location)
-#				var g = preload("res://test/scenes/godot.tscn").instance()
-#				var location = key
-#				add_child(g)
-#				g.set_global_pos(location)
-		bouncescanner.set_pos(Vector2())
-		
-	#DO THE SAME WITH EMPTY SHOTS USING THE CHECKER TO SEE WHERE THEY WILL LAND ON THE OTHER BOARD
-	#orbs hit the warp at y = -100 or -1080 locally
-	#x = y / (currentpoint.y / currentpoint.x)
-	
-	var warppointdict = {}
-	for shot in emptyshots:
-		var localx = -(1080 / (shot.y/shot.x))
-		var realx = localx + get_pos().x
-		scanner.set_global_pos(Vector2(0 + (1920 - realx),0))
-		scanner.move(-shot)
-		if(scanner.is_colliding() and scanner.get_collider().is_in_group("orb")):
-			warppointdict[scanner.get_collider()] = shot + get_pos()
-#			print()
-#			print("scanner pos")
-#			print(scanner.get_global_pos())
-#			print("realx")
-#			print(realx)
-#			print("shot")
-#			print(shot + get_pos())
-
-#		var g = preload("res://test/scenes/rgodot.tscn").instance()
-#		var location = scanner.get_global_pos()
-#		add_child(g)
-#		g.set_global_pos(location)
-	for key in warpbouncedict.keys():
-		scanner.set_global_pos(warpbouncedict[key][0])
-		scanner.move(Vector2(key.x,-key.y))
-		if(scanner.is_colliding()):
-			if(scanner.get_collider().is_in_group("orb")):
-				warpbouncepointdict[scanner.get_collider()] = warpbouncedict[key][1]
-#			var g = preload("res://test/scenes/rgodot.tscn").instance()
-#			var location = scanner.get_global_pos()
-#			add_child(g)
-#			g.set_global_pos(location)
-	
-	for key in warpbouncepointdict.keys():
-		print(key.get_name())
-	
-	
-	
-	var uniquebouncelist = []
-	for i in bouncelist:
-		if(!uniquebouncelist.has(i)):
-			uniquebouncelist.push_back(i)
-	bouncescanner.queue_free()
-	
-#	for i in bouncepointdict.values():
-#		print(i)
-	
-	var uniquelist = []
-	for i in list:
-		if (!uniquelist.has(i)):
-			uniquelist.push_back(i)
-	scanner.queue_free()
-	
-	var fulltargetlist = pointdict.keys() + warppointdict.keys()
-	for key in bouncepointdict.keys():
-		if(!fulltargetlist.has(key)):
-			fulltargetlist.push_back(key)
-	for key in warpbouncepointdict.keys():
-		if(!fulltargetlist.has(key)):
-			fulltargetlist.push_back(key)
-	
-	
-	#target finding starts
-	
-	
-	for borb in fulltargetlist:
-		#print(borb)
-		if(borb.colour == orb.colour):
-			borbs.push_back(borb)
-		
-	if(borbs.size() == 1):
-		print("ONE BORB")
-		var targets = []
-		
-		
-		var bail1 = false
-		if(borbs[0].colour == aiflagcolour):
-			var group = []
-			group = borbs[0].Search(5,borbs[0].colour,group,true)
-			for touchingorb in group:
-				if(touchingorb.istouchingflag or touchingorb.isflag):
-					bail1 = true 
-					print("SUPREME ULTRA BAILINGLLLDKFJSDKFJSLDF")
-					break
-		
-		if(!bail1):
-			if(pointdict.keys().has(borbs[0])):
-				clickedpos = pointdict[borbs[0]]
-			elif(bouncepointdict.keys().has(borbs[0])):
-				clickedpos = bouncepointdict[borbs[0]]
-			elif(warppointdict.keys().has(borbs[0])):
-				clickedpos = warppointdict[borbs[0]]
-			else:
-				clickedpos = warpbouncepointdict[borbs[0]]
-			foundtarget = true
-			state = 1
-			return borbs[0]
-		print("BAILING @@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-	elif(borbs.size() > 1):
-		print("MULTIPLE BORBS")
-		for borb in borbs:
-			var ar = []
-#			print(borb.Search(1,borb.colour,ar).size())
-			var targets = borb.Search(4,borb.colour,ar)
-			var bail2 = false
-			for i in targets:
-				if i.is_in_group("flag"):
-					bail2 = true
-					print("BAILING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-					break
-			if bail2:
-				continue
-			if(borb.Search(1,borb.colour,ar).size() >= 1):
-				print("FOUND GOOD MATCH")
-#				for i in ar:
-#					pass
-#					print(i)
-				if(pointdict.keys().has(borb)):
-					clickedpos = pointdict[borb]
-				elif(bouncepointdict.keys().has(borb)):
-					clickedpos = bouncepointdict[borb]
-				elif(warppointdict.keys().has(borb)):
-					clickedpos = warppointdict[borb]
-				else:
-					clickedpos = warpbouncepointdict[borb]
-				foundtarget = true
-				state = 1
-				return borb
-			if(pointdict.keys().has(borbs[0])):
-				clickedpos = pointdict[borbs[0]]
-			elif(bouncepointdict.keys().has(borbs[0])):
-				clickedpos = bouncepointdict[borbs[0]]
-			elif(warppointdict.keys().has(borbs[0])):
-				clickedpos = warppointdict[borbs[0]]
-			else:
-				clickedpos = warpbouncepointdict[borbs[0]]
-		print("throwing away an orb")
-#		foundtarget = true
-#		state = 1
-#		return borbs[0] #change this
-	if(container.IsFull()):
-		if(!madeswap):
-			state = 4
-#			orb = Swap(orb)
-#			madeswap = true
-#			state = 0
-		else:
-			state = 2
-			print("TROWING AWAY AN ORBBBBBB")
-			ThrowAway2(pointdict,bouncepointdict,warppointdict,emptyshots)
-	else:
-		Store(orb)
-		state = 0
-
 
 func laserScan():
 	var shot
@@ -1231,6 +916,11 @@ func FullScan2():
 	#and try to move it the remainder of the distance
 	#hopefully it will collide
 	
+	if(ischarged):
+		print("CHARGED")
+	else:
+		print("NOT CHARGED")
+	
 	for r in rgodots:
 		r.queue_free()
 	rgodots.clear()
@@ -1262,7 +952,6 @@ func FullScan2():
 	if(laserisactive):
 		laserScan()
 		return
-	
 	
 	scanner = preload("res://test/scenes/scanner.tscn").instance()
 	add_child(scanner)
@@ -1416,7 +1105,22 @@ func FullScan2():
 		for borb in fulltargetlist:
 			if(borb.colour == orb.colour):
 				borbs.push_back(borb)
-			
+		
+		if(ischarged): 
+			var target = ChargeScan(borbs)
+			if(target != null):
+				if(pointdict.keys().has(target)):
+					clickedpos = pointdict[target]
+				elif(bouncepointdict.keys().has(target)):
+					clickedpos = bouncepointdict[target]
+				elif(warppointdict.keys().has(target)):
+					clickedpos = warppointdict[target]
+				else:
+					clickedpos = warpbouncepointdict[target]
+				foundtarget = true
+				state = 1
+				return target 
+		
 		if(borbs.size() == 1):
 			print("ONE BORB")
 			var targets = []
@@ -1424,7 +1128,7 @@ func FullScan2():
 			var bail1 = false
 			if(borbs[0].colour == aiflagcolour):
 				
-				if borbs[0].SearchFor(5,borbs[0].colour,get_parent().p2flag,true) or borbs[0] == get_parent().p2flag:
+				if borbs[0].SearchFor(7,borbs[0].colour,get_parent().p2flag,true) or borbs[0] == get_parent().p2flag:
 					bail1 = true 
 					fulltargetlist.remove(fulltargetlist.find(borbs[0]))
 					print("removed " + str(borbs[0].get_name()) + " would have matched flag")
@@ -1552,3 +1256,110 @@ func FullScan2():
 			state = 0
 			return #to exit the loop
 	print("exited function somehow")
+
+
+
+
+
+
+func ChargeScan(targets): #borbs
+	#should be used after gotten borbs
+	#check to see if using a yellow ability on the targeted orb will
+	#shock the flag orb or drop the flag orb
+	#not only avoid bad shots but pick the best shot
+	#edge case scenario is that the orb that is shot bridges two groups
+	#it would be difficult to check for that
+	
+	#have dict of target borb and how many things it will shock with yellow ability
+	#for each borb:
+	#first check if a match could even be made
+	#if it can then get the match group
+	#search for surrounding orbs of same colour and grey orbs
+	#is the flag orb the same colour?
+	#if it is and the flag orb is in that then bail
+	#is flag at the top already?
+	#if not then can the flag get to the top with those orbs excluded?
+	#if not then bail
+	#if not bailed at this point add to dict [target] = shocks
+	#return target with most shocks or null if there are none
+	
+	var testedorbs = [] # list of orbs that have been checked so they are not checked more than once
+	var goodorbs = {} # target = how many grey and same coloured orbs it shocks / maybe drops eventually
+	var masterlist = []
+	
+	for target in targets:
+		print("STARTING CHARGE TARGET " + target.get_name())
+		# check match, more than 2 in group to be fired at
+		var list = []
+		list = target.Search(7,target.colour,list,true)
+		masterlist.append(list)
+		if(list.size() > 1):
+			var next = false
+			for i in list:
+				if i == get_parent().p2flag:
+					print("has flag in match group")
+					next = true
+					break
+			if next:
+				print("going to next target")
+				continue # next target
+			for i in list:
+				i.isexcluded = true
+			var mastershocks = []
+			var bail = false
+			for i in list:
+				var shocks = []
+				bail = false
+				shocks = i.ChargeSearch(2,i.colour,shocks)
+				if shocks.size() > 0:
+					for s in shocks:
+						if(s == get_parent().p2flag):
+							bail = true
+							print("will shock flag")
+							break #stop looking at shocks
+							
+						if !mastershocks.has(s):
+							mastershocks.append(s)
+					if bail:
+						for l in list:
+							l.isexcluded = false
+						print("breaking from loop")
+						break #leave match group,list
+			if bail:
+				print("going to next target")
+				continue #go to next target
+			for i in mastershocks:
+				i.isexcluded = true
+			var a = []
+			if !get_parent().p2flag.LookForTop(a):
+				for i in list:
+					i.isexcluded = false
+				for i in mastershocks:
+					i.isexcluded = false
+				print("would have dropped flag, going to next target")
+				continue
+				#bail
+			
+			for i in mastershocks:
+				i.isexcluded = false
+			goodorbs[target] = mastershocks.size()
+			
+			
+			for i in list:
+				i.isexcluded = false
+		else:
+			print("match group not big enough, next target")
+			continue
+	if(goodorbs.keys().size() > 0):
+		print("There are good orbs")
+		var biggest = goodorbs.keys()[0]
+		
+		for key in goodorbs.keys():
+			print(key.get_name() + " with " + str(goodorbs[key]) + " shocks")
+			if goodorbs[key] >= goodorbs[biggest]:
+				biggest = key
+		print("returning " + biggest.get_name())
+		return biggest
+	else:
+		print("No good orbs, returning null")
+		return null

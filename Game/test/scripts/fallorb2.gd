@@ -53,15 +53,13 @@ func _ready():
 	#get appropriate rotation and sprite
 	#start fall animation
 	randomize()
-	var right = randi() % 2
-	var clock = randi() % 2
-	var waittime = randf() / 20
+	right = randi() % 3
+	clock = randi() % 3
+	var waittime = (randf() * .1)
 	get_node("Timer").set_wait_time(waittime)
 	get_node("Timer").start()
-	if right == 0:
-		Right = true
-	if clock == 0:
-		Clock = true
+	print(right)
+	print(clock)
 	print("RANDOMIZEEEEEEEEEEEEEEEE")
 	print(waittime)
 	
@@ -75,14 +73,15 @@ func _fixed_process(delta):
 #	if(waittimer < waittime and !falling):
 #		get_node("AnimationPlayer").play("fall")
 #		falling = true
-	if(Right):
-		fallRight(delta)
-	else:
-		fallLeft(delta)
-	if(Clock):
-		spinClock(delta)
-	else:
-		spinAntiClock(delta)
+	if(falling):
+		if(Right):
+			fallRight(delta)
+		else:
+			fallLeft(delta)
+		if(Clock):
+			spinClock(delta)
+		else:
+			spinAntiClock(delta)
 
 
 
@@ -115,5 +114,11 @@ func spinAntiClock(delta):
 
 func _on_Timer_timeout():
 	if(!falling):
+		if right == 0:
+			Right = true
+		if clock == 0:
+			Clock = true
 		get_node("AnimationPlayer").play("fall")
 		falling = true
+		print(right)
+		print(clock)

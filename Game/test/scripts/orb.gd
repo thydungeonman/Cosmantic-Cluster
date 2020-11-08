@@ -188,6 +188,8 @@ func Move(delta):
 							killorbs = orb.Search(2,colour,killorbs)
 						for orb in matchingorbs:
 							greyorbs = orb.Search(2,COLOUR.GREY,greyorbs)
+							
+							
 						var extraleftovers = []
 						for orb in matchingorbs:  #remove the original match orbs
 							killorbs.remove(killorbs.find(orb))
@@ -483,7 +485,7 @@ func CountNeighbors():
 #searching for COLOUR.NONE will return all orbs
 #searching deeper than one level will also return the original orb
 #the group is needed so that orbs are not added twice
-#exclude on for there to need to be a path to same coloured orbs
+#exclude on for there to need to be a path of like coloured orbs to same coloured orbs
 func Search(level, searchcolour, group, exclude = false):
 	level -= 1
 	if(level >= 0):
@@ -543,8 +545,6 @@ func SearchFor(level,searchcolour,target,exclude = false):
 				if(exclude == false or topleft.colour == searchcolour):
 					if(topleft.SearchFor(level,searchcolour,target,exclude)):
 						return true
-		
-		
 		if(topright != null):
 			if(topright.is_in_group("orb")):
 				if(topright == target):
@@ -582,6 +582,56 @@ func SearchFor(level,searchcolour,target,exclude = false):
 						return true
 	return false
 
+#specific version of search to be used when checking charged shots
+#returns greys along with searchcolour and excludes orbs that are isexcluded
+func ChargeSearch(level, searchcolour, group):
+	level -= 1
+	if(level >= 0):
+		if(topleft != null):
+			if(topleft.is_in_group("orb")):
+				if((topleft.colour == searchcolour or topleft.colour == COLOUR.GREY) and !topleft.isexcluded):
+					if(!group.has(topleft)):
+						group.push_back(topleft)
+				if(!topleft.isexcluded):
+					topleft.ChargeSearch(level, searchcolour, group)
+		if(topright != null):
+			if(topright.is_in_group("orb")):
+				if(topright.colour == searchcolour or topright.colour == COLOUR.GREY) and !topright.isexcluded:
+					if(!group.has(topright)):
+						group.push_back(topright)
+				if(!topright.isexcluded):
+					topright.ChargeSearch(level, searchcolour, group)
+		if(left != null):
+			if(left.is_in_group("orb")):
+				if(left.colour == searchcolour or left.colour == COLOUR.GREY) and !left.isexcluded:
+					if(!group.has(left)):
+						group.push_back(left)
+				if(!left.isexcluded):
+					left.ChargeSearch(level, searchcolour, group)
+		if(right != null):
+			if(right.is_in_group("orb")):
+				if(right.colour == searchcolour or right.colour == COLOUR.GREY) and !right.isexcluded:
+					if(!group.has(right)):
+						group.push_back(right)
+				if(!right.isexcluded):
+					right.ChargeSearch(level, searchcolour, group)
+		if(bottomleft != null):
+			if(bottomleft.is_in_group("orb")):
+				if(bottomleft.colour == searchcolour or bottomleft.colour == COLOUR.GREY) and !bottomleft.isexcluded:
+					if(!group.has(bottomleft)):
+						group.push_back(bottomleft)
+				if(!bottomleft.isexcluded):
+					bottomleft.ChargeSearch(level, searchcolour, group)
+		if(bottomright != null):
+			if(bottomright.is_in_group("orb")):
+				if(bottomright.colour == searchcolour or bottomright.colour == COLOUR.GREY) and !bottomright.isexcluded:
+					if(!group.has(bottomright)):
+						group.push_back(bottomright)
+				if(!bottomright.isexcluded):
+					bottomright.ChargeSearch(level, searchcolour, group)
+		return group
+
+
 func Charge():
 	#this bool signals that the yellow ability was activated for this orb
 	charged = true
@@ -615,7 +665,7 @@ func PrintNeighbors():
 		var s = ""
 		s += "topleft: " + str(topleft) + " " + topleft.get_name()
 		if(topleft.is_in_group("orb")):
-			s += " Colour: " + str(topleft.colour)
+			s += (" Colour: " + str(topleft.colour) + " isexcluded = " + str(topleft.isexcluded))
 		print(s)
 	else:
 		print("topleft: " + "null")
@@ -623,7 +673,7 @@ func PrintNeighbors():
 		var s = ""
 		s += "topright: " + str(topright) + " " + topright.get_name()
 		if(topright.is_in_group("orb")):
-			s += " Colour: " + str(topright.colour)
+			s += (" Colour: " + str(topright.colour) + " isexcluded = " + str(topright.isexcluded))
 		print(s)
 	else:
 		print("topright: " + "null")
@@ -631,7 +681,7 @@ func PrintNeighbors():
 		var s = ""
 		s += "left: " + str(left) + " " + left.get_name()
 		if(left.is_in_group("orb")):
-			s += " Colour: " + str(left.colour)
+			s += " Colour: " + str(left.colour) + " isexcluded = " + str(left.isexcluded)
 		print(s)
 	else:
 		print("left: " + "null")
@@ -639,7 +689,7 @@ func PrintNeighbors():
 		var s = ""
 		s += "right: " + str(right) + " " + right.get_name()
 		if(right.is_in_group("orb")):
-			s += " Colour: " + str(right.colour)
+			s += " Colour: " + str(right.colour) + " isexcluded = " + str(right.isexcluded)
 		print(s)
 	else:
 		print("right: " + "null")
@@ -647,7 +697,7 @@ func PrintNeighbors():
 		var s = ""
 		s += "bottomleft: " + str(bottomleft) + " " + bottomleft.get_name()
 		if(bottomleft.is_in_group("orb")):
-			s += " Colour: " + str(bottomleft.colour)
+			s += " Colour: " + str(bottomleft.colour) + " isexcluded = " + str(bottomleft.isexcluded)
 		print(s)
 	else:
 		print("bottomleft: " + "null")
@@ -655,7 +705,7 @@ func PrintNeighbors():
 		var s = ""
 		s += "bottomright: " + str(bottomright) + " " + bottomright.get_name()
 		if(bottomright.is_in_group("orb")):
-			s += " Colour: " + str(bottomright.colour)
+			s += " Colour: " + str(bottomright.colour) + " isexcluded = " + str(bottomright.isexcluded)
 		print(s)
 	else:
 		print("bottomright: " + "null")
@@ -663,12 +713,25 @@ func PrintNeighbors():
 	
 
 func _on_orb_mouse_enter():
-	print( SearchFor(3,colour,get_parent().p2flag))
-	
-	print("EXCLUDE ON")
-	print(SearchFor(3,colour,get_parent().p2flag,true))
-	
-	print("")
+	pass
+	PrintNeighbors()
+#	var group = []
+#	group = Search(5,colour,group,true)
+#	
+#	print("starting listing")
+#	if group.size() > 0:
+#		for orb in group:
+#			print(orb.get_name() + " with colour " + str(orb.colour))
+#	print("done listing")
+#	print( SearchFor(3,colour,get_parent().p2flag))
+#	
+#	print("EXCLUDE ON")
+#	print(SearchFor(3,colour,get_parent().p2flag,true))
+#	
+#	print("")
+
+
+
 #	if istouchingtop:
 #		print("its good")
 #	PrintNeighbors()
@@ -822,7 +885,7 @@ func PathToTop(crossreforbs):
 
 
 func spawnFallOrb():
-	var fallorb = preload("res://test/scenes/fallorb2.tscn").instance()
+	var fallorb = load("res://test/scenes/fallorb2.tscn").instance()
 	get_parent().add_child(fallorb)
 	fallorb.set_global_pos(get_global_pos())
 	fallorb.changeColour(colour)

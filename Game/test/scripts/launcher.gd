@@ -97,7 +97,7 @@ func _fixed_process(delta):
 
 func LoadOrb(delta):
 	if(upcomingorb == null):
-		randomize()
+#		randomize()
 		if(availablecolours.size() > 0):
 			var rand = randi() % availablecolours.size()
 			if(availablecolours[rand] == COLOUR.YELLOW):

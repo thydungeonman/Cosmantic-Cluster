@@ -1,6 +1,9 @@
 extends Node2D
 
-
+#bugs
+#when an orb at the top has all of its top neighbors redone with orbs it wont reneighbor with the top
+#two orbs that should be shocked will result with one falling
+#dropping your enemies entire board will result in them winning from a board clear
 
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
@@ -32,7 +35,6 @@ var s = false
 var t  = 0.0 #timer variable to delay the raycasts of the orbs when generated, works with s
 
 var leftoverorbs = []
-var crossreforbs = []
 var orb; #the newest orb
 
 onready var p1launcher = get_node("p1launcher")
@@ -59,6 +61,10 @@ var p1darktimer = 0.00
 var p2isdark = false
 var p2darktime = 5.00 #time that the darkness ability lasts
 var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
+var p1blue = false #true if p1 is generating grey orbs on p2 board 
+var p2blue = false
+var p1bluetimes = 0#number of times to generate grey orbs
+var p2bluetimes = 0
 
 var timerpaused = false
 var timerlockout = false
@@ -69,9 +75,13 @@ var rclick = false
 
 func _ready():
 	#music.play(0)
+	randomize()
+	var randseed = randi()
+	seed(randseed)
+	print("This levels seed is " + str(randseed))
 	
 	GenerateAILauncher()
-
+	
 	GenerateBoardP1()
 	GenerateBoardP2()
 	GeneratePlayer1Flag()
@@ -127,6 +137,23 @@ func _fixed_process(delta):
 		P1BlackAblility(delta)
 	if(p1isdark):
 		P2BlackAbility(delta)
+	
+	
+	#to generate grey orbs because they can't be generated all in one frame
+	if(p1blue):
+		if p1bluetimes > 0:
+			P1BlueAbility()
+			p1bluetimes -= 1
+		else:
+			p1blue = false
+	
+	if(p2blue):
+		if(p2bluetimes > 0):
+			P2BlueAbility()
+			p2bluetimes -= 1
+		else:
+			p2blue = false
+	
 
 func GenerateBoardP1():
 	#generate board based off of the width of the screen and the width of an orb
@@ -170,7 +197,9 @@ func GenerateBoardP2():
 func CheckFall(): #will most likely take one or more kinematic bodies that are the neighboring orbs of the ones that were just matched and killed
 #	print("checking fall" + " " + str(leftoverorbs.size()))
 	var orbfell = false
+	
 	for i in leftoverorbs:
+		var crossreforbs = []
 #		print(i.get_name())
 		i.set_opacity(1)
 		if i != null:
@@ -185,7 +214,7 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 						orbsonboard.remove(x)
 #					badorb.get_node("AnimationPlayer").play("shrink")
 					badorb.get_node("AnimationPlayer").play("fall")
-			crossreforbs.clear()
+		crossreforbs.clear()
 	if(orbfell):
 		sfx.play("punch sound - falling orbs")
 #		print("sfx played")
@@ -194,7 +223,7 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 func GenerateOddRow(xoffset, yoffset, width, player):
 	for i in range(numthatfit):
 		var orb
-		randomize()
+#		randomize()
 		var result = randi() % 8
 		if(result == 0):
 			orb = preload(YELLOW).instance()
@@ -229,7 +258,7 @@ func GenerateEvenRow(xoffset, yoffset, width, player):
 	xoffset += 35
 	for i in range(numthatfit - 1):
 		var orb
-		randomize()
+#		randomize()
 		var result = randi() % 8
 		if(result == 0):
 			orb = preload(YELLOW).instance()
@@ -358,6 +387,7 @@ func NewHandleAbility(player):
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
 			animenap1.play("ena attack")
+			
 		elif(lastusedcolourp1 == COLOUR.BLUE): #comboable
 			if(abilitycombop1 > 8):
 				abilitycombop1 = 8
@@ -368,9 +398,10 @@ func NewHandleAbility(player):
 				times -= 3
 			else:
 				times -= 4
-			
-			for i in range(times):
-				P1BlueAbility()
+			p1bluetimes = times
+			p1blue = true
+#			for i in range(times):
+#				P1BlueAbility()
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.GREEN): #comboable
 			if(abilitycombop1 > 8):
@@ -470,9 +501,10 @@ func NewHandleAbility(player):
 				times -= 3
 			else:
 				times -= 4
-			
-			for i in range(times):
-				P2BlueAbility()
+			p2bluetimes = times
+			p2blue = true
+#			for i in range(times):
+#				P2BlueAbility()
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.GREEN): #comboable
 			
@@ -652,7 +684,6 @@ func P2BlackAbility(delta):
 		p1darktime = 1.0
 
 func P1BlueAbility():
-	
 	var orb = FindAvailableSpot(PLAYER.PLAYER2)
 	if(orb == null):
 		return #couldn't find an orb. bail out
@@ -741,7 +772,7 @@ func GeneratePlayer1Flag():
 	p1flag = preload("res://test/scenes/flagorb.tscn").instance()
 	var s = Image()
 	
-	randomize()
+#	randomize()
 	var result = randi() % 8
 	if(result == 0):
 		s.load("res://test/sprites/flag orb yellow new.png")
@@ -769,7 +800,7 @@ func GeneratePlayer1Flag():
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
 	p1flag.get_node("Sprite").get_texture().create_from_image(s)
-	randomize()
+#	randomize()
 	var p = randi() % 11
 	add_child(p1flag)
 	orbsonboard.push_back(p1flag)
@@ -780,7 +811,7 @@ func GeneratePlayer2Flag():
 	p2flag = preload("res://test/scenes/flagorb2.tscn").instance()
 	var s = Image()
 	
-	randomize()
+#	randomize()
 	var result = randi() % 8
 	if(result == 0):
 		s.load("res://test/sprites/flag orb yellow new.png")
@@ -808,7 +839,7 @@ func GeneratePlayer2Flag():
 		p2flag.colour = COLOUR.WHITE
 	print("flag2 colour: " + str(p2flag.colour))
 	p2flag.get_node("Sprite").get_texture().create_from_image(s)
-	randomize()
+#	randomize()
 	var p = randi() % 11
 	add_child(p2flag)
 	orbsonboard.push_back(p2flag)
