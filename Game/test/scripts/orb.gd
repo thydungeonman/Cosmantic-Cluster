@@ -76,9 +76,9 @@ func _input(event):
 	pass
 
 func _fixed_process(delta):
-	
+	get_node("Label").set_text(str(istouchingtop))
 	if(ismoving):
-		Move(delta)
+		Move(delta) 
 
 func GetNeighboringPositions():
 	#calculates the positions that neighboring orbs will be set too, creates a hexagon shape.
@@ -194,7 +194,7 @@ func Move(delta):
 						for orb in matchingorbs:  #remove the original match orbs
 							killorbs.remove(killorbs.find(orb))
 						for orb in greyorbs:
-							print(orb)
+#							print(orb)
 							orb.TakeDamage()
 						var extraleftovers = []
 						for orb in killorbs:
@@ -203,6 +203,8 @@ func Move(delta):
 							get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))
 							orb.RemoveFromPlayer()
 							orb.anim.play("zap")
+						for korb in killorbs:
+							extraleftovers.remove(extraleftovers.find(korb))
 						for orb in extraleftovers:
 							if(!leftoverorbs.has(orb)):
 								leftoverorbs.push_back(orb)
@@ -455,6 +457,55 @@ func LookForTop(crossreforbs):
 	falling = true
 	#print(str(get_name()) + " did not find top")
 	return false
+
+
+#look for top method that looks for orbs that are in the top rather than the top itself
+func LookForTop2(crossreforbs):
+	
+	crossreforbs.push_back(self)
+	if(self.istouchingtop):
+		return true
+	if(topleft != null and !topleft.is_in_group("wall")):
+		#print("topleft")
+		if(!crossreforbs.has(topleft)):
+			if(topleft.is_in_group("orb")):
+				if(topleft.istouchingtop or (topleft.LookForTop2(crossreforbs) and !topleft.isexcluded)):
+					return true
+	if(topright != null and !topright.is_in_group("wall")):
+		#print("topright")
+		if(!crossreforbs.has(topright)):
+			if(topright.is_in_group("orb")):
+				if(topright.istouchingtop or (topright.LookForTop2(crossreforbs) and !topright.isexcluded)):
+					return true
+	if(left != null and !left.is_in_group("wall")):
+		#print("left")
+		if(!crossreforbs.has(left)):
+			if(left.is_in_group("orb")):
+				if(left.istouchingtop or (left.LookForTop2(crossreforbs) and !left.isexcluded)):
+					return true
+	if(right != null and !right.is_in_group("wall")):
+		#print("right")
+		if(!crossreforbs.has(right)):
+			if(right.is_in_group("orb")):
+				if(right.istouchingtop or (right.LookForTop2(crossreforbs) and !right.isexcluded)):
+					return true
+	if(bottomleft != null and !bottomleft.is_in_group("wall")):
+		#print("bottomleft")
+		if(!crossreforbs.has(bottomleft)):
+			if(bottomleft.is_in_group("orb")):
+				if(bottomleft.istouchingtop or (bottomleft.LookForTop2(crossreforbs) and !bottomleft.isexcluded)):
+					return true
+	if(bottomright != null and !bottomright.is_in_group("wall")):
+		#print("bottomright")
+		if(!crossreforbs.has(bottomright)):
+			if(bottomright.is_in_group("orb")):
+				if(bottomright.istouchingtop or (bottomright.LookForTop2(crossreforbs) and !bottomright.isexcluded)):
+					return true
+				
+	falling = true
+	#print(str(get_name()) + " did not find top")
+	return false
+
 
 
 func ActivateAbility():
@@ -746,6 +797,8 @@ func DoCasts():
 			ray.get_collider().bottomright = self
 		if(ray.get_collider().is_in_group("flag")):
 			istouchingflag = true
+		if(ray.get_collider().is_in_group("top")):
+			istouchingtop = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
 	ray.set_cast_to(lleftspot)
@@ -759,6 +812,8 @@ func DoCasts():
 			ray.get_collider().right = self
 		if(ray.get_collider().is_in_group("flag")):
 			istouchingflag = true
+		if(ray.get_collider().is_in_group("top")):
+			istouchingtop = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
 	ray.set_cast_to(lbottomrightspot)
@@ -769,6 +824,8 @@ func DoCasts():
 			ray.get_collider().topleft = self
 		if(ray.get_collider().is_in_group("flag")):
 			istouchingflag = true
+		if(ray.get_collider().is_in_group("top")):
+			istouchingtop = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 	
 	
@@ -780,6 +837,8 @@ func DoCasts():
 			ray.get_collider().bottomleft = self
 		if(ray.get_collider().is_in_group("flag")):
 			istouchingflag = true
+		if(ray.get_collider().is_in_group("top")):
+			istouchingtop = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 			
 	ray.set_cast_to(lbottomleftspot)
@@ -790,6 +849,8 @@ func DoCasts():
 			ray.get_collider().topright = self
 		if(ray.get_collider().is_in_group("flag")):
 			istouchingflag = true
+		if(ray.get_collider().is_in_group("top")):
+			istouchingtop = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 			
 	ray.set_cast_to(lrightspot)
@@ -803,6 +864,8 @@ func DoCasts():
 			ray.get_collider().left = self
 		if(ray.get_collider().is_in_group("flag")):
 			istouchingflag = true
+		if(ray.get_collider().is_in_group("top")):
+			istouchingtop = true
 			#ray.get_collider().set_opacity(ray.get_collider().get_opacity() - .15)
 
 func Sparkle():

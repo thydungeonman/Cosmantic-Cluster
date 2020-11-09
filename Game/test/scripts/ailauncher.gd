@@ -96,6 +96,7 @@ var playerflagcolour
 var aiflagcolour
 
 var scannerlist = []
+var throwingaway = false # only used for board label
 
 
 func _ready():
@@ -108,7 +109,10 @@ func _ready():
 
 func _fixed_process(delta):
 	Click()
-	
+	if(throwingaway):
+		get_parent().get_node("throwaway").show()
+	else:
+		get_parent().get_node("throwaway").hide()
 #	print(get_parent().orbsonboardp2.size())
 #	if(Input.is_action_pressed("click")):
 #		if(!madeswap):
@@ -507,6 +511,7 @@ func Fire():
 	# spawn lightning area and child to orb
 	# when orb stops check bool in orb and then activate lightning
 	#print(str(orb))
+	throwingaway = false
 	if(laserisactive):
 		Disable()
 		var laser = preload("res://test/scenes/laser.tscn").instance()
@@ -641,8 +646,9 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 	#own flag orb
 	#enemy flag orb
 	#orbs that are very close to launcher
-	
+	throwingaway = true
 	#don't aim at the enemy flag orb
+	get_parent().get_node("throwaway").set_text("THROWING AWAY")
 	var fulltargetdict = straightshottargets
 	for key in warpshottargets.keys():
 		fulltargetdict[key] = warpshottargets[key]

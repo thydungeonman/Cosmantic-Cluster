@@ -1,8 +1,6 @@
 extends Node2D
 
 #bugs
-#when an orb at the top has all of its top neighbors redone with orbs it wont reneighbor with the top
-#two orbs that should be shocked will result with one falling
 #dropping your enemies entire board will result in them winning from a board clear
 
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
@@ -204,7 +202,7 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 		i.set_opacity(1)
 		if i != null:
 #			print("start")
-			var s = i.LookForTop(crossreforbs)
+			var s = i.LookForTop2(crossreforbs)
 #			print("end")
 			if s == false:
 				for badorb in crossreforbs:
@@ -860,6 +858,7 @@ func Restart():
 	p2launcher.Reset()
 	p1launcher.container.Reset()
 	p2launcher.container.Reset()
+	get_node("top").Reset()
 	t = 0
 	s = false
 	player1health = 5

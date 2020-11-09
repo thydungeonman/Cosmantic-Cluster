@@ -31,6 +31,12 @@ shortcut = null
 text = "list targets"
 flat = false
 
+[connection signal="pressed" from="replaybutton" to="." method="_on_replaybutton_pressed"]
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+
+[connection signal="toggled" from="Button" to="." method="_on_Button_toggled"]
+
 [connection signal="pressed" from="Button 2" to="." method="_on_Button_2_pressed"]
 
 

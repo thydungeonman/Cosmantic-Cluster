@@ -817,6 +817,7 @@ func Restart():
 	p2launcher.Reset()
 	p1launcher.container.Reset()
 	p2launcher.container.Reset()
+	get_node("top").Reset()
 	t = 0
 	s = false
 	player1health = 5

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=1]
+[gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://test/scenes/launcher.tscn" type="PackedScene" id=1]
 [ext_resource path="res://test/scripts/ailauncher.gd" type="Script" id=2]
+[ext_resource path="res://test/sprites/ability effects/ice crack.png" type="Texture" id=3]
 
 [node name="ailauncher" instance=ExtResource( 1 )]
 
@@ -10,6 +11,22 @@ script/script = ExtResource( 2 )
 [node name="health" parent="."]
 
 margin/right = 280.0
+
+[node name="ice" parent="."]
+
+texture = ExtResource( 3 )
+
+[node name="firedamage" parent="."]
+
+transform/pos = Vector2( 99.3561, 65.3207 )
+
+[node name="glowheal" parent="."]
+
+transform/pos = Vector2( 99.0831, 76.0334 )
+
+[node name="abilityglow" parent="."]
+
+visibility/visible = false
 
 [node name="RayCastCenter" type="RayCast2D" parent="."]
 

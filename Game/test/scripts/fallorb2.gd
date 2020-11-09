@@ -52,16 +52,16 @@ func setRot(rotation):
 func _ready():
 	#get appropriate rotation and sprite
 	#start fall animation
-	randomize()
-	right = randi() % 3
-	clock = randi() % 3
-	var waittime = (randf() * .1)
+#	randomize()
+	right = randi() % 2
+	clock = randi() % 2
+	var waittime = (randf() * .15)
 	get_node("Timer").set_wait_time(waittime)
 	get_node("Timer").start()
-	print(right)
-	print(clock)
-	print("RANDOMIZEEEEEEEEEEEEEEEE")
-	print(waittime)
+#	print(right)
+#	print(clock)
+#	print("RANDOMIZEEEEEEEEEEEEEEEE")
+#	print(waittime)
 	
 	set_fixed_process(true)
 
@@ -106,7 +106,7 @@ func spinClock(delta):
 	#rotate clockwise
 
 func spinAntiClock(delta):
-	sprite.rotate(PI* delta)
+	sprite.rotate(-PI* delta)
 	pass
 	#rotate anticlock
 
