@@ -4,7 +4,6 @@ enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 
 enum GC {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,RAND = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9, BLANKROW = 10,FLAG = 11}
-
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
 const BLUE = "res://test/scenes/blueorb.tscn"
@@ -18,22 +17,23 @@ const RED = "res://test/scenes/redorb.tscn"
 var p1flagspot
 var p2flagspot
 
-var genavailablecolours = [GC.RED,GC.GREEN,GC.BLUE,GC.YELLOW]
-var launcheravailablecolours = [COLOUR.RED,COLOUR.GREEN,COLOUR.BLUE,COLOUR.YELLOW]
+var genavailablecolours = [GC.RED,GC.GREEN,GC.BLUE,GC.YELLOW,GC.ORANGE,GC.PURPLE]
+var launcheravailablecolours = [COLOUR.RED,COLOUR.GREEN,COLOUR.BLUE,COLOUR.YELLOW,GC.ORANGE,GC.PURPLE]
 var board = [
-[GC.BLANKROW],
-[GC.NONE,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.NONE]
-,[GC.NONE,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND]
-,[GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND]
-,[GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.FLAG,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND]
-,[GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND]
-,[GC.BLANKROW]
-,[GC.BLANKROW]
-,[GC.BLANKROW]
-,[GC.BLANKROW]
-,[GC.BLANKROW]
-,[GC.BLANKROW]
-,[GC.BLANKROW]
+[GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND], #13 1
+[GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.NONE,GC.RAND,GC.RAND,GC.FLAG,GC.RAND,GC.RAND], #12 2
+[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.RAND,GC.NONE,GC.RAND,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE], #13 3
+[GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.RAND,GC.RAND,GC.RAND] #12 4
+,[GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.RAND,GC.NONE,GC.RAND,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.NONE] #13 5
+,[GC.PURPLE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.PURPLE] #12 6
+,[GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.RAND,GC.NONE,GC.RAND,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.NONE] #13 7
+,[GC.NONE,GC.PURPLE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.PURPLE,GC.NONE] #12 8
+,[GC.NONE,GC.NONE,GC.RAND,GC.PURPLE,GC.RAND,GC.RAND,GC.NONE,GC.RAND,GC.RAND,GC.PURPLE,GC.RAND,GC.NONE,GC.NONE] #13 9
+,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #12 10
+,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.PURPLE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 11
+,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #12 12
+,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 13
+,[GC.BLANKROW] #12 14
 ]
 
 func _ready():
@@ -56,7 +56,7 @@ func GenerateBoardP1():
 	
 	for i in range(board.size()):
 		pass
-		if(i%2 == 1): 
+		if(i%2 == 1):
 			GenerateEvenRow(xoffset + 35,yoffset,orbwidth,PLAYER.PLAYER1,board[i])
 		else:
 			GenerateEvenRow(xoffset,yoffset,orbwidth,PLAYER.PLAYER1,board[i])
@@ -88,7 +88,7 @@ func GenerateEvenRow(xoffset,yoffset,width,player,row):
 		elif(row[i] == GC.BLANKROW):
 			return
 		elif(row[i] == GC.RAND):
-#			randomize()
+			randomize()
 			var rand = randi() % genavailablecolours.size()
 			orb = GenerateOrb(orb,genavailablecolours[rand])
 		elif(row[i] == GC.FLAG):
@@ -139,7 +139,7 @@ func GeneratePlayer1Flag():
 	p1flag = preload("res://test/scenes/flagorb.tscn").instance()
 	var s = Image()
 	
-#	randomize()
+	randomize()
 	var rand = randi() % genavailablecolours.size()
 	var result = genavailablecolours[rand]
 	if(result == GC.YELLOW):
@@ -168,7 +168,7 @@ func GeneratePlayer1Flag():
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
 	p1flag.get_node("Sprite").get_texture().create_from_image(s)
-#	randomize()
+	randomize()
 	var p = randi() % 11
 	add_child(p1flag)
 	orbsonboard.push_back(p1flag)
@@ -182,7 +182,7 @@ func GeneratePlayer2Flag():
 	p2flag = preload("res://test/scenes/flagorb2.tscn").instance()
 	var s = Image()
 	
-#	randomize()
+	randomize()
 	var rand = randi() % genavailablecolours.size()
 	var result = genavailablecolours[rand]
 	if(result == GC.YELLOW):
@@ -211,7 +211,7 @@ func GeneratePlayer2Flag():
 		p2flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p2flag.colour))
 	p2flag.get_node("Sprite").get_texture().create_from_image(s)
-#	randomize()
+	randomize()
 	var p = randi() % 11
 	add_child(p2flag)
 	orbsonboard.push_back(p2flag)
@@ -219,6 +219,3 @@ func GeneratePlayer2Flag():
 	p2flag.set_pos(p2flagspot)
 	print(p2flag.get_pos())
 	print("flag pos")
-
-func _on_Button_2_pressed():
-	get_node("p2launcher").listshots = !get_node("p2launcher").listshots

@@ -7,27 +7,52 @@
 
 script/source = "extends Node2D
 
-
+onready var vbarray = get_node(\"ScrollContainer/VButtonArray\")
 
 func _ready():
-	# Called every time the node is added to the scene.
-	# Initialization here
-	pass
+	var d = Directory.new()
+	if(d.open(\"res://test/stages\") == OK):
+		d.list_dir_begin()
+		var file_name = d.get_next()
+		while (file_name != \"\"):
+			if d.current_is_dir():
+				print(\"Found directory: \" + file_name)
+			else:
+				print(\"Found file: \" + file_name)
+				vbarray.add_button(file_name)
+				
+			file_name = d.get_next()
+	else:
+		print(\"An error occurred when trying to access the path.\")
 
 
-func _on_Button_pressed():
+	
+
+
+
+func _on_story_pressed():
 	get_tree().change_scene(\"res://test/aiboard.tscn\")
 
 
-func _on_Button1_pressed():
+func _on_VS_pressed():
 	get_tree().change_scene(\"res://test/character select screen.tscn\")
+
+
+
+
+
+func _on_VButtonArray_button_selected( button_idx ):
+	var text = \"res://test/stages/\" +  vbarray.get_button_text(button_idx)
+	get_tree().change_scene(text)
+	
+	
 "
 
 [node name="Node2D" type="Node2D"]
 
 script/script = SubResource( 1 )
 
-[node name="Button" type="Button" parent="."]
+[node name="story" type="Button" parent="."]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -44,7 +69,7 @@ shortcut = null
 text = "Story"
 flat = false
 
-[node name="Button1" type="Button" parent="."]
+[node name="VS" type="Button" parent="."]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -61,7 +86,7 @@ shortcut = null
 text = "2p Vs"
 flat = false
 
-[node name="Button2" type="Button" parent="."]
+[node name="options" type="Button" parent="."]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -78,7 +103,7 @@ shortcut = null
 text = "Options"
 flat = false
 
-[node name="Button3" type="Button" parent="."]
+[node name="credits" type="Button" parent="."]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -101,8 +126,39 @@ transform/pos = Vector2( 960, 570 )
 z/z = -1
 texture = ExtResource( 2 )
 
-[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
 
-[connection signal="pressed" from="Button1" to="." method="_on_Button1_pressed"]
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 20.0
+margin/top = 15.0
+margin/right = 145.0
+margin/bottom = 90.0
+scroll/horizontal = false
+scroll/vertical = true
+scroll/deadzone = 0
+
+[node name="VButtonArray" type="VButtonArray" parent="ScrollContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 125.0
+margin/bottom = 75.0
+flat = false
+button/count = 0
+button/min_button_size = 7.0
+button/align = 3
+
+[connection signal="pressed" from="story" to="." method="_on_story_pressed"]
+
+[connection signal="pressed" from="VS" to="." method="_on_VS_pressed"]
+
+[connection signal="button_selected" from="ScrollContainer/VButtonArray" to="." method="_on_VButtonArray_button_selected"]
 
 
