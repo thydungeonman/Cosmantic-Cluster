@@ -681,11 +681,12 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 			print("TOO CLOSE")
 			continue
 		potentialtargets.push_back(target)
-	var shot = randi() % potentialtargets.size()
-	clickedpos = fulltargetdict[potentialtargets[shot]]
-	state = 2
-	print(potentialtargets[0].get_name())
-	if(potentialtargets.size() == 0):
+	if(potentialtartegs.size() > 0):
+		var shot = randi() % potentialtargets.size()
+		clickedpos = fulltargetdict[potentialtargets[shot]]
+		state = 2
+		print(potentialtargets[0].get_name())
+	else:
 		ThrowAway()
 	
 
