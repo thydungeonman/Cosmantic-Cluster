@@ -577,7 +577,7 @@ texture = ExtResource( 12 )
 
 visibility/visible = false
 visibility/opacity = 0.0
-transform/pos = Vector2( 269.029, 2.63905 )
+transform/pos = Vector2( 98.3888, 75.0863 )
 transform/scale = Vector2( 3, 3 )
 texture = ExtResource( 15 )
 

@@ -964,26 +964,32 @@ func FullScan2():
 	add_child(scanner)
 	scanner.add_collision_exception_with(orb)
 	
-#	
+
 	bouncescanner = preload("res://test/scenes/scanner.tscn").instance()
 	add_child(bouncescanner)
 	bouncescanner.add_collision_exception_with(orb)
 	bouncescanner.add_collision_exception_with(scanner)
 	scanner.add_collision_exception_with(bouncescanner)
+	var g = preload("res://test/scenes/rgodot.tscn").instance()
+	add_child(g)
+	rgodots.push_back(g)
+	g.set_pos(scanner.get_pos())
 	var hits = []
 	var lastshotorb 
 	while (i != 120):
 		var remainder = scanner.move(currentpoint)
 		if(scanner.is_colliding()):
 			if(scanner.get_collider().is_in_group("orb")):
-				
 				currentorb = scanner.get_collider()
 				if currentorb != lastorb:
 					var average = Vector2()
 					if(lastorb != null):
-						for hit in hits:
-							average += hit
-						pointdict[lastorb] = average / hits.size()
+						if(hits.size() > 1):
+							for hit in hits:
+								average += hit
+							pointdict[lastorb] = average / hits.size()
+						if(hits.size() == 1):
+							pointdict.erase(lastorb)
 						
 					hits = [scanner.get_global_pos()]
 					pointdict[currentorb] = scanner.get_global_pos()
@@ -1003,10 +1009,6 @@ func FullScan2():
 		i += 1
 	print("printing list shots")
 	for key in pointdict.keys():
-#		var g = preload("res://test/scenes/rgodot.tscn").instance()
-#		add_child(g)
-#		rgodots.push_back(g)
-#		g.set_global_pos(pointdict[key])
 		if(listshots):
 			print(key.get_name())
 	print("done printing list shots")

@@ -76,7 +76,7 @@ func _input(event):
 	pass
 
 func _fixed_process(delta):
-	get_node("Label").set_text(str(istouchingtop))
+#	get_node("Label").set_text(str(istouchingtop))
 	if(ismoving):
 		Move(delta) 
 
