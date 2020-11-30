@@ -970,10 +970,10 @@ func FullScan2():
 	bouncescanner.add_collision_exception_with(orb)
 	bouncescanner.add_collision_exception_with(scanner)
 	scanner.add_collision_exception_with(bouncescanner)
-	var g = preload("res://test/scenes/rgodot.tscn").instance()
-	add_child(g)
-	rgodots.push_back(g)
-	g.set_pos(scanner.get_pos())
+#	var g = preload("res://test/scenes/rgodot.tscn").instance()
+#	add_child(g)
+#	rgodots.push_back(g)
+#	g.set_pos(scanner.get_pos())
 	var hits = []
 	var lastshotorb 
 	while (i != 120):
