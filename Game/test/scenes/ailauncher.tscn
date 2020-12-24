@@ -24,10 +24,6 @@ transform/pos = Vector2( 99.3561, 65.3207 )
 
 transform/pos = Vector2( 99.0831, 76.0334 )
 
-[node name="abilityglow" parent="."]
-
-visibility/visible = false
-
 [node name="RayCastCenter" type="RayCast2D" parent="."]
 
 enabled = true

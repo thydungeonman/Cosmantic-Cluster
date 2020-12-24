@@ -20,19 +20,19 @@ var p2flagspot
 var genavailablecolours = [GC.RED,GC.GREEN,GC.BLUE,GC.YELLOW,GC.ORANGE,GC.PURPLE,GC.WHITE]
 var launcheravailablecolours = [COLOUR.RED,COLOUR.GREEN,COLOUR.BLUE,COLOUR.YELLOW,COLOUR.ORANGE,COLOUR.PURPLE,COLOUR.WHITE]
 var board = [
-[GC.NONE,GC.NONE,GC.NONE,GC.RAND,GC.WHITE,GC.NONE,GC.WHITE,GC.NONE,GC.WHITE,GC.RAND,GC.NONE,GC.NONE,GC.NONE], #13 1
-[GC.NONE,GC.NONE,GC.WHITE,GC.RAND,GC.NONE,GC.RAND,GC.RAND,GC.NONE,GC.RAND,GC.WHITE,GC.NONE,GC.NONE], #12 2
+[GC.NONE,GC.NONE,GC.NONE,GC.RED,GC.WHITE,GC.NONE,GC.WHITE,GC.NONE,GC.WHITE,GC.RED,GC.NONE,GC.NONE,GC.NONE], #13 1
+[GC.NONE,GC.NONE,GC.WHITE,GC.RED,GC.NONE,GC.RED,GC.RED,GC.NONE,GC.RED,GC.WHITE,GC.NONE,GC.NONE], #12 2
 [GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.RAND,GC.NONE,GC.WHITE,GC.NONE,GC.RAND,GC.NONE,GC.NONE,GC.NONE,GC.NONE], #13 3
 [GC.NONE,GC.WHITE,GC.NONE,GC.NONE,GC.RAND,GC.WHITE,GC.WHITE,GC.RAND,GC.NONE,GC.NONE,GC.WHITE,GC.NONE] #12 4
-,[GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.WHITE,GC.RAND,GC.NONE,GC.RAND,GC.WHITE,GC.RAND,GC.RAND,GC.RAND,GC.NONE] #13 5
+,[GC.NONE,GC.RED,GC.RED,GC.RAND,GC.WHITE,GC.RAND,GC.NONE,GC.RAND,GC.WHITE,GC.RAND,GC.RED,GC.RED,GC.NONE] #13 5
 ,[GC.NONE,GC.WHITE,GC.NONE,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.NONE,GC.WHITE,GC.NONE] #12 6
 ,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.WHITE,GC.NONE,GC.FLAG,GC.NONE,GC.WHITE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 7
 ,[GC.NONE,GC.WHITE,GC.NONE,GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.RAND,GC.NONE,GC.NONE,GC.WHITE,GC.NONE] #12 8
-,[GC.NONE,GC.RAND,GC.RAND,GC.RAND,GC.WHITE,GC.RAND,GC.NONE,GC.RAND,GC.WHITE,GC.RAND,GC.RAND,GC.RAND,GC.NONE] #13 9
+,[GC.NONE,GC.RED,GC.RED,GC.RAND,GC.WHITE,GC.RAND,GC.NONE,GC.RAND,GC.WHITE,GC.RAND,GC.RED,GC.RED,GC.NONE] #13 9
 ,[GC.NONE,GC.WHITE,GC.NONE,GC.NONE,GC.RAND,GC.WHITE,GC.WHITE,GC.RAND,GC.NONE,GC.NONE,GC.WHITE,GC.NONE] #12 10
 ,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.RAND,GC.NONE,GC.WHITE,GC.NONE,GC.RAND,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 11
-,[GC.NONE,GC.NONE,GC.WHITE,GC.RAND,GC.NONE,GC.RAND,GC.RAND,GC.NONE,GC.RAND,GC.WHITE,GC.NONE,GC.NONE] #12 12
-,[GC.NONE,GC.NONE,GC.NONE,GC.RAND,GC.WHITE,GC.NONE,GC.WHITE,GC.NONE,GC.WHITE,GC.RAND,GC.NONE,GC.NONE,GC.NONE] #13 13
+,[GC.NONE,GC.NONE,GC.WHITE,GC.RED,GC.NONE,GC.RED,GC.RED,GC.NONE,GC.RED,GC.WHITE,GC.NONE,GC.NONE] #12 12
+,[GC.NONE,GC.NONE,GC.NONE,GC.RED,GC.WHITE,GC.NONE,GC.WHITE,GC.NONE,GC.WHITE,GC.RED,GC.NONE,GC.NONE,GC.NONE] #13 13
 ,[GC.BLANKROW] #12 14
 ]
 
@@ -43,6 +43,8 @@ func _ready():
 	print(orbsonboard.size())
 	print(orbsonboardp1.size())
 	print(orbsonboardp2.size())
+	get_node("p1deathline").translate(Vector2(0,-15))
+	get_node("p2deathline").translate(Vector2(0,-15))
 
 func GenerateBoardP1():
 	var startorb = preload("res://test/scenes/orb.tscn").instance()
@@ -143,28 +145,28 @@ func GeneratePlayer1Flag():
 	var rand = randi() % genavailablecolours.size()
 	var result = genavailablecolours[rand]
 	if(result == GC.YELLOW):
-		s.load("res://test/sprites/flag orb yellow new.png")
+		s.load(YELLOWFLAG)
 		p1flag.colour = COLOUR.YELLOW
 	elif(result == GC.BLUE):
-		s.load("res://test/sprites/flag orb blue new.png")
+		s.load(BLUEFLAG)
 		p1flag.colour = COLOUR.BLUE
 	elif(result == GC.RED):
-		s.load("res://test/sprites/flag orb red new ver 2.png")
+		s.load(REDFLAG)
 		p1flag.colour = COLOUR.RED
 	elif(result == GC.ORANGE):
-		s.load("res://test/sprites/flag orb orange new.png")
+		s.load(ORANGEFLAG)
 		p1flag.colour = COLOUR.ORANGE
 	elif(result == GC.PURPLE):
-		s.load("res://test/sprites/flag orb purple new.png")
+		s.load(PURPLEFLAG)
 		p1flag.colour = COLOUR.PURPLE
 	elif(result == GC.GREEN):
-		s.load("res://test/sprites/flag orb green new.png")
+		s.load(GREENFLAG)
 		p1flag.colour = COLOUR.GREEN
 	elif(result == GC.BLACK):
-		s.load("res://test/sprites/flag orb black new.png")
+		s.load(BLACKFLAG)
 		p1flag.colour = COLOUR.BLACK
 	elif(result == GC.WHITE):
-		s.load("res://test/sprites/flag orb white new.png")
+		s.load(WHITEFLAG)
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
 	p1flag.get_node("Sprite").get_texture().create_from_image(s)
@@ -186,28 +188,28 @@ func GeneratePlayer2Flag():
 	var rand = randi() % genavailablecolours.size()
 	var result = genavailablecolours[rand]
 	if(result == GC.YELLOW):
-		s.load("res://test/sprites/flag orb yellow new.png")
+		s.load(YELLOWFLAG)
 		p2flag.colour = COLOUR.YELLOW
 	elif(result == GC.BLUE):
-		s.load("res://test/sprites/flag orb blue new.png")
+		s.load(BLUEFLAG)
 		p2flag.colour = COLOUR.BLUE
 	elif(result == GC.RED):
-		s.load("res://test/sprites/flag orb red new ver 2.png")
+		s.load(REDFLAG)
 		p2flag.colour = COLOUR.RED
 	elif(result == GC.ORANGE):
-		s.load("res://test/sprites/flag orb orange new.png")
+		s.load(ORANGEFLAG)
 		p2flag.colour = COLOUR.ORANGE
 	elif(result == GC.PURPLE):
-		s.load("res://test/sprites/flag orb purple new.png")
+		s.load(PURPLEFLAG)
 		p2flag.colour = COLOUR.PURPLE
 	elif(result == GC.GREEN):
-		s.load("res://test/sprites/flag orb green new.png")
+		s.load(GREENFLAG)
 		p2flag.colour = COLOUR.GREEN
 	elif(result == GC.BLACK):
-		s.load("res://test/sprites/flag orb black new.png")
+		s.load(BLACKFLAG)
 		p2flag.colour = COLOUR.BLACK
 	elif(result == GC.WHITE):
-		s.load("res://test/sprites/flag orb white new.png")
+		s.load(WHITEFLAG)
 		p2flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p2flag.colour))
 	p2flag.get_node("Sprite").get_texture().create_from_image(s)

@@ -28,6 +28,11 @@ transform/scale = Vector2( 1, 1.27241 )
 transform/pos = Vector2( 960, 660 )
 transform/scale = Vector2( 1, 1.29606 )
 
+[node name="gameoverlabel" parent="."]
+
+margin/left = 405.0
+margin/right = 1515.0
+
 [node name="ena" parent="."]
 
 texture = ExtResource( 3 )

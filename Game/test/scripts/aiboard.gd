@@ -7,6 +7,17 @@ enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
 
+enum FLAGS {YELLOW = 0,BLUE,RED,ORAGNE,PURPLE,GREEN,BLACK,WHITE}
+
+const YELLOWFLAG = "res://test/sprites/yellow star.png"
+const BLUEFLAG = "res://test/sprites/blue star.png"
+const REDFLAG = "res://test/sprites/red star.png"
+const ORANGEFLAG = "res://test/sprites/orange star.png"
+const PURPLEFLAG = "res://test/sprites/purple star.png"
+const GREENFLAG = "res://test/sprites/green star.png"
+const BLACKFLAG = "res://test/sprites/black star.png"
+const WHITEFLAG = "res://test/sprites/white star.png"
+
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
 const BLUE = "res://test/scenes/blueorb.tscn"
@@ -86,14 +97,16 @@ func _ready():
 	GeneratePlayer2Flag()
 	HelpAI()
 	set_fixed_process(true)
+	
+	
 
 func _fixed_process(delta):
-	for b in orbsonboardp2:
-		if(b.istouchingflag):
-			b.get_node("pathed").set_text("yes")
-		else:
-			b.get_node("pathed").set_text("no")
-			b.CountNeighbors()
+#	for b in orbsonboardp2:
+#		if(b.istouchingflag):
+#			b.get_node("pathed").set_text("yes")
+#		else:
+#			b.get_node("pathed").set_text("no")
+#			b.CountNeighbors()
 	#print(orbsonboardp2.size())
 	if(Input.is_action_pressed("ui_page_up")):
 		p1launcher.Charge()
@@ -126,6 +139,9 @@ func _fixed_process(delta):
 			i.GetNeighboringPositions()
 			i.GetNeighbors()
 		s = true
+		for orb in orbsonboard:
+			if(orb.istouchingtop):
+				orb.get_node("topring").show()
 	t += delta
 	if(Input.is_action_pressed("ui_select")):
 		for orb in orbsonboard:
@@ -746,7 +762,9 @@ func P2BlueAbility():
 
 func RClick():
 	print("rclick")
-	FindGap()
+#	FindGap()
+	FindPeninsula2(COLOUR.RED)
+#	print(p2launcher.lchecker.get_overlapping_bodies())
 
 func FindAvailableSpot(player):
 	#finds the first available spot for a gray orb to be spawned for the player that is passed to the function
@@ -773,28 +791,28 @@ func GeneratePlayer1Flag():
 #	randomize()
 	var result = randi() % 8
 	if(result == 0):
-		s.load("res://test/sprites/flag orb yellow new.png")
+		s.load(YELLOWFLAG)
 		p1flag.colour = COLOUR.YELLOW
 	elif(result == 1):
-		s.load("res://test/sprites/flag orb blue new.png")
+		s.load(BLUEFLAG)
 		p1flag.colour = COLOUR.BLUE
 	elif(result == 2):
-		s.load("res://test/sprites/flag orb red new ver 2.png")
+		s.load(REDFLAG)
 		p1flag.colour = COLOUR.RED
 	elif(result == 3):
-		s.load("res://test/sprites/flag orb orange new.png")
+		s.load(ORANGEFLAG)
 		p1flag.colour = COLOUR.ORANGE
 	elif(result == 4):
-		s.load("res://test/sprites/flag orb purple new.png")
+		s.load(PURPLEFLAG)
 		p1flag.colour = COLOUR.PURPLE
 	elif(result == 5):
-		s.load("res://test/sprites/flag orb green new.png")
+		s.load(GREENFLAG)
 		p1flag.colour = COLOUR.GREEN
 	elif(result == 6):
-		s.load("res://test/sprites/flag orb black new.png")
+		s.load(BLACKFLAG)
 		p1flag.colour = COLOUR.BLACK
 	elif(result == 7):
-		s.load("res://test/sprites/flag orb white new.png")
+		s.load(WHITEFLAG)
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
 	p1flag.get_node("Sprite").get_texture().create_from_image(s)
@@ -805,6 +823,7 @@ func GeneratePlayer1Flag():
 	p1flag.set_pos(Vector2(17 + 70 + (70 * p),40 + 70 + 70 + 70 - (70 * Vector2(1.07337749,1.8417709).normalized().y)))
 	print(p1flag.get_pos())
 	print("flag pos")
+	
 func GeneratePlayer2Flag():
 	p2flag = preload("res://test/scenes/flagorb2.tscn").instance()
 	var s = Image()
@@ -812,28 +831,28 @@ func GeneratePlayer2Flag():
 #	randomize()
 	var result = randi() % 8
 	if(result == 0):
-		s.load("res://test/sprites/flag orb yellow new.png")
+		s.load(YELLOWFLAG)
 		p2flag.colour = COLOUR.YELLOW
 	elif(result == 1):
-		s.load("res://test/sprites/flag orb blue new.png")
+		s.load(BLUEFLAG)
 		p2flag.colour = COLOUR.BLUE
 	elif(result == 2):
-		s.load("res://test/sprites/flag orb red new ver 2.png")
+		s.load(REDFLAG)
 		p2flag.colour = COLOUR.RED
 	elif(result == 3):
-		s.load("res://test/sprites/flag orb orange new.png")
+		s.load(ORANGEFLAG)
 		p2flag.colour = COLOUR.ORANGE
 	elif(result == 4):
-		s.load("res://test/sprites/flag orb purple new.png")
+		s.load(PURPLEFLAG)
 		p2flag.colour = COLOUR.PURPLE
 	elif(result == 5):
-		s.load("res://test/sprites/flag orb green new.png")
+		s.load(GREENFLAG)
 		p2flag.colour = COLOUR.GREEN
 	elif(result == 6):
-		s.load("res://test/sprites/flag orb black new.png")
+		s.load(BLACKFLAG)
 		p2flag.colour = COLOUR.BLACK
 	elif(result == 7):
-		s.load("res://test/sprites/flag orb white new.png")
+		s.load(WHITEFLAG)
 		p2flag.colour = COLOUR.WHITE
 	print("flag2 colour: " + str(p2flag.colour))
 	p2flag.get_node("Sprite").get_texture().create_from_image(s)
@@ -878,6 +897,14 @@ func Restart():
 func UpdateHealthLabels():
 	p1launcher.get_node("health").set_text("Health " + str(player1health))
 	p2launcher.get_node("health").set_text("Health " + str(player2health))
+	if(player1health < 4):
+		p1launcher.get_node("HealthAnimationPlayer").play("blink")
+	else:
+		p1launcher.get_node("HealthAnimationPlayer").play("rest")
+	if(player2health < 4):
+		p2launcher.get_node("HealthAnimationPlayer").play("blink")
+	else:
+		p2launcher.get_node("HealthAnimationPlayer").play("rest")
 
 func GameOver(gameoverstring,winner):
 	if(winner == PLAYER.PLAYER1):
@@ -899,7 +926,7 @@ func GameOver(gameoverstring,winner):
 	get_node("quitbutton").set_hidden(false)
 	get_node("quitbutton").set_disabled(false)
 	get_node("Timer").set_active(false)
-	p2launcher.state = 6 #stop ai
+	p2launcher.state = 7 #stop ai
 	
 
 func _on_replaybutton_pressed():
@@ -914,9 +941,9 @@ func _on_replaybutton_pressed():
 
 func _on_Timer_timeout():
 	if(orbsonboardp1.size() < orbsonboardp2.size()):
-		GameOver("Player One wins",PLAYER.PLAYER1)
+		GameOver("Time out! Player 1 wins",PLAYER.PLAYER1)
 	elif(orbsonboardp1.size() > orbsonboardp2.size()):
-		GameOver("Player Two wins",PLAYER.PLAYER2)
+		GameOver("Time out! Opponent wins",PLAYER.PLAYER2)
 	else:
 		GameOver("Its a Draw",null)
 
@@ -932,18 +959,18 @@ func _on_Button_toggled( pressed ):
 
 func IsPlayerDead():
 	if(player1health < 1):
-		GameOver("Player two wins dead",PLAYER.PLAYER2)
+		GameOver("Ran out of health! You lose!",PLAYER.PLAYER2)
 	elif(player2health < 1):
-		GameOver("Player one wins dead",PLAYER.PLAYER1)
+		GameOver("Opponent has run out of health! You win!",PLAYER.PLAYER1)
 
 #check to see if anyone has cleared their board
 func CheckPlayerBoard(player):
 	if(player == PLAYER.PLAYER1):
 		if(orbsonboardp1.size() == 0):
-			GameOver("Player One Wins clear board!",PLAYER.PLAYER1)
+			GameOver("Player 1 board clear! You win!",PLAYER.PLAYER1)
 	elif(player == PLAYER.PLAYER2 or player == PLAYER.AI):
 		if(orbsonboardp2.size() == 0):
-			GameOver("Player Two Wins clear board!",PLAYER.PLAYER2)
+			GameOver("Opponent board clear! You lose!",PLAYER.PLAYER2)
 
 
 #ai helper function
@@ -993,6 +1020,43 @@ func FindPeninsula(targetcolour):
 			return t
 	return t
 
+#returns good orbs to shoot at that are targetcolour in order of importance
+#peninsula orbs then grey orbs then individual orbs
+func FindPeninsula2(targetcolour):
+	var targets = []
+	var potentials = []
+	for orb in orbsonboardp2:
+		if orb.CountNeighbors() < 4:
+			potentials.push_back(orb)
+	for orb in potentials:
+		var crossreforbs = []
+		orb.PathToTop2(crossreforbs)
+	for orb in orbsonboardp2:
+		if (orb.timespathedupon > 2 and orb.colour == targetcolour):
+			targets.push_back(orb)
+#		orb.get_node("pathed").show()
+#		orb.get_node("pathed").set_text(str(orb.timespathedupon))
+	if(targets.size() > 1):
+		pass #do bubble sort
+		var temp
+		for i in range(targets.size()):
+			for j in range(targets.size()):
+				if targets[j].timespathedupon < targets[i].timespathedupon:
+					#swap
+					temp = targets[i]
+					targets[i] = targets[j]
+					targets[j] = temp 
+	
+	
+	for orb in orbsonboardp2:
+		if orb.colour == COLOUR.GREY:
+			targets.push_back(orb)
+		elif(orb.colour == targetcolour and targets.find(orb) == -1):
+			targets.push_back(orb)
+		orb.timespathedupon = 0
+	print(targets)
+	return targets
+
 #find a gap in the orbs on the board to throwaway unneeded orbs
 func FindGap():
 	var positions = []
@@ -1037,3 +1101,24 @@ func HelpAI():
 	print(aimpos)
 	p2launcher.playerflagcolour = p1flag.colour
 	p2launcher.aiflagcolour = p2flag.colour
+
+
+func DeathLineWarningp1():
+	for orb in orbsonboardp1:
+		if orb.get_pos().y > 880:
+			if(!get_node("p1deathlineplayer").is_playing()):
+				get_node("p1deathlineplayer").play("blink")
+			return
+	
+	if(get_node("p1deathlineplayer").is_playing()):
+		get_node("p1deathlineplayer").play("rest")
+
+func DeathLineWarningp2():
+	for orb in orbsonboardp2:
+		if orb.get_pos().y > 880:
+			if(!get_node("p2deathlineplayer").is_playing()):
+				get_node("p2deathlineplayer").play("blink")
+			return
+	
+	if(get_node("p2deathlineplayer").is_playing()):
+		get_node("p2deathlineplayer").play("rest")

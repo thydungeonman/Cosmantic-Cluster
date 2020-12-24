@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=1]
+[gd_scene load_steps=18 format=1]
 
 [ext_resource path="res://test/scripts/orb.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/red orb.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://test/sfx/electric-zap - Yellow abilty used removed orbs.smp" type="Sample" id=6]
 [ext_resource path="res://test/sfx/glass-shatter-3 - Group of orbs removed.smp" type="Sample" id=7]
 [ext_resource path="res://test/sfx/retro-video-game-sfx-bounce - orb bouncing off wall.smp" type="Sample" id=8]
+[ext_resource path="res://test/sprites/orb ceiling ring.png" type="Texture" id=9]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -605,6 +606,12 @@ params/attenuation/distance_exp = 1.0
 config/polyphony = 3
 config/samples = SubResource( 8 )
 config/pitch_random = 0.0
+
+[node name="topring" type="Sprite" parent="."]
+
+visibility/visible = false
+transform/scale = Vector2( 0.14, 0.14 )
+texture = ExtResource( 9 )
 
 [connection signal="mouse_enter" from="." to="." method="_on_orb_mouse_enter"]
 

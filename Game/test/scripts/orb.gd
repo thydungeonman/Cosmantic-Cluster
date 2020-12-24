@@ -170,6 +170,8 @@ func Move(delta):
 				EnableLauncher()
 				GetNeighboringPositions()
 				GetNeighbors()
+				if(istouchingtop):
+					get_node("topring").show()
 				#print(CountNeighbors())
 				var foundmatch = CheckMatch(matchingorbs,leftoverorbs);
 				
@@ -224,15 +226,19 @@ func Move(delta):
 						orb.anim.play("blink")
 						if(orb.isflag):
 							if(orb.player == PLAYER.PLAYER1):
-								get_parent().GameOver("Player two wins",PLAYER.PLAYER2)
+								get_parent().GameOver("Player 1 flag orb destroyed!",PLAYER.PLAYER2)
 							elif(orb.player == PLAYER.PLAYER2 or player == PLAYER.AI):
-								get_parent().GameOver("Player one wins",PLAYER.PLAYER1)
+								get_parent().GameOver("Player 2 flag orb destroyed!",PLAYER.PLAYER1)
 				else:
 					get_parent().NewHandleAbility(player)
 					matchingorbs.clear()
 					leftoverorbs.clear()
 					if(WentOverDeathLine()):
 						SignalGameOver()
+		if(player == PLAYER.PLAYER1):
+			get_parent().DeathLineWarningp1()
+		else:
+			get_parent().DeathLineWarningp2()
 
 
 func click():
@@ -271,6 +277,8 @@ func Die():
 	#this function perform all of the necessary actions before an orb can be freed and then frees it
 	#removes itself from the list of orbs, unhooks from its neighbors, and checks if orbs around it will fall after its freed
 	RemoveFromPlayer()
+	get_parent().DeathLineWarningp1()
+	get_parent().DeathLineWarningp2()
 	var index = get_parent().orbsonboard.find(self)
 	if(index != -1):
 		get_parent().orbsonboard.remove(index)
@@ -469,38 +477,44 @@ func LookForTop2(crossreforbs):
 		#print("topleft")
 		if(!crossreforbs.has(topleft)):
 			if(topleft.is_in_group("orb")):
-				if(topleft.istouchingtop or (topleft.LookForTop2(crossreforbs) and !topleft.isexcluded)):
-					return true
+				if(!topleft.isexcluded):
+					if(topleft.istouchingtop or (topleft.LookForTop2(crossreforbs) and !topleft.isexcluded)):
+						return true
 	if(topright != null and !topright.is_in_group("wall")):
 		#print("topright")
 		if(!crossreforbs.has(topright)):
 			if(topright.is_in_group("orb")):
-				if(topright.istouchingtop or (topright.LookForTop2(crossreforbs) and !topright.isexcluded)):
-					return true
+				if(!topright.isexcluded):
+					if(topright.istouchingtop or (topright.LookForTop2(crossreforbs) and !topright.isexcluded)):
+						return true
 	if(left != null and !left.is_in_group("wall")):
 		#print("left")
 		if(!crossreforbs.has(left)):
 			if(left.is_in_group("orb")):
-				if(left.istouchingtop or (left.LookForTop2(crossreforbs) and !left.isexcluded)):
-					return true
+				if(!left.isexcluded):
+					if(left.istouchingtop or (left.LookForTop2(crossreforbs) and !left.isexcluded)):
+						return true
 	if(right != null and !right.is_in_group("wall")):
 		#print("right")
 		if(!crossreforbs.has(right)):
 			if(right.is_in_group("orb")):
-				if(right.istouchingtop or (right.LookForTop2(crossreforbs) and !right.isexcluded)):
-					return true
+				if(!right.isexcluded):
+					if(right.istouchingtop or (right.LookForTop2(crossreforbs) and !right.isexcluded)):
+						return true
 	if(bottomleft != null and !bottomleft.is_in_group("wall")):
 		#print("bottomleft")
 		if(!crossreforbs.has(bottomleft)):
 			if(bottomleft.is_in_group("orb")):
-				if(bottomleft.istouchingtop or (bottomleft.LookForTop2(crossreforbs) and !bottomleft.isexcluded)):
-					return true
+				if(!bottomleft.isexcluded):
+					if(bottomleft.istouchingtop or (bottomleft.LookForTop2(crossreforbs) and !bottomleft.isexcluded)):
+						return true
 	if(bottomright != null and !bottomright.is_in_group("wall")):
 		#print("bottomright")
 		if(!crossreforbs.has(bottomright)):
 			if(bottomright.is_in_group("orb")):
-				if(bottomright.istouchingtop or (bottomright.LookForTop2(crossreforbs) and !bottomright.isexcluded)):
-					return true
+				if(!bottomright.isexcluded):
+					if(bottomright.istouchingtop or (bottomright.LookForTop2(crossreforbs) and !bottomright.isexcluded)):
+						return true
 				
 	falling = true
 	#print(str(get_name()) + " did not find top")
@@ -765,27 +779,15 @@ func PrintNeighbors():
 
 func _on_orb_mouse_enter():
 	pass
-	PrintNeighbors()
-#	var group = []
-#	group = Search(5,colour,group,true)
-#	
-#	print("starting listing")
-#	if group.size() > 0:
-#		for orb in group:
-#			print(orb.get_name() + " with colour " + str(orb.colour))
-#	print("done listing")
-#	print( SearchFor(3,colour,get_parent().p2flag))
-#	
-#	print("EXCLUDE ON")
-#	print(SearchFor(3,colour,get_parent().p2flag,true))
-#	
-#	print("")
-
-
-
-#	if istouchingtop:
-#		print("its good")
 #	PrintNeighbors()
+	var ar = []
+	print(PathToTop2(ar))
+	for orb in get_parent().orbsonboardp2:
+		orb.get_node("pathed").show()
+		orb.get_node("pathed").set_text(str(orb.timespathedupon))
+		
+	for orb in get_parent().orbsonboardp2:
+		orb.timespathedupon = 0
 
 func DoCasts():
 	#raycasts to local neighboring positions to find neighboring orbs and then hooks them up
@@ -882,10 +884,10 @@ func SignalGameOver(): #used when an orb goes over the death line
 	var s;
 	var k;
 	if(player == PLAYER.PLAYER1):
-		s = "Player 2 Wins"
+		s = "Player 1 over death line!"
 		k = PLAYER.PLAYER2
 	else:
-		s = "Player 1 Wins"
+		s = "Player 2 over death line!"
 		k = PLAYER.PLAYER1
 	get_parent().GameOver(s,k)
 
@@ -946,6 +948,69 @@ func PathToTop(crossreforbs):
 				
 	return false
 
+func PathToTop2(crossreforbs):
+	crossreforbs.push_back(self)
+	if(topleft != null and !topleft.is_in_group("wall")):
+		#print("topleft")
+		if(!crossreforbs.has(topleft)):
+			if(topleft.is_in_group("orb")):
+				if(topleft.istouchingtop or (!topleft.istouchingtop and topleft.PathToTop2(crossreforbs))):
+					topleft.timespathedupon += 1
+					if(topleft.istouchingtop):
+						print(topleft.get_name())
+					return true
+	if(topright != null and !topright.is_in_group("wall")):
+		#print("topright")
+		if(!crossreforbs.has(topright)):
+			if(topright.is_in_group("orb")):
+				if(topright.istouchingtop or (!topright.istouchingtop and topright.PathToTop2(crossreforbs))):
+					#print(str(get_name()) + " found top on topright")
+					topright.timespathedupon += 1
+					if(topright.istouchingtop):
+						print(topright.get_name())
+					return true
+	if(left != null and !left.is_in_group("wall")):
+		#print("left")
+		if(!crossreforbs.has(left)):
+			if(left.is_in_group("orb")):
+				if(left.istouchingtop or (!left.istouchingtop and left.PathToTop2(crossreforbs))):
+					#print(str(get_name()) + " found top on left")
+					left.timespathedupon += 1
+					if(left.istouchingtop):
+						print(left.get_name())
+					return true
+	if(right != null and !right.is_in_group("wall")):
+		#print("right")
+		if(!crossreforbs.has(right)):
+			if(right.is_in_group("orb")):
+				if(right.istouchingtop or (!right.istouchingtop and right.PathToTop2(crossreforbs))):
+					#print(str(get_name()) + " found top on right")
+					right.timespathedupon += 1
+					if(right.istouchingtop):
+						print(right.get_name())
+					return true
+	if(bottomleft != null and !bottomleft.is_in_group("wall")):
+		#print("bottomleft")
+		if(!crossreforbs.has(bottomleft)):
+			if(bottomleft.is_in_group("orb")):
+				if(bottomleft.istouchingtop or (!bottomleft.istouchingtop and bottomleft.PathToTop2(crossreforbs))):
+					#print(str(get_name()) + " found top on bottomleft")
+					bottomleft.timespathedupon += 1
+					if(bottomleft.istouchingtop):
+						print(bottomleft.get_name())
+					return true
+	if(bottomright != null and !bottomright.is_in_group("wall")):
+		#print("bottomright")
+		if(!crossreforbs.has(bottomright)):
+			if(bottomright.is_in_group("orb")):
+				if(bottomright.istouchingtop or (!bottomright.istouchingtop and bottomright.PathToTop2(crossreforbs))):
+					#print(str(get_name()) + " found top on bottomright")
+					bottomright.timespathedupon += 1
+					if(bottomright.istouchingtop):
+						print(bottomright.get_name())
+					return true
+				
+	return false
 
 func spawnFallOrb():
 	var fallorb = load("res://test/scenes/fallorb2.tscn").instance()
@@ -953,3 +1018,5 @@ func spawnFallOrb():
 	fallorb.set_global_pos(get_global_pos())
 	fallorb.changeColour(colour)
 	fallorb.setRot(get_node("Sprite").get_rot())
+
+

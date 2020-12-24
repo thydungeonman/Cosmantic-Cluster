@@ -5,6 +5,15 @@ enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
 
+const YELLOWFLAG = "res://test/sprites/yellow star.png"
+const BLUEFLAG = "res://test/sprites/blue star.png"
+const REDFLAG = "res://test/sprites/red star.png"
+const ORANGEFLAG = "res://test/sprites/orange star.png"
+const PURPLEFLAG = "res://test/sprites/purple star.png"
+const GREENFLAG = "res://test/sprites/green star.png"
+const BLACKFLAG = "res://test/sprites/black star.png"
+const WHITEFLAG = "res://test/sprites/white star.png"
+
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
 const BLUE = "res://test/scenes/blueorb.tscn"
@@ -20,6 +29,8 @@ onready var sfx = get_node("SamplePlayer2D")
 onready var anim = get_node("AnimationPlayer")
 onready var animenap1 = get_node("enaplayer")
 onready var animenap2 = get_node("enaP2player")
+onready var animdeathlinep1 = get_node("p1deathlineplayer")
+onready var animdeathlinep2 = get_node("p2deathlineplayer")
 
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width+
 
@@ -106,10 +117,13 @@ func _fixed_process(delta):
 	
 	#for whatever reason the physics of the orbs does not work as soon as theyre ready
 	#so we will wait for a half second for them to find their neighbors
-	if(t > .5 and s == false):
+	if(t > .2 and s == false):
 		for i in orbsonboard:
 			i.GetNeighboringPositions()
 			i.GetNeighbors()
+			for orb in orbsonboard:
+				if(orb.istouchingtop):
+					orb.get_node("topring").show()
 		s = true
 	t += delta
 	if(Input.is_action_pressed("ui_select")):
@@ -733,28 +747,28 @@ func GeneratePlayer1Flag():
 	randomize()
 	var result = randi() % 8
 	if(result == 0):
-		s.load("res://test/sprites/flag orb yellow new.png")
+		s.load(YELLOWFLAG)
 		p1flag.colour = COLOUR.YELLOW
 	elif(result == 1):
-		s.load("res://test/sprites/flag orb blue new.png")
+		s.load(BLUEFLAG)
 		p1flag.colour = COLOUR.BLUE
 	elif(result == 2):
-		s.load("res://test/sprites/flag orb red new ver 2.png")
+		s.load(REDFLAG)
 		p1flag.colour = COLOUR.RED
 	elif(result == 3):
-		s.load("res://test/sprites/flag orb orange new.png")
+		s.load(ORANGEFLAG)
 		p1flag.colour = COLOUR.ORANGE
 	elif(result == 4):
-		s.load("res://test/sprites/flag orb purple new.png")
+		s.load(PURPLEFLAG)
 		p1flag.colour = COLOUR.PURPLE
 	elif(result == 5):
-		s.load("res://test/sprites/flag orb green new.png")
+		s.load(GREENFLAG)
 		p1flag.colour = COLOUR.GREEN
 	elif(result == 6):
-		s.load("res://test/sprites/flag orb black new.png")
+		s.load(BLACKFLAG)
 		p1flag.colour = COLOUR.BLACK
 	elif(result == 7):
-		s.load("res://test/sprites/flag orb white new.png")
+		s.load(WHITEFLAG)
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
 	p1flag.get_node("Sprite").get_texture().create_from_image(s)
@@ -771,28 +785,28 @@ func GeneratePlayer2Flag():
 	randomize()
 	var result = randi() % 8
 	if(result == 0):
-		s.load("res://test/sprites/flag orb yellow new.png")
+		s.load(YELLOWFLAG)
 		p2flag.colour = COLOUR.YELLOW
 	elif(result == 1):
-		s.load("res://test/sprites/flag orb blue new.png")
+		s.load(BLUEFLAG)
 		p2flag.colour = COLOUR.BLUE
 	elif(result == 2):
-		s.load("res://test/sprites/flag orb red new ver 2.png")
+		s.load(REDFLAG)
 		p2flag.colour = COLOUR.RED
 	elif(result == 3):
-		s.load("res://test/sprites/flag orb orange new.png")
+		s.load(ORANGEFLAG)
 		p2flag.colour = COLOUR.ORANGE
 	elif(result == 4):
-		s.load("res://test/sprites/flag orb purple new.png")
+		s.load(PURPLEFLAG)
 		p2flag.colour = COLOUR.PURPLE
 	elif(result == 5):
-		s.load("res://test/sprites/flag orb green new.png")
+		s.load(GREENFLAG)
 		p2flag.colour = COLOUR.GREEN
 	elif(result == 6):
-		s.load("res://test/sprites/flag orb black new.png")
+		s.load(BLACKFLAG)
 		p2flag.colour = COLOUR.BLACK
 	elif(result == 7):
-		s.load("res://test/sprites/flag orb white new.png")
+		s.load(WHITEFLAG)
 		p2flag.colour = COLOUR.WHITE
 	print("flag2 colour: " + str(p2flag.colour))
 	p2flag.get_node("Sprite").get_texture().create_from_image(s)
@@ -829,6 +843,8 @@ func Restart():
 	abilitycombop2 = 0
 	animenap1.play("ena idle")
 	animenap2.play("enap2 idle")
+	animdeathlinep1.play("rest")
+	animdeathlinep2.play("rest")
 	get_node("Timer").set_wait_time(300)
 	get_node("Timer").set_active(true)
 	get_node("Timer").start()
@@ -836,6 +852,14 @@ func Restart():
 func UpdateHealthLabels():
 	p1launcher.get_node("health").set_text("Health " + str(player1health))
 	p2launcher.get_node("health").set_text("Health " + str(player2health))
+	if(player1health < 4):
+		p1launcher.get_node("HealthAnimationPlayer").play("blink")
+	else:
+		p1launcher.get_node("HealthAnimationPlayer").play("rest")
+	if(player2health < 4):
+		p2launcher.get_node("HealthAnimationPlayer").play("blink")
+	else:
+		p2launcher.get_node("HealthAnimationPlayer").play("rest")
 
 func GameOver(gameoverstring,winner):
 	if(winner == PLAYER.PLAYER1):
@@ -871,9 +895,9 @@ func _on_replaybutton_pressed():
 
 func _on_Timer_timeout():
 	if(orbsonboardp1.size() < orbsonboardp2.size()):
-		GameOver("Player One wins",PLAYER.PLAYER1)
+		GameOver("Time out! Player 1 wins",PLAYER.PLAYER1)
 	elif(orbsonboardp1.size() > orbsonboardp2.size()):
-		GameOver("Player Two wins",PLAYER.PLAYER2)
+		GameOver("Time out! Player 2 wins",PLAYER.PLAYER2)
 	else:
 		GameOver("Its a Draw",null)
 	print("player1 " + str(orbsonboardp1.size()))
@@ -889,14 +913,34 @@ func _on_Button_toggled( pressed ):
 
 func IsPlayerDead():
 	if(player1health < 1):
-		GameOver("Player two wins",PLAYER.PLAYER2)
+		GameOver("Player 1 has ran out of health!",PLAYER.PLAYER2)
 	elif(player2health < 1):
-		GameOver("Player one wins",PLAYER.PLAYER1)
+		GameOver("Player 2 has ran out of health!",PLAYER.PLAYER1)
 
 func CheckPlayerBoard(player):
 	if(player == PLAYER.PLAYER1):
 		if(orbsonboardp1.size() == 0):
-			GameOver("Player One Wins!",PLAYER.PLAYER1)
+			GameOver("Player 1 board clear!",PLAYER.PLAYER1)
 	elif(player == PLAYER.PLAYER2):
 		if(orbsonboardp2.size() == 0):
-			GameOver("Player Two Wins!",PLAYER.PLAYER2)
+			GameOver("Player 2 board clear!",PLAYER.PLAYER2)
+
+func DeathLineWarningp1():
+	for orb in orbsonboardp1:
+		if orb.get_pos().y > 900:
+			if(!get_node("p1deathlineplayer").is_playing()):
+				get_node("p1deathlineplayer").play("blink")
+			return
+	
+	if(get_node("p1deathlineplayer").is_playing()):
+		get_node("p1deathlineplayer").play("rest")
+
+func DeathLineWarningp2():
+	for orb in orbsonboardp2:
+		if orb.get_pos().y > 900:
+			if(!get_node("p2deathlineplayer").is_playing()):
+				get_node("p2deathlineplayer").play("blink")
+			return
+	
+	if(get_node("p2deathlineplayer").is_playing()):
+		get_node("p2deathlineplayer").play("rest")

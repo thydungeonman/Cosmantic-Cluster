@@ -57,6 +57,12 @@ var frozentimer = 0.00
 
 var lasing = false
 var laserisactive = false
+var laserscanning = false
+var lasertargets = []
+var lasertargetcounter = 0
+var lchecker
+var lchecker2
+var shot = Vector2()
 
 onready var centercast = get_node("RayCastCenter/")
 onready var leftcast = get_node("RayCastCenter/RayCastLeft")
@@ -133,6 +139,14 @@ func _fixed_process(delta):
 	#print(aiming)
 	LoadOrb(delta)
 	#print(orb)
+	if(state == 6): #laserscanning
+		print("laserscanning frame " + str(lasertargetcounter))
+		if(laserscanning):
+			LaserCheck() #check to see if the laser is making a good shot
+			if(state != 6):
+				return
+		LaserScan2() #move lasercheckers to correct position
+		laserscanning = true
 	
 	if(state == 5):
 		waitcounter += delta
@@ -652,6 +666,8 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 	var fulltargetdict = straightshottargets
 	for key in warpshottargets.keys():
 		fulltargetdict[key] = warpshottargets[key]
+	for key in bounceshottargets.keys():
+		fulltargetdict[key] = bounceshottargets[key]
 	var potentialtargets = []
 	var potential = false
 	if(emptyshots.size() > 0):
@@ -667,9 +683,24 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 		if(target.isflag):
 			continue
 		if(get_pos().distance_to(target.get_pos()) < 130):
-			print("TOO CLOSE")
+			print("TOO CLOSE!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STRAIGHT")
 			continue
 		potentialtargets.push_back(target)
+	
+	for target in bounceshottargets.keys():
+		var group = []
+		group = target.Search(1,target.colour,group)
+		if(group < 0):
+			continue
+		if(target.isflag):
+			continue
+		if(get_pos().distance_to(target.get_pos()) < 200):
+			print("TOO CLOSE!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! BOUNCE")
+			continue
+		potentialtargets.push_back(target)
+	
+	
+	
 	for target in warpshottargets.keys():
 		var group = []
 		group = target.Search(1,target.colour,group)
@@ -681,13 +712,22 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 			print("TOO CLOSE")
 			continue
 		potentialtargets.push_back(target)
+	
 	if(potentialtargets.size() > 0):
-		var shot = randi() % potentialtargets.size()
-		clickedpos = fulltargetdict[potentialtargets[shot]]
+#		var shot = randi() % potentialtargets.size()
+#		clickedpos = fulltargetdict[potentialtargets[shot]]
+		var highest = 0
+		for shot in range(potentialtargets.size()):
+			if(potentialtargets[shot].get_pos().y < potentialtargets[highest].get_pos().y):
+				highest = shot
+		clickedpos = fulltargetdict[potentialtargets[highest]]
 		state = 2
 		print(potentialtargets[0].get_name())
 	else:
-		ThrowAway()
+		print("can't throw awayyyyyyyyyyy")
+		clickedpos = Vector2(1500,300)
+		state = 2
+#		ThrowAway()
 	
 
 
@@ -869,49 +909,144 @@ func CheckFlagShot():
 	#if cannot hit player flag orb but can hit an orb that touches the player flag orb and matches colour, take the shot
 
 
+#func laserScan():
+#
+#	var shot
+#	var t = get_parent().FindPeninsula(orb.colour)
+#	if(t == null):
+#		shot = Vector2(1500,300)
+#	else:
+#		shot = t.get_pos()
+#	var goodshot = false
+#	lchecker = preload("res://test/scenes/laserchecker.tscn").instance()
+#	add_child(lchecker)
+#	while goodshot == false:
+#		var difference = shot - lchecker.get_global_pos()
+#		lchecker.set_rot(0)
+#		lchecker.look_at(lchecker.get_global_pos() + difference)
+#		var trajectory = shot - get_global_pos()
+#		var m = -abs(trajectory.y/trajectory.x)
+#		var x = 1900
+#		var s = 1900 - 1447
+#		if(shot.x < 1447):
+#			x = 1000
+#		var y = (m*s) + 980
+#		print(str(y) + " = " + str(m) + " * " + str(s) + "+ 980" )
+#		var lchecker2 = preload("res://test/scenes/laserchecker.tscn").instance()
+#		add_child(lchecker2)
+#		lchecker2.set_global_pos(Vector2(x,y))
+#		lchecker2.look_at(Vector2(x + -difference.x,y + difference.y))
+#		var goodloop = true
+#		lchecker.get_overlapping_bodies()
+#		print(str(lchecker.get_overlapping_bodies()))
+#		for body in lchecker.get_overlapping_bodies() + lchecker2.get_overlapping_bodies():
+#			if(body.is_in_group("orb")):
+#				if(body.isflag and body.player == PLAYER.PLAYER2):
+#					shot.x += 5
+#					goodloop = false
+#					break
+#		lchecker.queue_free()
+#		lchecker2.queue_free()
+#		if(!goodloop):
+#			continue
+#		break
+#	goodshot = true
+#	clickedpos = shot
+#	state = 2
 
-func laserScan():
-	var shot
-	var t = get_parent().FindPeninsula(orb.colour)
-	if(t == null):
-		t = Vector2(1500,300)
-	else:
-		shot = t.get_pos()
+func LaserScan2():
+	#get all orbs of orb.colour in a list
+	#do lchecker positioning for each
+	#if one would hit the flag orb or drop flag orb
+	#go to the next one
+	#if none are good or there are none
+	#swap or store
+	#repeat
+	#if still none are good
+	#aim far right 
+	#
+	if(lasertargets.size() == 0):
+		print("all out of targets")
+		clickedpos = Vector2(1500,300)
+		state = 2
+		laserscanning = false
+		lasertargets.clear()
+		lasertargetcounter = 0
+		return
+	
+	if(lchecker == null):
+		lchecker = preload("res://test/scenes/laserchecker.tscn").instance()
+		add_child(lchecker)
 	var goodshot = false
-	var lchecker = preload("res://test/scenes/laserchecker.tscn").instance()
-	add_child(lchecker)
-	while goodshot == false:
-		var difference = shot - lchecker.get_global_pos()
-		lchecker.set_rot(0)
-		lchecker.look_at(lchecker.get_global_pos() + difference)
-		var trajectory = shot - get_global_pos()
-		var m = -abs(trajectory.y/trajectory.x)
-		var x = 1900
-		var s = 1900 - 1447
-		if(shot.x < 1447):
-			x = 1000
-		var y = (m*s) + 980
-		print(str(y) + " = " + str(m) + " * " + str(s) + "+ 980" )
-		var lchecker2 = preload("res://test/scenes/laserchecker.tscn").instance()
+	
+	var lorb = lasertargets[lasertargetcounter]
+	shot = lorb.get_pos()
+	var difference = shot - lchecker.get_global_pos()
+	lchecker.set_rot(0)
+	lchecker.look_at(lchecker.get_global_pos() + difference)
+	var trajectory = shot - get_global_pos()
+	var m = -abs(trajectory.y/trajectory.x)
+	var x = 1900
+	var s = 1900 - 1447
+	if(shot.x < 1447):
+		x = 1000
+	var y = (m*s) + 980
+	print(str(y) + " = " + str(m) + " * " + str(s) + "+ 980" )
+	if(lchecker2 == null):
+		lchecker2 = preload("res://test/scenes/laserchecker.tscn").instance()
 		add_child(lchecker2)
-		lchecker2.set_global_pos(Vector2(x,y))
-		lchecker2.look_at(Vector2(x + -difference.x,y + difference.y))
-		var goodloop = true
-		for body in lchecker.get_overlapping_bodies() + lchecker2.get_overlapping_bodies():
-			if(body.is_in_group("orb")):
-				if(body.isflag and body.player == PLAYER.PLAYER2):
-					shot.x += 5
-					goodloop = false
-					break
-		lchecker.queue_free()
-		lchecker2.queue_free()
-		if(!goodloop):
-			continue
-		break
-	goodshot = true
-	clickedpos = shot
-	state = 2
+	lchecker2.set_global_pos(Vector2(x,y))
+	lchecker2.look_at(Vector2(x + -difference.x,y + difference.y))
+	lasertargetcounter += 1
+	if(lasertargetcounter == lasertargets.size()): #all out of targets
+		print("all out of targets")
+		clickedpos = Vector2(1500,300)
+		state = 2
+		laserscanning = false
+		lasertargets.clear()
+		lasertargetcounter = 0
+		return
 
+
+
+#this has to be done one a separate frame
+func LaserCheck():
+	
+	var goodloop = true
+	print("checking bodies")
+	var bodies = lchecker.get_overlapping_bodies() + lchecker2.get_overlapping_bodies()
+	print("num of bodies " + str(bodies.size()))
+	for body in bodies:
+		print("body is " + str(body.get_name()))
+		if(body.is_in_group("orb")):
+			print(str(body.get_name()))
+			#if would laser the flag orb
+			if(body.isflag and body.player == PLAYER.PLAYER2):
+				print("would have lazed flag orb")
+				goodloop = false
+				break
+		#if would drop the flag orb by lasering 
+		#change to doing a look for top if all of the bodies were excluded
+	for body in bodies:
+		if(body.is_in_group("orb")):
+			body.isexcluded = true
+	var a = []
+	if(get_parent().p2flag.LookForTop2(a) == false):
+		goodloop = false
+		print("WOULD HAVE DROPPED FLAG BY LASINGFDFDFDF")
+	for body in bodies:
+		if(body.is_in_group("orb")):
+			body.isexcluded = false
+		
+	if goodloop:
+		print("good shot and returning")
+		print("firing at " + str(lasertargets[lasertargetcounter - 1]) + " with name " + str(lasertargets[lasertargetcounter - 1].get_name()) )
+		clickedpos = shot
+		state = 2
+		lasertargetcounter = 0
+		laserscanning = false
+		lasertargets.clear()
+		return
 
 func FullScan2():
 	#brute force scan of all orbs that can be hit from the ailauncher
@@ -922,7 +1057,7 @@ func FullScan2():
 	#the in a new loop give the scanner a collision exception with the wall
 	#and try to move it the remainder of the distance
 	#hopefully it will collide
-	
+	print("")
 	if(ischarged):
 		print("CHARGED")
 	else:
@@ -957,7 +1092,9 @@ func FullScan2():
 	
 	
 	if(laserisactive):
-		laserScan()
+		lasertargets.clear()
+		lasertargets = get_parent().FindPeninsula2(orb.colour)
+		state = 6
 		return
 	
 	scanner = preload("res://test/scenes/scanner.tscn").instance()
@@ -1147,11 +1284,11 @@ func FullScan2():
 			#bail if matching this orb would drop the flag orb
 			if(!bail1):
 				var nearest = []
-				nearest = borbs[0].Search(2,borbs[0].colour,nearest)
+				nearest = borbs[0].Search(5,borbs[0].colour,nearest)
 				for corb in nearest:
 					corb.isexcluded = true
 				var a = []
-				if(get_parent().p2flag.LookForTop(a) == false):
+				if(get_parent().p2flag.LookForTop2(a) == false):
 					bail1 = true
 					fulltargetlist.remove(fulltargetlist.find(borbs[0]))
 					print("removed " + str(borbs[0].get_name()) + " would have dropped flag")
@@ -1196,17 +1333,20 @@ func FullScan2():
 				if(!bail2):
 					print("bail 2 is false")
 					var nearest = []
-					nearest = borb.Search(2,borb.colour,nearest)
+					nearest = borb.Search(5,borb.colour,nearest)
 					for corb in nearest:
 						corb.isexcluded = true
 					var a = []
-					if(get_parent().p2flag.LookForTop(a) == false):
+					if(get_parent().p2flag.LookForTop2(a) == false):
 						bail2 = true
 						fulltargetlist.remove(fulltargetlist.find(borb))
-						print("removed " + str(borb.get_name()) + " would have dropped flag")
+						print("removed " + str(borb.get_name()) + " would have dropped flag BIG TIMEEEEEEEEEE")
 					for corb in nearest:
 						corb.isexcluded = false
-				
+					
+				#check if matching this would drop flag
+					
+					
 				if bail2:
 					print("bail2 is true")
 					continue
@@ -1259,6 +1399,7 @@ func FullScan2():
 				print("throwing away an orb")
 				print("orb is "+ orb.get_name())
 				ThrowAway2(pointdict,bouncepointdict,warppointdict,emptyshots)
+				return
 		else:
 			print("storing " + orb.get_name())
 			Store(orb)

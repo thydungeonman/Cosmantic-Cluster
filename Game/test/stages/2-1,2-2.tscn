@@ -12,5 +12,12 @@ script/script = ExtResource( 2 )
 
 texture = ExtResource( 3 )
 
+[node name="gameoverlabel" parent="."]
+
+visibility/visible = false
+margin/left = 819.0
+margin/right = 1101.0
+margin/bottom = 301.0
+
 
 [editable path="wall"]
