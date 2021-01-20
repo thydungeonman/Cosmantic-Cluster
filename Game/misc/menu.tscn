@@ -1,8 +1,11 @@
-[gd_scene load_steps=6 format=1]
+[gd_scene load_steps=9 format=1]
 
 [ext_resource path="res://test/fonts/ff.fnt" type="BitmapFont" id=1]
 [ext_resource path="res://misc/fgdfg.png" type="Texture" id=2]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena.png" type="Texture" id=3]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena attack.png" type="Texture" id=3]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena lose.png" type="Texture" id=4]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena idle.png" type="Texture" id=5]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena win.png" type="Texture" id=6]
 
 [sub_resource type="GDScript" id=1]
 
@@ -52,7 +55,7 @@ func _on_VButtonArray_button_selected( button_idx ):
 [sub_resource type="Animation" id=2]
 
 resource/name = "New Anim"
-length = 3.0
+length = 8.5
 loop = true
 step = 0.1
 tracks/0/type = "value"
@@ -60,10 +63,40 @@ tracks/0/path = NodePath("Sprite 2:frame")
 tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = {
-"times": FloatArray( 0, 3 ),
-"transitions": FloatArray( 1, 1 ),
+"times": FloatArray( 0, 1.3, 1.4, 4.5, 4.6, 5.7, 5.8, 8.5 ),
+"transitions": FloatArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ 0, 25 ]
+"values": [ 0, 13, 0, 28, 0, 11, 0, 27 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite 2:texture")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": FloatArray( 0, 1.4, 4.6, 5.8 ),
+"transitions": FloatArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 4 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 6 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite 2:vframes")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": FloatArray( 0, 1.4, 4.6, 5.8 ),
+"transitions": FloatArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 2, 3, 2, 4 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Sprite 2:hframes")
+tracks/3/interp = 1
+tracks/3/imported = false
+tracks/3/keys = {
+"times": FloatArray( 0, 1.4, 4.6, 5.8 ),
+"transitions": FloatArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 7, 10, 6, 7 ]
 }
 
 [node name="Node2D" type="Node2D"]
@@ -177,8 +210,9 @@ button/align = 3
 
 transform/pos = Vector2( 385, 420 )
 texture = ExtResource( 3 )
-vframes = 5
-hframes = 35
+vframes = 3
+hframes = 10
+frame = 19
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
