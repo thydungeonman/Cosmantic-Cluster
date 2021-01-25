@@ -9,7 +9,6 @@ script/script = ExtResource( 2 )
 
 [node name="gameoverlabel" parent="."]
 
-visibility/visible = false
 margin/left = 415.0
 margin/right = 1510.0
 
