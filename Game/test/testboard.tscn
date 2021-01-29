@@ -22,15 +22,15 @@
 [ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=20]
 [ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=21]
 [ext_resource path="res://icon.png" type="Texture" id=22]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena win.png" type="Texture" id=23]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena attack.png" type="Texture" id=24]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena damage.png" type="Texture" id=25]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena idle.png" type="Texture" id=26]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ena lose.png" type="Texture" id=27]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/lose sprite sheet2.png" type="Texture" id=28]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Attack sprite sheet2.png" type="Texture" id=29]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/damage sprite sheet2.png" type="Texture" id=30]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Ena Idle Temp sprite sheet2.png" type="Texture" id=31]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena win.png" type="Texture" id=23]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena attack.png" type="Texture" id=24]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena damage.png" type="Texture" id=25]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena idle.png" type="Texture" id=26]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena lose.png" type="Texture" id=27]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Attack sprite sheet2.png" type="Texture" id=28]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/damage sprite sheet2.png" type="Texture" id=29]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Ena Idle Temp sprite sheet2.png" type="Texture" id=30]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/lose sprite sheet2.png" type="Texture" id=31]
 [ext_resource path="res://test/sprites/enaP2 Sprite Sheet/win sprite sheet2.png" type="Texture" id=32]
 [ext_resource path="res://test/sprites/warning line.png" type="Texture" id=33]
 
@@ -249,10 +249,10 @@ tracks/1/path = NodePath("ena:hframes")
 tracks/1/interp = 1
 tracks/1/imported = false
 tracks/1/keys = {
-"times": FloatArray( 0 ),
-"transitions": FloatArray( 1 ),
+"times": FloatArray( 0, 2.8 ),
+"transitions": FloatArray( 1, 1 ),
 "update": 1,
-"values": [ 10 ]
+"values": [ 29, 29 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("ena:frame")
@@ -272,7 +272,7 @@ tracks/3/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 3 ]
+"values": [ 1 ]
 }
 
 [sub_resource type="Animation" id=10]
@@ -308,7 +308,7 @@ tracks/2/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 9 ]
+"values": [ 18 ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("ena:vframes")
@@ -318,12 +318,12 @@ tracks/3/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 2 ]
+"values": [ 1 ]
 }
 
 [sub_resource type="Animation" id=11]
 
-length = 1.0
+length = 1.2
 loop = true
 step = 0.1
 tracks/0/type = "value"
@@ -331,7 +331,7 @@ tracks/0/path = NodePath("ena:frame")
 tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = {
-"times": FloatArray( 0, 1 ),
+"times": FloatArray( 0, 1.1 ),
 "transitions": FloatArray( 1, 1 ),
 "update": 0,
 "values": [ 0, 11 ]
@@ -354,7 +354,7 @@ tracks/2/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 6 ]
+"values": [ 12 ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("ena:vframes")
@@ -364,7 +364,7 @@ tracks/3/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 2 ]
+"values": [ 1 ]
 }
 
 [sub_resource type="Animation" id=12]
@@ -390,7 +390,7 @@ tracks/1/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 7 ]
+"values": [ 14 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("ena:frame")
@@ -410,7 +410,7 @@ tracks/3/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 2 ]
+"values": [ 1 ]
 }
 
 [sub_resource type="Animation" id=13]
@@ -446,7 +446,7 @@ tracks/2/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 7 ]
+"values": [ 28 ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("ena:vframes")
@@ -456,7 +456,7 @@ tracks/3/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 4 ]
+"values": [ 1 ]
 }
 
 [sub_resource type="Animation" id=14]
@@ -472,7 +472,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 29 ) ]
+"values": [ ExtResource( 28 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -508,7 +508,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 30 ) ]
+"values": [ ExtResource( 29 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -544,7 +544,7 @@ tracks/0/keys = {
 "times": FloatArray( 0.1 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 31 ) ]
+"values": [ ExtResource( 30 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -580,7 +580,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 28 ) ]
+"values": [ ExtResource( 31 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -983,8 +983,8 @@ flip_v = true
 transform/pos = Vector2( 270, 950 )
 transform/scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 23 )
-vframes = 4
-hframes = 7
+hframes = 28
+frame = 27
 
 [node name="enaplayer" type="AnimationPlayer" parent="."]
 
@@ -1008,7 +1008,8 @@ autoplay = "ena idle"
 transform/pos = Vector2( 1240, 985 )
 transform/scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 28 )
-hframes = 6
+hframes = 10
+frame = 9
 
 [node name="enaP2player" type="AnimationPlayer" parent="."]
 
