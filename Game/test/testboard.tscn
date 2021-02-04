@@ -22,11 +22,11 @@
 [ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=20]
 [ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=21]
 [ext_resource path="res://icon.png" type="Texture" id=22]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena win.png" type="Texture" id=23]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena attack.png" type="Texture" id=24]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena damage.png" type="Texture" id=25]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena idle.png" type="Texture" id=26]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/spritesheet ena lose.png" type="Texture" id=27]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA win 600x328.png" type="Texture" id=23]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA attack 600x328 - 2rows.png" type="Texture" id=24]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA damage 600x328.png" type="Texture" id=25]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA idle 600x328.png" type="Texture" id=26]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA lose 600x328.png" type="Texture" id=27]
 [ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Attack sprite sheet2.png" type="Texture" id=28]
 [ext_resource path="res://test/sprites/enaP2 Sprite Sheet/damage sprite sheet2.png" type="Texture" id=29]
 [ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Ena Idle Temp sprite sheet2.png" type="Texture" id=30]
@@ -249,10 +249,10 @@ tracks/1/path = NodePath("ena:hframes")
 tracks/1/interp = 1
 tracks/1/imported = false
 tracks/1/keys = {
-"times": FloatArray( 0, 2.8 ),
-"transitions": FloatArray( 1, 1 ),
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 29, 29 ]
+"values": [ 14 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("ena:frame")
@@ -272,7 +272,7 @@ tracks/3/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 1 ]
+"values": [ 2 ]
 }
 
 [sub_resource type="Animation" id=10]
@@ -285,10 +285,10 @@ tracks/0/path = NodePath("ena:texture")
 tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = {
-"times": FloatArray( 0 ),
-"transitions": FloatArray( 1 ),
+"times": FloatArray( 0, 1.7 ),
+"transitions": FloatArray( 1, 1 ),
 "update": 1,
-"values": [ ExtResource( 25 ) ]
+"values": [ ExtResource( 25 ), ExtResource( 25 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("ena:frame")
@@ -377,10 +377,10 @@ tracks/0/path = NodePath("ena:texture")
 tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = {
-"times": FloatArray( 0 ),
-"transitions": FloatArray( 1 ),
+"times": FloatArray( 0, 1.3 ),
+"transitions": FloatArray( 1, 1 ),
 "update": 1,
-"values": [ ExtResource( 27 ) ]
+"values": [ ExtResource( 27 ), ExtResource( 27 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("ena:hframes")
@@ -415,7 +415,7 @@ tracks/3/keys = {
 
 [sub_resource type="Animation" id=13]
 
-length = 2.7
+length = 1.7
 loop = false
 step = 0.1
 tracks/0/type = "value"
@@ -433,10 +433,10 @@ tracks/1/path = NodePath("ena:frame")
 tracks/1/interp = 1
 tracks/1/imported = false
 tracks/1/keys = {
-"times": FloatArray( 0, 2.7 ),
+"times": FloatArray( 0, 1.7 ),
 "transitions": FloatArray( 1, 1 ),
 "update": 0,
-"values": [ 0, 27 ]
+"values": [ 0, 17 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("ena:hframes")
@@ -446,7 +446,7 @@ tracks/2/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ 28 ]
+"values": [ 18 ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("ena:vframes")
@@ -983,8 +983,7 @@ flip_v = true
 transform/pos = Vector2( 270, 950 )
 transform/scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 23 )
-hframes = 28
-frame = 27
+hframes = 18
 
 [node name="enaplayer" type="AnimationPlayer" parent="."]
 
