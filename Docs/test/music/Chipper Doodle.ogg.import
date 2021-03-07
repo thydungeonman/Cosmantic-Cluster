@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Chipper Doodle.ogg-1e0d99b823cf8c297fa239250041c1ab.oggstr"
+
+[deps]
+
+source_file="res://test/music/Chipper Doodle.ogg"
+dest_files=[ "res://.import/Chipper Doodle.ogg-1e0d99b823cf8c297fa239250041c1ab.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Electrodoodle.ogg-10a80ad90c402a956e6a2cd686f82a6c.oggstr"
+
+[deps]
+
+source_file="res://test/music/Electrodoodle.ogg"
+dest_files=[ "res://.import/Electrodoodle.ogg-10a80ad90c402a956e6a2cd686f82a6c.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

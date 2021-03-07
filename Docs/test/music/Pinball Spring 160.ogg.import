@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Pinball Spring 160.ogg-8e701c7e680106a76ed695813c829ff2.oggstr"
+
+[deps]
+
+source_file="res://test/music/Pinball Spring 160.ogg"
+dest_files=[ "res://.import/Pinball Spring 160.ogg-8e701c7e680106a76ed695813c829ff2.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -1,0 +1,9 @@
+[gd_scene load_steps=1 format=2]
+
+[ext_resource path="res://test/sprites/flag orb red new ver 2.png" type="Texture" id=1]
+
+[node name="RedGodot" type="Sprite"]
+
+scale = Vector2( 0.14, 0.14 )
+texture = ExtResource( 1 )
+modulate = Color( 1, 0, 0.046875, 1 )

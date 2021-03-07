@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Bit Shift.ogg-3bbc07ec8ba1e2c0ca0083397bc97144.oggstr"
+
+[deps]
+
+source_file="res://test/music/Bit Shift.ogg"
+dest_files=[ "res://.import/Bit Shift.ogg-3bbc07ec8ba1e2c0ca0083397bc97144.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

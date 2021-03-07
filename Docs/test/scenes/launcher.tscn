@@ -1,0 +1,668 @@
+[gd_scene load_steps=27 format=2]
+
+[ext_resource path="res://test/scripts/launcher.gd" type="Script" id=1]
+[ext_resource path="res://test/scenes/container.tscn" type="PackedScene" id=2]
+[ext_resource path="res://test/fonts/orbit.font" type="BitmapFont" id=3]
+[ext_resource path="res://test/sfx/bump - orb saved for later.sample" type="Sample" id=4]
+[ext_resource path="res://test/sfx/electric-zap-001 - Yellow ability launched.sample" type="Sample" id=5]
+[ext_resource path="res://test/sfx/hurt-c-02 - orb switch.sample" type="Sample" id=6]
+[ext_resource path="res://test/sfx/ice-cracking - laucher unfreezing.sample" type="Sample" id=7]
+[ext_resource path="res://test/sfx/jump-c-05 - orb launched.sample" type="Sample" id=8]
+[ext_resource path="res://test/sfx/laser-shot-silenced - orange ability launched.sample" type="Sample" id=9]
+[ext_resource path="res://test/sfx/mrown1__tick launcher aiming left or right.sample" type="Sample" id=10]
+[ext_resource path="res://test/sprites/ability effects/ice crack.png" type="Texture" id=11]
+[ext_resource path="res://test/sprites/ability effects/ice frozen.png" type="Texture" id=12]
+[ext_resource path="res://test/sprites/launcher/launcher spiral temp.png" type="Texture" id=13]
+[ext_resource path="res://test/sprites/launcher/launcher center temp.png" type="Texture" id=14]
+[ext_resource path="res://test/sprites/ability effects/red ability temp.png" type="Texture" id=15]
+[ext_resource path="res://test/sprites/glow effects/green healing light.png" type="Texture" id=16]
+[ext_resource path="res://test/sprites/glow effects/orange lazer glow.png" type="Texture" id=17]
+[ext_resource path="res://test/sprites/glow effects/electric yellow glow.png" type="Texture" id=18]
+
+[sub_resource type="Resource" id=1]
+
+"samples/bump - orb saved for later" = {
+"db": -8.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 4 )
+}
+"samples/electric-zap-001 - Yellow ability launched" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 5 )
+}
+"samples/hurt-c-02 - orb switch" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 6 )
+}
+"samples/ice-cracking - laucher unfreezing" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 7 )
+}
+"samples/jump-c-05 - orb launched" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 8 )
+}
+"samples/laser-shot-silenced - orange ability launched" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 9 )
+}
+"samples/mrown1__tick launcher aiming left or right" = {
+"db": -8.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 10 )
+}
+
+[sub_resource type="Animation" id=2]
+
+resource_name = "crack"
+length = 0.5
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("ice:texture")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 11 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ice:modulate:a")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=3]
+
+resource_name = "freeze"
+length = 0.1
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("ice:visible")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("launchercenter:visible")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("launcherspiral:visible")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("ice:texture")
+tracks/3/interp = 1
+tracks/3/imported = false
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 12 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("ice:modulate:a")
+tracks/4/interp = 1
+tracks/4/imported = false
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+
+[sub_resource type="Animation" id=4]
+
+length = 0.1
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("launcherspiral:texture")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 13 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("launcherspiral:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("launcherspiral:scale")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 4, 4 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("launchercenter:texture")
+tracks/3/interp = 1
+tracks/3/imported = false
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 14 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("launchercenter:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/imported = false
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("launchercenter:scale")
+tracks/5/interp = 1
+tracks/5/imported = false
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 4, 4 ) ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("launchercenter:visible")
+tracks/6/interp = 1
+tracks/6/imported = false
+tracks/6/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("launcherspiral:z_index")
+tracks/7/interp = 1
+tracks/7/imported = false
+tracks/7/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ -1 ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("launchercenter:z_index")
+tracks/8/interp = 1
+tracks/8/imported = false
+tracks/8/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ -1 ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("ice:visible")
+tracks/9/interp = 1
+tracks/9/imported = false
+tracks/9/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("launcherspiral:visible")
+tracks/10/interp = 1
+tracks/10/imported = false
+tracks/10/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("firedamage:visible")
+tracks/11/interp = 1
+tracks/11/imported = false
+tracks/11/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/12/type = "value"
+tracks/12/path = NodePath("glowheal:visible")
+tracks/12/interp = 1
+tracks/12/imported = false
+tracks/12/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=5]
+
+length = 1.0
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("launcherspiral:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 180.0, 360.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("launcherspiral:texture")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 13 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+
+resource_name = "damage"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("firedamage:texture")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 15 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("firedamage:modulate:a")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 1.0, 1.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("firedamage:visible")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=7]
+
+resource_name = "heal"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("glowheal:visible")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("glowheal:modulate:a")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=8]
+
+resource_name = "laser"
+length = 0.3
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("abilityglow:texture")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 17 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("abilityglow:visible")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("abilityglow:modulate:a")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+
+[sub_resource type="Animation" id=9]
+
+resource_name = "lightning"
+length = 0.3
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("abilityglow:visible")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("abilityglow:texture")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 18 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("abilityglow:modulate:a")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+
+[sub_resource type="Animation" id=10]
+
+resource_name = "rest"
+length = 0.1
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("abilityglow:visible")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("firedamage:visible")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=11]
+
+resource_name = "blink"
+length = 1.3
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("health:custom_colors/font_color")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 0.7, 0.9, 1.1, 1.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=12]
+
+resource_name = "rest"
+length = 0.01
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("health:custom_colors/font_color")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="launcher" type="Node2D"]
+
+script = ExtResource( 1 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+
+amount = 50
+lifetime = 5.0
+emitting = false
+config/process_mode = 1
+params/direction = 261.0
+params/spread = 0.0
+params/linear_velocity = 1000.0
+params/spin_velocity = 0.0
+params/orbit_velocity = 0.0
+params/gravity_direction = 0.0
+params/gravity_strength = 0.0
+params/radial_accel = 0.0
+params/tangential_accel = 0.0
+params/damping = 0.0
+params/initial_angle = 0.0
+params/initial_size = 10.0
+params/final_size = 10.0
+params/hue_variation = 0.0
+params/anim_speed_scale = 1.0
+params/anim_initial_pos = 0.0
+color/color = Color( 0.894118, 0.894118, 0.847059, 1 )
+
+[node name="container" parent="." instance=ExtResource( 2 )]
+
+position = Vector2( 299.9, -85.9174 )
+
+[node name="health" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags_horizontal = 1
+size_flags_vertical = 0
+margin_left = -95.0
+margin_top = 46.0
+margin_right = 110.0
+margin_bottom = 86.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 2
+text = "Health 5"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+mouse_filter = 1
+
+[node name="SamplePlayer" type="Node" parent="."]
+
+config/polyphony = 3
+config/samples = SubResource( 1 )
+default/volume_db = -20.0
+default/pitch_scale = 1.0
+default/pan = 0.0
+default/depth = 0.0
+default/height = 0.0
+default/filter/type = 0
+default/filter/cutoff = 5000.0
+default/filter/resonance = 1.0
+default/filter/gain = 1.0
+default/reverb_room = 2
+default/reverb_send = 0.0
+default/chorus_send = 0.0
+
+[node name="nextorb" type="Sprite" parent="."]
+
+position = Vector2( -100, 0 )
+scale = Vector2( 0.11, 0.11 )
+z_index = -1
+
+[node name="LauncherAnimationPlayer" type="AnimationPlayer" parent="."]
+
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+root_node = NodePath("..")
+anims/crack = SubResource( 2 )
+anims/freeze = SubResource( 3 )
+anims/rest = SubResource( 4 )
+anims/spin = SubResource( 5 )
+next/crack = "rest"
+next/rest = "spin"
+playback_active = true
+playback_speed = 1.0
+blend_times = [  ]
+autoplay = "rest"
+
+[node name="launcherspiral" type="Sprite" parent="."]
+
+scale = Vector2( 4, 4 )
+z_index = -1
+texture = ExtResource( 13 )
+
+[node name="launchercenter" type="Sprite" parent="."]
+
+scale = Vector2( 4, 4 )
+z_index = -1
+texture = ExtResource( 14 )
+
+[node name="ice" type="Sprite" parent="."]
+
+visible = false
+scale = Vector2( 4, 4 )
+texture = ExtResource( 12 )
+
+[node name="firedamage" type="Sprite" parent="."]
+
+visible = false
+position = Vector2( 101.091, 65.3598 )
+scale = Vector2( 3, 3 )
+texture = ExtResource( 15 )
+
+[node name="glowheal" type="Sprite" parent="."]
+
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( -202.286, 1.78503 )
+scale = Vector2( 3, 3 )
+texture = ExtResource( 16 )
+
+[node name="AbilityAnimationPlayer" type="AnimationPlayer" parent="."]
+
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+root_node = NodePath("..")
+anims/damage = SubResource( 6 )
+anims/heal = SubResource( 7 )
+anims/laser = SubResource( 8 )
+anims/lightning = SubResource( 9 )
+anims/rest = SubResource( 10 )
+playback_active = true
+playback_speed = 1.0
+blend_times = [  ]
+autoplay = ""
+
+[node name="abilityglow" type="Sprite" parent="."]
+
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+scale = Vector2( 4, 4 )
+z_index = -1
+texture = ExtResource( 18 )
+
+[node name="HealthAnimationPlayer" type="AnimationPlayer" parent="."]
+
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+root_node = NodePath("..")
+anims/blink = SubResource( 11 )
+anims/rest = SubResource( 12 )
+playback_active = true
+playback_speed = 1.0
+blend_times = [  ]
+autoplay = ""

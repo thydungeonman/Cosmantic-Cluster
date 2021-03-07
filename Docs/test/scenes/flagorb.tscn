@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://test/scenes/orb.tscn" type="PackedScene" id=1]
+[ext_resource path="res://test/scripts/flagorb.gd" type="Script" id=2]
+[ext_resource path="res://test/sprites/star (2).png" type="Texture" id=3]
+
+[sub_resource type="ImageTexture" id=1]
+
+resource_name = "blue orb.png"
+flags = 5
+image = Image()
+)size = Vector2( 500, 500 )
+storage = 0
+lossy_quality = 0.7
+
+[node name="flagorb" instance=ExtResource( 1 ) groups=[
+"flag",
+]]
+
+script = ExtResource( 2 )
+
+[node name="Sprite" parent="."]
+
+texture = SubResource( 1 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+
+visible = false
+amount = 10
+lifetime = 1.0
+config/process_mode = 1
+config/half_extents = Vector2( 30, 30 )
+texture = ExtResource( 3 )
+params/direction = 0.0
+params/spread = 180.0
+params/linear_velocity = 20.0
+params/spin_velocity = 1.69
+params/orbit_velocity = 0.0
+params/gravity_direction = 0.0
+params/gravity_strength = 0.0
+params/radial_accel = 0.0
+params/tangential_accel = 0.0
+params/damping = 0.0
+params/initial_angle = 0.0
+params/initial_size = 0.02
+params/final_size = 0.03
+params/hue_variation = 0.0
+params/anim_speed_scale = 1.0
+params/anim_initial_pos = 0.0
+randomness/spin_velocity = 1.0

@@ -1,5 +1,8 @@
  extends Node2D
 
+#check is laser shot checks if the best spot is the flag orb
+#alter its too close for shot parameters
+
 
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
