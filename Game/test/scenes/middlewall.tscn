@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=1]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://test/sprites/board/Wall ver2.png" type="Texture" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -30,8 +30,8 @@ _update_shape_index = 0
 
 [node name="Sprite" type="Sprite" parent="."]
 
-transform/pos = Vector2( 0, -1.08604 )
-transform/scale = Vector2( 1, 18.8525 )
+transform/pos = Vector2( 4.17233e-07, 0 )
+transform/scale = Vector2( 0.666667, 1 )
 texture = ExtResource( 1 )
 
 
