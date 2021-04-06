@@ -80,7 +80,11 @@ var rclick = false
 
 func _ready():
 #	music.play(0)
-	
+	get_node("smoke/AnimationPlayer").play("reveal")
+	pass
+
+
+func Start():
 	GenerateP2Launcher()
 	GeneratePlayer1Flag()
 	GeneratePlayer2Flag()

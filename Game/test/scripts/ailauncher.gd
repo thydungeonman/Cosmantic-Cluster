@@ -114,9 +114,10 @@ func _ready():
 	add_child(next)
 	next.set_pos(Vector2(0,20))
 	AimReticule()
+	set_process(true)
 	
 
-func _fixed_process(delta):
+func _process(delta):
 	Click()
 	if(throwingaway):
 		get_parent().get_node("throwaway").show()
@@ -1110,10 +1111,7 @@ func FullScan2():
 	bouncescanner.add_collision_exception_with(orb)
 	bouncescanner.add_collision_exception_with(scanner)
 	scanner.add_collision_exception_with(bouncescanner)
-#	var g = preload("res://test/scenes/rgodot.tscn").instance()
-#	add_child(g)
-#	rgodots.push_back(g)
-#	g.set_pos(scanner.get_pos())
+	
 	var hits = []
 	var lastshotorb 
 	while (i != 120):
@@ -1147,6 +1145,11 @@ func FullScan2():
 		scanner.set_pos(Vector2())
 		currentpoint = currentpoint.rotated(-.025)
 		i += 1
+	for s in pointdict.keys():
+		var g = preload("res://test/scenes/rgodot.tscn").instance()
+		add_child(g)
+		rgodots.push_back(g)
+		g.set_global_pos(pointdict[s])
 	print("printing list shots")
 	for key in pointdict.keys():
 		if(listshots):

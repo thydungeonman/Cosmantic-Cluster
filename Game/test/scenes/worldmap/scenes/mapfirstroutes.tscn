@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=1]
+[gd_scene load_steps=9 format=1]
 
 [ext_resource path="res://test/scenes/worldmap/scripts/mapfirstroutes.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/worldmap/Island small without float.png" type="Texture" id=2]
 [ext_resource path="res://test/sprites/Ena Sprite Sheet/Ena Idle Temp sprite sheet.png" type="Texture" id=3]
-[ext_resource path="res://icon.png" type="Texture" id=4]
-[ext_resource path="res://test/scenes/worldmap/scenes/stageselector.tscn" type="PackedScene" id=5]
+[ext_resource path="res://test/scenes/worldmap/scenes/stageselector.tscn" type="PackedScene" id=4]
 
 [sub_resource type="Curve2D" id=1]
 
@@ -13,7 +12,7 @@ _data = {
 "points": Vector2Array( 0, 0, 0, 0, 0, 10, 0, 0, -71.7411, 78.343, 50, 70, 17.6052, 25.9676, 0, 0, 165, 115 )
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=2]
 
 resource/name = "walk"
 length = 0.4
@@ -30,14 +29,14 @@ tracks/0/keys = {
 "values": [ 0, 3 ]
 }
 
-[sub_resource type="Curve2D" id=2]
+[sub_resource type="Curve2D" id=3]
 
 bake_interval = 5.0
 _data = {
 "points": Vector2Array( 0, 0, 0, 0, 565, 645, 0, 0, 0, 0, 590, 630, 0, 0, 0, 0, 700, 640, 0, 0, 24.8716, -11.2166, 740, 625, 0, 0, 0, 0, 795, 625, 0, 0, 91.1957, 30.7237, 740, 670, 0, 0, 0, 0, 860, 660, 0, 0, 43.891, -27.7976, 920, 685, 0, 0, 12.6796, 6.33981, 925, 625, 0, 0, 13.1673, 6.82749, 1000, 595, 3.90142, -6.33981, 21.0013, 16.8238, 1030, 655, 0, 0, 81.2216, 11.9566, 1130, 600, 0, 0, 49.5009, -62.7659, 1235, 600, 0, 0, 0, 0, 1350, 550, 0, 0, 151.09, -15.4786, 1420, 550, 3.28366, 1.44144, -8.98344, -5.74973, 1550, 420, -0.642564, -2.31323, -4.60782, -1.96478, 1530, 390, 3.21282, 5.65457, 1.0281, 0.89959, 1545, 370, 0, 0, 0, 0, 1540, 345, 0, 0, 0, 0, 1510, 300, 0, 0, 0, 0, 1490, 260, 0, 0, 0, 0, 1505, 205, 0, 0, 0, 0, 1485, 110 )
 }
 
-[sub_resource type="Curve2D" id=3]
+[sub_resource type="Curve2D" id=4]
 
 bake_interval = 5.0
 _data = {
@@ -101,7 +100,7 @@ drag_margin/bottom = 0.2
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-anims/walk = SubResource( 4 )
+anims/walk = SubResource( 2 )
 playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
@@ -109,7 +108,7 @@ autoplay = "walk"
 
 [node name="fountain to mountain" type="Path2D" parent="."]
 
-curve = SubResource( 2 )
+curve = SubResource( 3 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="fountain to mountain"]
 
@@ -122,14 +121,9 @@ cubic_interp = true
 loop = false
 lookahead = 4.0
 
-[node name="Sprite" type="Sprite" parent="fountain to mountain/PathFollow2D"]
-
-transform/scale = Vector2( 0.1, 0.1 )
-texture = ExtResource( 4 )
-
 [node name="fountain to mansion" type="Path2D" parent="."]
 
-curve = SubResource( 3 )
+curve = SubResource( 4 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="fountain to mansion"]
 
@@ -142,15 +136,62 @@ cubic_interp = true
 loop = false
 lookahead = 4.0
 
-[node name="Sprite1" type="Sprite" parent="fountain to mansion/PathFollow2D"]
+[node name="ss0" parent="." instance=ExtResource( 4 )]
 
-transform/scale = Vector2( 0.1, 0.1 )
-texture = ExtResource( 4 )
-
-[node name="stageselector" parent="." instance=ExtResource( 5 )]
-
-visibility/visible = false
 transform/pos = Vector2( 415, 550 )
+modulate = Color( 1, 1, 1, 1 )
+
+[node name="ss1" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 565, 655 )
+
+[node name="ss2" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 865, 660 )
+
+[node name="ss3" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1000, 595 )
+
+[node name="ss4" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1405, 545 )
+
+[node name="ss5" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1530, 390 )
+
+[node name="ss6" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1505, 205 )
+
+[node name="ss7" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1485, 110 )
+
+[node name="ss8" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 580, 750 )
+
+[node name="ss9" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 620, 850 )
+
+[node name="ss10" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 830, 870 )
+
+[node name="ss11" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1180, 905 )
+
+[node name="ss12" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1425, 845 )
+
+[node name="ss13" parent="." instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 1430, 690 )
 
 [node name="worldcamera" type="Camera2D" parent="."]
 
@@ -171,5 +212,43 @@ drag_margin/left = 0.2
 drag_margin/top = 0.2
 drag_margin/right = 0.2
 drag_margin/bottom = 0.2
+
+[node name="buttonmountain" type="Button" parent="."]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 590.0
+margin/top = 595.0
+margin/right = 602.0
+margin/bottom = 615.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Go East?"
+flat = false
+
+[node name="buttonmansion" type="Button" parent="."]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 525.0
+margin/top = 685.0
+margin/right = 591.0
+margin/bottom = 705.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Go South?"
+flat = false
+
+[connection signal="button_up" from="buttonmountain" to="." method="_on_buttonmountain_button_up"]
+
+[connection signal="button_up" from="buttonmansion" to="." method="_on_buttonmansion_button_up"]
 
 

@@ -1,15 +1,19 @@
-[gd_scene load_steps=3 format=1]
+[gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://test/aiboard.tscn" type="PackedScene" id=1]
 [ext_resource path="res://test/stages/scripts/6-1-2.gd" type="Script" id=2]
+[ext_resource path="res://boards/stage 6 route 1 mountain .png" type="Texture" id=3]
 
 [node name="6-1-2" instance=ExtResource( 1 )]
 
 script/script = ExtResource( 2 )
 
+[node name="background" parent="."]
+
+texture = ExtResource( 3 )
+
 [node name="gameoverlabel" parent="."]
 
-visibility/visible = false
 margin/left = 819.0
 margin/right = 1101.0
 margin/bottom = 301.0

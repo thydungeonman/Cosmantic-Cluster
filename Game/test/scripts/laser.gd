@@ -36,7 +36,7 @@ func Move(delta):
 		for orb in d:
 			if(orb.is_in_group("orb")):
 				if(orb.colour == colour):
-					orb.anim.play("burn")
+					orb.spawnBurnOrb()
 				if(orb.colour == COLOUR.GREY and !greyorbs.has(orb)):
 					greyorbs.push_back(orb)
 					orb.TakeDamage()

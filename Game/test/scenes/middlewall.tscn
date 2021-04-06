@@ -30,7 +30,7 @@ _update_shape_index = 0
 
 [node name="Sprite" type="Sprite" parent="."]
 
-transform/pos = Vector2( 4.17233e-07, 0 )
+transform/pos = Vector2( 0, 389 )
 transform/scale = Vector2( 0.666667, 1 )
 texture = ExtResource( 1 )
 

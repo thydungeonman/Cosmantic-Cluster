@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=1]
+[gd_scene load_steps=59 format=1]
 
 [ext_resource path="res://test/testboard.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/a71c466e2535309b4849dda26c8beb1d.jpg" type="Texture" id=2]
@@ -33,6 +33,7 @@
 [ext_resource path="res://test/sprites/enaP2 Sprite Sheet/lose sprite sheet2.png" type="Texture" id=31]
 [ext_resource path="res://test/sprites/enaP2 Sprite Sheet/win sprite sheet2.png" type="Texture" id=32]
 [ext_resource path="res://test/sprites/warning line.png" type="Texture" id=33]
+[ext_resource path="res://misc/fgdfg.png" type="Texture" id=34]
 
 [sub_resource type="CanvasItemShader" id=1]
 
@@ -750,6 +751,35 @@ tracks/0/keys = {
 "values": [ false ]
 }
 
+[sub_resource type="Animation" id=24]
+
+resource/name = "reveal"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 1 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("..")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": FloatArray( 1 ),
+"transitions": FloatArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "Start"
+} ]
+}
+
 [node name="testboard" type="Node2D"]
 
 script/script = ExtResource( 1 )
@@ -1104,6 +1134,23 @@ playback/default_blend_time = 0.0
 root/root = NodePath("..")
 anims/blink = SubResource( 22 )
 anims/rest = SubResource( 23 )
+playback/active = true
+playback/speed = 1.0
+blend_times = [  ]
+autoplay = ""
+
+[node name="smoke" type="Sprite" parent="."]
+
+transform/pos = Vector2( 960, 540 )
+z/z = 4
+texture = ExtResource( 34 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="smoke"]
+
+playback/process_mode = 1
+playback/default_blend_time = 0.0
+root/root = NodePath("..")
+anims/reveal = SubResource( 24 )
 playback/active = true
 playback/speed = 1.0
 blend_times = [  ]

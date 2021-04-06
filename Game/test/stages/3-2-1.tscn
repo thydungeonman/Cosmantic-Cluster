@@ -1,11 +1,16 @@
-[gd_scene load_steps=3 format=1]
+[gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://test/aiboard.tscn" type="PackedScene" id=1]
 [ext_resource path="res://test/stages/scripts/3-2-1.gd" type="Script" id=2]
+[ext_resource path="res://boards/stage 3 and 4 route 2 beach path.png" type="Texture" id=3]
 
 [node name="3-2-1" instance=ExtResource( 1 )]
 
 script/script = ExtResource( 2 )
+
+[node name="background" parent="."]
+
+texture = ExtResource( 3 )
 
 
 [editable path="wall"]

@@ -88,11 +88,14 @@ func _process(delta):
 	
 				
 
+func LoadBoard():
+	get_tree().change_scene("res://test/testboard.tscn")
+
 func _fixed_process(delta):
 #	print(str(get_progress(player1currentpath)))
 	
 	if(Input.is_action_pressed("ui_enter")):
-		get_tree().change_scene("res://test/testboard.tscn")
+		get_node("AnimationPlayer").play("mirrors")
 	
 	
 	if(Input.is_action_pressed("ui_select")):
@@ -282,3 +285,6 @@ func _fixed_process(delta):
 			print(player1hover)
 	else:
 		player1pressing = false
+
+func SmokeAndMirrors():
+	

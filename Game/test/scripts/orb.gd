@@ -1019,4 +1019,12 @@ func spawnFallOrb():
 	fallorb.changeColour(colour)
 	fallorb.setRot(get_node("Sprite").get_rot())
 
+func spawnBurnOrb():
+	var burnorb = load("res://test/scenes/burnorb.tscn").instance()
+	get_parent().add_child(burnorb)
+	burnorb.set_global_pos(get_global_pos())
+	burnorb.changeColour(colour)
+	burnorb.setRot(get_node("Sprite").get_rot())
+	BecomeEthereal()
+	Die()
 

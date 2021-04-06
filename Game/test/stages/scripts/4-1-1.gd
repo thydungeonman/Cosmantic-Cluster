@@ -221,3 +221,6 @@ func GeneratePlayer2Flag():
 	p2flag.set_pos(p2flagspot)
 	print(p2flag.get_pos())
 	print("flag pos")
+
+func Win():
+	get_tree().change_scene("res://test/stages/4-1-2.tscn")

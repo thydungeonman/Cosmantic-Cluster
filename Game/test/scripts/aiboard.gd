@@ -47,7 +47,7 @@ var leftoverorbs = []
 var orb; #the newest orb
 
 onready var p1launcher = get_node("p1launcher")
-var p2launcher = null
+onready var p2launcher = get_node("ailauncher")
 var p2launcherpos = Vector2(1447,980)
 
 var p1flag #flag orbs
@@ -89,7 +89,9 @@ func _ready():
 	seed(randseed)
 	print("This levels seed is " + str(randseed))
 	
-	GenerateAILauncher()
+#	GenerateAILauncher()
+	p2launcher.set_name("p2launcher")
+	p2launcher.player = p2launcher.PLAYER.PLAYER2
 	
 	GenerateBoardP1()
 	GenerateBoardP2()
@@ -304,10 +306,9 @@ func GenerateEvenRow(xoffset, yoffset, width, player):
 		orbsonboard.push_front(orb)
 
 func GenerateAILauncher():
-	p2launcher = preload("res://test/scenes/ailauncher.tscn").instance()
-	add_child(p2launcher)
-	p2launcher.set_name("p2launcher")
-	p2launcher.player = p2launcher.PLAYER.PLAYER2
+#	p2launcher = preload("res://test/scenes/ailauncher.tscn").instance()
+#	add_child(p2launcher)
+	
 	p2launcher.set_pos(p2launcherpos)
 #
 #func GenerateP2Launcher():
@@ -911,22 +912,28 @@ func GameOver(gameoverstring,winner):
 		print("one win")
 		animenap1.play("ena win")
 		animenap2.play("enap2 lose")
+		get_node("nextroundplayer").play("win")
 	elif(winner == PLAYER.PLAYER2):
 		print("2 win")
 		animenap1.play("ena lose")
 		animenap2.play("enap2 win")
+		get_node("replaybutton").set_hidden(false)
+		get_node("replaybutton").set_disabled(false)
+		get_node("quitbutton").set_hidden(false)
+		get_node("quitbutton").set_disabled(false)
+		
 	else:
 		animenap1.play("ena lose")
 		animenap2.play("enap2 lose")
 	get_node("screendim").set_hidden(false)
-	get_node("replaybutton").set_hidden(false)
+	
 	get_node("gameoverlabel").set_text(gameoverstring)
 	get_node("gameoverlabel").set_hidden(false)
-	get_node("replaybutton").set_disabled(false)
-	get_node("quitbutton").set_hidden(false)
-	get_node("quitbutton").set_disabled(false)
+	
+	
 	get_node("Timer").set_active(false)
 	p2launcher.state = 7 #stop ai
+	
 	
 
 func _on_replaybutton_pressed():
@@ -1123,6 +1130,11 @@ func DeathLineWarningp2():
 	if(get_node("p2deathlineplayer").is_playing()):
 		get_node("p2deathlineplayer").play("rest")
 
+func Win():
+	#override in levels
+	#load partner level
+	#in case of second level maybe play end cutscene and return to map
+	pass
 
 #var board = [
 #[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE], #13 1
