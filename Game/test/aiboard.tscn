@@ -83,10 +83,6 @@ autoplay = ""
 
 editor/display_folded = false
 
-[node name="smoke" parent="."]
-
-visibility/visible = false
-
 [node name="ailauncher" parent="." instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 1445, 980 )
