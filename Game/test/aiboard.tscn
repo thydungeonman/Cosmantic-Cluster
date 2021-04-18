@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=1]
+[gd_scene load_steps=7 format=1]
 
 [ext_resource path="res://test/testboard.tscn" type="PackedScene" id=1]
 [ext_resource path="res://test/scripts/aiboard.gd" type="Script" id=2]
-[ext_resource path="res://test/sprites/board/grass ground test.png" type="Texture" id=3]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/Ena Idle Temp sprite sheet.png" type="Texture" id=4]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Ena Idle Temp sprite sheet2.png" type="Texture" id=5]
-[ext_resource path="res://test/scenes/ailauncher.tscn" type="PackedScene" id=6]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/Ena Idle Temp sprite sheet.png" type="Texture" id=3]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Ena Idle Temp sprite sheet2.png" type="Texture" id=4]
+[ext_resource path="res://test/scenes/ailauncher.tscn" type="PackedScene" id=5]
 
 [sub_resource type="Animation" id=1]
 
@@ -51,6 +50,10 @@ transform/pos = Vector2( 960, 660 )
 transform/scale = Vector2( 1, 1.29606 )
 z/z = -2
 
+[node name="p1panel" parent="."]
+
+texture = null
+
 [node name="gameoverlabel" parent="."]
 
 margin/left = 405.0
@@ -59,19 +62,16 @@ margin/right = 1515.0
 [node name="ground" parent="."]
 
 transform/pos = Vector2( 960, 1070 )
-transform/rot = 180.0
-transform/scale = Vector2( 1, 1 )
 z/z = -3
-texture = ExtResource( 3 )
 
 [node name="ena" parent="."]
 
-texture = ExtResource( 4 )
+texture = ExtResource( 3 )
 hframes = 4
 
 [node name="enaP2" parent="."]
 
-texture = ExtResource( 5 )
+texture = ExtResource( 4 )
 hframes = 4
 frame = 3
 
@@ -83,7 +83,7 @@ autoplay = ""
 
 editor/display_folded = false
 
-[node name="ailauncher" parent="." instance=ExtResource( 6 )]
+[node name="ailauncher" parent="." instance=ExtResource( 5 )]
 
 transform/pos = Vector2( 1445, 980 )
 z/z = -1

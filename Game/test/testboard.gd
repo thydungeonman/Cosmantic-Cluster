@@ -24,6 +24,15 @@ const GREEN = "res://test/scenes/greenorb.tscn"
 const WHITE = "res://test/scenes/whiteorb.tscn"
 const RED = "res://test/scenes/redorb.tscn"
 
+const YELLOWP = "res://test/sprites/Ability panels/Yellow panel.png"
+const BLUEP = "res://test/sprites/Ability panels/Blue panel.png"
+const ORANGEP = "res://test/sprites/Ability panels/Orange panel.png"
+const PURPLEP = "res://test/sprites/Ability panels/Purple panel.png"
+const BLACKP = "res://test/sprites/Ability panels/Black panel.png"
+const GREENP = "res://test/sprites/Ability panels/Green panel.png"
+const WHITEP = "res://test/sprites/Ability panels/White panel.png"
+const REDP = "res://test/sprites/Ability panels/Red panel.png"
+
 onready var music = get_node("backgroundmusic")
 onready var sfx = get_node("SamplePlayer2D")
 onready var anim = get_node("AnimationPlayer")
@@ -31,6 +40,7 @@ onready var animenap1 = get_node("enaplayer")
 onready var animenap2 = get_node("enaP2player")
 onready var animdeathlinep1 = get_node("p1deathlineplayer")
 onready var animdeathlinep2 = get_node("p2deathlineplayer")
+
 
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width+
 
@@ -63,6 +73,8 @@ var p1isnegated = false # these are for when a player has their next ability neg
 var p2isnegated = false
 onready var p1abilitylabel = get_node("p1combo")
 onready var p2abilitylabel = get_node("p2combo")
+onready var p1panel = get_node("p1panel")
+onready var p2panel = get_node("p2panel")
 
 var p1isdark = false
 var p1darktime = 5.00
@@ -302,24 +314,41 @@ func HandleAbilityCombo(colour,player):
 			combo = abilitycombop1
 		if(lastusedcolourp1 != COLOUR.BLUE):
 			if(colour == COLOUR.BLACK):
-				get_node("p1combo").set_text("BLACK ABILITY X")
+#				get_node("p1combo").set_text("BLACK ABILITY X")
+				var panel = preload(BLACKP)
+				p1panel.set_texture(panel)
 			elif(colour == COLOUR.BLUE):
-				get_node("p1combo").set_text("BLUE ABILITY X")
+				pass
+#				get_node("p1combo").set_text("BLUE ABILITY X")
 			elif(colour == COLOUR.GREEN):
-				get_node("p1combo").set_text("GREEN ABILITY X")
+#				get_node("p1combo").set_text("GREEN ABILITY X")
+				var panel = preload(GREENP)
+				p1panel.set_texture(panel)
 			elif(colour == COLOUR.ORANGE):
-				get_node("p1combo").set_text("ORANGE ABILITY X")
+#				get_node("p1combo").set_text("ORANGE ABILITY X")
+				var panel = preload(ORANGEP)
+				p1panel.set_texture(panel)
 			elif(colour == COLOUR.PURPLE):
-				get_node("p1combo").set_text("PURPLE ABILITY X")
+#				get_node("p1combo").set_text("PURPLE ABILITY X")
+				var panel = preload(PURPLEP)
+				p1panel.set_texture(panel)
 			elif(colour == COLOUR.RED):
-				get_node("p1combo").set_text("RED ABILITY X")
+#				get_node("p1combo").set_text("RED ABILITY X")
+				var panel = preload(REDP)
+				p1panel.set_texture(panel)
 			elif(colour == COLOUR.WHITE):
-				get_node("p1combo").set_text("WHITE ABILITY X")
+#				get_node("p1combo").set_text("WHITE ABILITY X")
+				var panel = preload(WHITEP)
+				p1panel.set_texture(panel)
 			elif(colour == COLOUR.YELLOW):
-				get_node("p1combo").set_text("YELLOW ABILITY X")
+#				get_node("p1combo").set_text("YELLOW ABILITY X")
+				var panel = preload(YELLOWP)
+				p1panel.set_texture(panel)
 		else:
 			get_node("p1combo").set_text("BLUE ABILITY X")
-		get_node("p1combo").set_text(get_node("p1combo").get_text() + str(abilitycombop1))
+			var panel = preload(BLUEP)
+			p1panel.set_texture(panel)
+		get_node("p1combo").set_text("X" + str(abilitycombop1))
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == colour or lastusedcolourp2 == COLOUR.BLUE):
 			abilitycombop2 += 1
@@ -331,24 +360,39 @@ func HandleAbilityCombo(colour,player):
 			combo = abilitycombop2
 		if(lastusedcolourp2 != COLOUR.BLUE):
 			if(colour == COLOUR.BLACK):
-				get_node("p2combo").set_text("BLACK ABILITY X")
+#				get_node("p2combo").set_text("BLACK ABILITY X")
+				var panel = preload(BLACKP)
+				p2panel.set_texture(panel)
 			elif(colour == COLOUR.BLUE):
 				get_node("p2combo").set_text("BLUE ABILITY X")
 			elif(colour == COLOUR.GREEN):
-				get_node("p2combo").set_text("GREEN ABILITY X")
+#				get_node("p2combo").set_text("GREEN ABILITY X")
+				var panel = preload(GREENP)
+				p2panel.set_texture(panel)
 			elif(colour == COLOUR.ORANGE):
-				get_node("p2combo").set_text("ORANGE ABILITY X")
+#				get_node("p2combo").set_text("ORANGE ABILITY X")
+				var panel = preload(ORANGEP)
+				p2panel.set_texture(panel)
 			elif(colour == COLOUR.PURPLE):
-				get_node("p2combo").set_text("PURPLE ABILITY X")
+#				get_node("p2combo").set_text("PURPLE ABILITY X")
+				var panel = preload(PURPLEP)
+				p2panel.set_texture(panel)
 			elif(colour == COLOUR.RED):
-				get_node("p2combo").set_text("RED ABILITY X")
+#				get_node("p2combo").set_text("RED ABILITY X")
+				var panel = preload(REDP)
+				p2panel.set_texture(panel)
 			elif(colour == COLOUR.WHITE):
-				get_node("p2combo").set_text("WHITE ABILITY X")
+#				get_node("p2combo").set_text("WHITE ABILITY X")
+				var panel = preload(WHITEP)
+				p2panel.set_texture(panel)
 			elif(colour == COLOUR.YELLOW):
-				get_node("p2combo").set_text("YELLOW ABILITY X")
+#				get_node("p2combo").set_text("YELLOW ABILITY X")
+				var panel = preload(YELLOWP)
+				p2panel.set_texture(panel)
 		else:
-			get_node("p2combo").set_text("BLUE ABILITY X")
-		get_node("p2combo").set_text(get_node("p2combo").get_text() + str(abilitycombop2))
+			var panel = preload(BLUEP)
+			p2panel.set_texture(panel)
+		get_node("p2combo").set_text("X" + str(abilitycombop2))
 	print("colour: " + str(colour) + " combo: " +  str(abilitycombop2))
 	return combo
 
@@ -401,7 +445,7 @@ func NewHandleAbility(player):
 		elif(lastusedcolourp1 == COLOUR.PURPLE):
 			lastusedcolourp2 = COLOUR.NONE
 			abilitycombop2 = 0
-			get_node("p2combo").set_text("NONE ABILITY X0")
+			get_node("p2combo").set_text("")
 			sfx.play("moved-02-dark - Purple ability used")
 			anim.play("p1purpleability")
 			animenap1.play("ena attack")
@@ -456,7 +500,8 @@ func NewHandleAbility(player):
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
 		lastusedcolourp1 = COLOUR.NONE
 		abilitycombop1 = 0
-		get_node("p1combo").set_text("NONE ABILITY X0")
+		get_node("p1combo").set_text("")
+		p1panel.set_texture(null)
 	
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == COLOUR.BLACK): #comboable
@@ -556,7 +601,7 @@ func NewHandleAbility(player):
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
 		lastusedcolourp2 = COLOUR.NONE
 		abilitycombop2 = 0
-		get_node("p2combo").set_text("NONE ABILITY X0")
+		get_node("p2combo").set_text("")
 	
 
 
@@ -845,6 +890,8 @@ func Restart():
 	lastusedcolourp2 = COLOUR.NONE
 	abilitycombop1 = 0
 	abilitycombop2 = 0
+	p1panel.set_texture(null)
+	p2panel.set_texture(null)
 	animenap1.play("ena idle")
 	animenap2.play("enap2 idle")
 	animdeathlinep1.play("rest")
