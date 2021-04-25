@@ -531,6 +531,7 @@ func Fire():
 	#print(str(orb))
 	throwingaway = false
 	if(laserisactive):
+		get_parent().p2panel.set_texture(null)
 		Disable()
 		var laser = preload("res://test/scenes/laser.tscn").instance()
 		var c = orb.colour
@@ -553,6 +554,7 @@ func Fire():
 		orb.inlauncher = false
 		orb.Sparkle()
 		if(ischarged):
+			get_parent().p2panel.set_texture(null)
 			orb.Charge()
 			ischarged = false
 			sfx.play("electric-zap-001 - Yellow ability launched")

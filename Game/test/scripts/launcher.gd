@@ -303,6 +303,10 @@ func Fire():
 	# when orb stops check bool in orb and then activate lightning
 	print(str(orb))
 	if(laserisactive):
+		if(player == PLAYER.PLAYER1):
+			get_parent().p1panel.set_texture(null)
+		else:
+			get_parent().p2panel.set_texture(null)
 		var laser = preload("res://test/scenes/laser.tscn").instance()
 		var c = orb.colour
 		orb.queue_free()
@@ -323,6 +327,10 @@ func Fire():
 		orb.inlauncher = false
 		orb.Sparkle()
 		if(ischarged):
+			if(player == PLAYER.PLAYER1):
+				get_parent().p1panel.set_texture(null)
+			else:
+				get_parent().p2panel.set_texture(null)
 			orb.Charge()
 			ischarged = false
 			sfx.play("electric-zap-001 - Yellow ability launched")

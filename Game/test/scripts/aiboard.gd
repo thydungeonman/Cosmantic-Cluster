@@ -95,6 +95,7 @@ var rclick = false
 
 func _ready():
 	#music.play(0)
+	get_node("smoke").hide()
 	randomize()
 	var randseed = randi()
 	seed(randseed)
@@ -481,6 +482,8 @@ func NewHandleAbility(player):
 			p1launcher.HealAnim()
 		elif(lastusedcolourp1 == COLOUR.ORANGE):
 			p1launcher.ActivateLaser()
+			var panel = preload(ORANGEP)
+			p1panel.set_texture(panel)
 		elif(lastusedcolourp1 == COLOUR.PURPLE):
 			lastusedcolourp2 = COLOUR.NONE
 			abilitycombop2 = 0
@@ -533,14 +536,16 @@ func NewHandleAbility(player):
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.YELLOW):
 			p1launcher.Charge()
+			p1panel.set_texture(preload(YELLOWP))
 			if(p1isdark):
 				p1darktimer = p1darktime
 				#p1isdark = false
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
+		if(lastusedcolourp1 != COLOUR.ORANGE and lastusedcolourp1 != COLOUR.YELLOW):
+			p1panel.set_texture(null)
 		lastusedcolourp1 = COLOUR.NONE
 		abilitycombop1 = 0
 		get_node("p1combo").set_text("")
-		p1panel.set_texture(null)
 	
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == COLOUR.BLACK): #comboable
@@ -586,6 +591,7 @@ func NewHandleAbility(player):
 			p2launcher.HealAnim()
 		elif(lastusedcolourp2 == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()
+			p2panel.set_texture(preload(ORANGEP))
 		elif(lastusedcolourp2 == COLOUR.PURPLE):
 			lastusedcolourp1 = COLOUR.NONE
 			abilitycombop1 = 0
@@ -634,16 +640,17 @@ func NewHandleAbility(player):
 			sfx.play("winter wind - White ability used")
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.YELLOW):
+			p2panel.set_texture(preload(YELLOWP))
 			p2launcher.Charge()
 			if(p2isdark):
 				p2darktimer = p2darktime
 				#p2isdark = false
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
+		if(lastusedcolourp2 != COLOUR.ORANGE and lastusedcolourp2 != COLOUR.YELLOW):
+			p2panel.set_texture(null)
 		lastusedcolourp2 = COLOUR.NONE
 		abilitycombop2 = 0
 		get_node("p2combo").set_text("")
-		p2panel.set_texture(null)
-	
 
 
 

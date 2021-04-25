@@ -86,7 +86,6 @@ editor/display_folded = false
 [node name="smoke" parent="."]
 
 transform/pos = Vector2( 960, 550 )
-modulate = Color( 1, 1, 1, 0 )
 
 [node name="ailauncher" parent="." instance=ExtResource( 5 )]
 
