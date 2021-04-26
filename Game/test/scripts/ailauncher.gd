@@ -546,6 +546,8 @@ func Fire():
 		sfx.play("laser-shot-silenced - orange ability launched")
 		abilityanim.play("rest")
 	else:
+		if(get_parent().p2panel.get_texture() == get_parent().purple):
+				get_parent().p2panel.set_texture(null)
 		Disable()
 		orb.trajectory.x = trajectory.x * cos(x)
 		orb.trajectory.y = trajectory.y * sin(x)

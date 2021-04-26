@@ -70,6 +70,7 @@ func _ready():
 	
 
 func _fixed_process(delta):
+	randomize()
 	LoadOrb(delta)
 	if(player == PLAYER.PLAYER1):
 		GetAimControlsP1(delta)
@@ -320,6 +321,14 @@ func Fire():
 		sfx.play("laser-shot-silenced - orange ability launched")
 		abilityanim.play("rest")
 	else:
+		if(player == PLAYER.PLAYER1):
+			if(get_parent().p1panel.get_texture() == get_parent().purple):
+				get_parent().p1panel.set_texture(null)
+		else:
+			if(get_parent().p2panel.get_texture() == get_parent().purple):
+				get_parent().p2panel.set_texture(null)
+		
+		
 		orb.trajectory.x = trajectory.x * cos(x)
 		orb.trajectory.y = trajectory.y * sin(x)
 		orb.get_node("sparkles").set_rot(x- (PI/2))

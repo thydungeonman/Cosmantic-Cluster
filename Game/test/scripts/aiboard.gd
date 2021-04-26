@@ -89,6 +89,10 @@ var p2bluetimes = 0
 var timerpaused = false
 var timerlockout = false
 
+var p1purpletimer = 0.0
+var p2purpletimer = 0.0
+var purple = preload(PURPLEP)
+
 #test
 onready var ray = get_node("RayCast2D")
 var rclick = false
@@ -115,6 +119,26 @@ func _ready():
 	
 
 func _fixed_process(delta):
+	
+	if(p1panel.get_texture() == purple):
+		p1purpletimer += delta
+		if(p1purpletimer > 3.0):
+			p1panel.set_texture(null)
+			p1purpletimer = 0.0
+	else:
+		if(p1purpletimer != 0.0):
+			p1purpletimer = 0.0
+	
+	if(p2panel.get_texture() == purple):
+		p2purpletimer += delta
+		if(p2purpletimer > 3.0):
+			p2panel.set_texture(null)
+			p2purpletimer = 0.0
+	else:
+		if(p2purpletimer != 0.0):
+			p2purpletimer = 0.0
+	
+	
 #	for b in orbsonboardp2:
 #		if(b.istouchingflag):
 #			b.get_node("pathed").set_text("yes")
@@ -541,7 +565,7 @@ func NewHandleAbility(player):
 				p1darktimer = p1darktime
 				#p1isdark = false
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
-		if(lastusedcolourp1 != COLOUR.ORANGE and lastusedcolourp1 != COLOUR.YELLOW):
+		if(lastusedcolourp1 != COLOUR.ORANGE and lastusedcolourp1 != COLOUR.YELLOW and lastusedcolourp1 != COLOUR.PURPLE):
 			p1panel.set_texture(null)
 		lastusedcolourp1 = COLOUR.NONE
 		abilitycombop1 = 0
@@ -646,7 +670,7 @@ func NewHandleAbility(player):
 				p2darktimer = p2darktime
 				#p2isdark = false
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
-		if(lastusedcolourp2 != COLOUR.ORANGE and lastusedcolourp2 != COLOUR.YELLOW):
+		if(lastusedcolourp2 != COLOUR.ORANGE and lastusedcolourp2 != COLOUR.YELLOW and lastusedcolourp2 != COLOUR.PURPLE):
 			p2panel.set_texture(null)
 		lastusedcolourp2 = COLOUR.NONE
 		abilitycombop2 = 0

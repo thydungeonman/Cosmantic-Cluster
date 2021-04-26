@@ -783,6 +783,7 @@ tracks/1/keys = {
 
 [node name="testboard" type="Node2D"]
 
+transform/pos = Vector2( -2, 0 )
 script/script = ExtResource( 1 )
 
 [node name="background" type="Sprite" parent="."]
@@ -1150,6 +1151,7 @@ autoplay = ""
 
 [node name="smoke" type="Sprite" parent="."]
 
+visibility/visible = false
 transform/pos = Vector2( 960, 540 )
 z/z = 4
 texture = ExtResource( 35 )

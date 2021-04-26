@@ -86,6 +86,10 @@ var p2darktimer = 0.00 #timer that counts how long the darkness has gone for
 var timerpaused = false
 var timerlockout = false
 
+
+var p1purpletimer = 0.0
+var p2purpletimer = 0.0
+var purple = preload(PURPLEP)
 #test
 onready var ray = get_node("RayCast2D")
 var rclick = false
@@ -106,6 +110,24 @@ func Start():
 	set_fixed_process(true)
 
 func _fixed_process(delta):
+	
+	if(p1panel.get_texture() == purple):
+		p1purpletimer += delta
+		if(p1purpletimer > 3.0):
+			p1panel.set_texture(null)
+			p1purpletimer = 0.0
+	else:
+		if(p1purpletimer != 0.0):
+			p1purpletimer = 0.0
+	
+	if(p2panel.get_texture() == purple):
+		p2purpletimer += delta
+		if(p2purpletimer > 3.0):
+			p2panel.set_texture(null)
+			p2purpletimer = 0.0
+	else:
+		if(p2purpletimer != 0.0):
+			p2purpletimer = 0.0
 	
 	if(Input.is_action_pressed("ui_page_up")):
 		p1launcher.Charge()
@@ -447,6 +469,7 @@ func NewHandleAbility(player):
 		elif(lastusedcolourp1 == COLOUR.PURPLE):
 			lastusedcolourp2 = COLOUR.NONE
 			abilitycombop2 = 0
+			p1panel.set_texture(preload(PURPLEP))
 			get_node("p2combo").set_text("")
 			sfx.play("moved-02-dark - Purple ability used")
 			anim.play("p1purpleability")
@@ -501,7 +524,7 @@ func NewHandleAbility(player):
 				p1darktimer = p1darktime
 				#p1isdark = false
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
-		if(lastusedcolourp1 != COLOUR.ORANGE and lastusedcolourp1 != COLOUR.YELLOW):
+		if(lastusedcolourp1 != COLOUR.ORANGE and lastusedcolourp1 != COLOUR.YELLOW and lastusedcolourp1 != COLOUR.PURPLE):
 			p1panel.set_texture(null)
 		get_node("p1combo").set_text("")
 		lastusedcolourp1 = COLOUR.NONE
@@ -606,7 +629,7 @@ func NewHandleAbility(player):
 				p2darktimer = p2darktime
 				#p2isdark = false
 				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
-		if(lastusedcolourp2 != COLOUR.ORANGE and lastusedcolourp2 != COLOUR.YELLOW):
+		if(lastusedcolourp2 != COLOUR.ORANGE and lastusedcolourp2 != COLOUR.YELLOW and lastusedcolourp2 != COLOUR.PURPLE):
 			p2panel.set_texture(null)
 		lastusedcolourp2 = COLOUR.NONE
 		abilitycombop2 = 0
@@ -687,7 +710,7 @@ func HandleAbility(colour,player):
 		if(colour == COLOUR.PURPLE):
 			p1isnegated = true
 			sfx.play("moved-02-dark - Purple ability used")
-			get_node("p1combo").set_text("NONE ABILITY X0")
+			get_node("p1combo").set_text("")
 		if(colour == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()
 	elif(player == PLAYER.PLAYER2 and p2isnegated):
