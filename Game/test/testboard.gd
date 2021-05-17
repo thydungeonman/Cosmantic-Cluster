@@ -1,6 +1,9 @@
 extends Node2D
 
 
+enum CHAR {ENA,ETHAN,ARNIE,MILISSA,TAMBRE,KOTA,GRUMPLE,CHROSNOW,ALISIA,MACCUS,KURTIS,
+JOKER,JASPER,CARL,GRIFFENHOOD,OSCAR,LUCY,CRANIAL,DAEGEL,SEILITH}
+
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
@@ -41,6 +44,11 @@ onready var animenap2 = get_node("enaP2player")
 onready var animdeathlinep1 = get_node("p1deathlineplayer")
 onready var animdeathlinep2 = get_node("p2deathlineplayer")
 
+var charp1
+var charp1anim
+
+var charp2
+var charp2anim
 
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width+
 
@@ -93,11 +101,65 @@ var purple = preload(PURPLEP)
 #test
 onready var ray = get_node("RayCast2D")
 var rclick = false
+const ENA = "res://test/scenes/characters/ena.tscn"
+const ARNIE = "res://test/scenes/characters/arnie.tscn"
+const ETHAN = "res://test/scenes/characters/ethan.tscn"
+const KOTA = "res://test/scenes/characters/kota.tscn"
+const GRUMPLE = "res://test/scenes/characters/grumple.tscn"
+const TAMBRE = "res://test/scenes/characters/tambre.tscn"
+const MILISSA = "res://test/scenes/characters/milissa.tscn"
+const CRANIAL = "res://test/scenes/characters/cranial.tscn"
+const CHROSNOW = "res://test/scenes/characters/chrosnow.tscn"
 
 func _ready():
 #	music.play(0)
 	get_node("smoke/AnimationPlayer").play("reveal")
-	pass
+	
+	if(global.pickedcharp1 == CHAR.ENA):
+		charp1 = load(ENA).instance()
+	elif(global.pickedcharp1 == CHAR.ETHAN):
+		charp1 = load(ETHAN).instance()
+	elif(global.pickedcharp1 == CHAR.ARNIE):
+		charp1 = load(ARNIE).instance()
+	elif(global.pickedcharp1 == CHAR.KOTA):
+		charp1 = load(KOTA).instance()
+	elif(global.pickedcharp1 == CHAR.GRUMPLE):
+		charp1 = load(GRUMPLE).instance()
+	elif(global.pickedcharp1 == CHAR.TAMBRE):
+		charp1 = load(TAMBRE).instance()
+	elif(global.pickedcharp1 == CHAR.MILISSA):
+		charp1 = load(MILISSA).instance()
+	elif(global.pickedcharp1 == CHAR.CRANIAL):
+		charp1 = load(CRANIAL).instance()
+	elif(global.pickedcharp1 == CHAR.CHROSNOW):
+		charp1 = load(CHROSNOW).instance()
+	
+	charp1.set_pos(Vector2(270,960))
+	add_child(charp1)
+	charp1anim = charp1.get_node("AnimationPlayer")
+	
+	if(global.pickedcharp2 == CHAR.ENA):
+		charp2 = load(ENA).instance()
+	elif(global.pickedcharp2 == CHAR.ETHAN):
+		charp2 = load(ETHAN).instance()
+	elif(global.pickedcharp2 == CHAR.ARNIE):
+		charp2 = load(ARNIE).instance()
+	elif(global.pickedcharp2 == CHAR.KOTA):
+		charp2 = load(KOTA).instance()
+	elif(global.pickedcharp2 == CHAR.GRUMPLE):
+		charp2 = load(GRUMPLE).instance()
+	elif(global.pickedcharp2 == CHAR.TAMBRE):
+		charp2 = load(TAMBRE).instance()
+	elif(global.pickedcharp2 == CHAR.MILISSA):
+		charp2 = load(MILISSA).instance()
+	elif(global.pickedcharp2 == CHAR.CRANIAL):
+		charp2 = load(CRANIAL).instance()
+	elif(global.pickedcharp2 == CHAR.CHROSNOW):
+		charp2 = load(CHROSNOW).instance()
+	
+	charp2.set_pos(Vector2(1240,960))
+	add_child(charp2)
+	charp2anim = charp2.get_node("AnimationPlayer")
 
 
 func Start():
@@ -429,6 +491,7 @@ func NewHandleAbility(player):
 				p2darktime += (abilitycombop1 - 2)
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
+			charp1anim.play("attack")
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.BLUE): #comboable
 			if(abilitycombop1 > 8):
@@ -443,6 +506,7 @@ func NewHandleAbility(player):
 			
 			for i in range(times):
 				P1BlueAbility()
+			charp1anim.play("attack")
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.GREEN): #comboable
 			if(abilitycombop1 > 8):
@@ -473,6 +537,7 @@ func NewHandleAbility(player):
 			get_node("p2combo").set_text("")
 			sfx.play("moved-02-dark - Purple ability used")
 			anim.play("p1purpleability")
+			charp1anim.play("attack")
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.RED): #comboable
 			print("red combo activated")
@@ -491,7 +556,9 @@ func NewHandleAbility(player):
 			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 			p2launcher.DamageAnim()
+			charp1anim.play("attack")
 			animenap1.play("ena attack")
+			charp2anim.play("damage")
 			animenap2.play("enap2 damage")
 			print(increase)
 			IsPlayerDead()
@@ -516,6 +583,7 @@ func NewHandleAbility(player):
 			p2launcher.Freeze(freezetime,tier)
 			
 			sfx.play("winter wind - White ability used")
+			charp1anim.play("attack")
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.YELLOW):
 			p1launcher.Charge()
@@ -538,6 +606,7 @@ func NewHandleAbility(player):
 				p1darktime += (abilitycombop2 - 2)
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
+			charp2anim.play("attack")
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.BLUE): #comboable
 			if(abilitycombop2 > 8):
@@ -552,6 +621,7 @@ func NewHandleAbility(player):
 			
 			for i in range(times):
 				P2BlueAbility()
+			charp2anim.play("attack")
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.GREEN): #comboable
 			
@@ -581,6 +651,7 @@ func NewHandleAbility(player):
 			get_node("p1combo").set_text("NONE ABILITY X0")
 			sfx.play("moved-02-dark - Purple ability used")
 			anim.play("p2purpleability")
+			charp2anim.play("attack")
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.RED): #comboable
 			print("red combo activated")
@@ -598,7 +669,9 @@ func NewHandleAbility(player):
 			UpdateHealthLabels()
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 			p1launcher.DamageAnim()
+			charp1anim.play("damage")
 			animenap1.play("ena damage")
+			charp2anim.play("attack")
 			animenap2.play("enap2 attack")
 			IsPlayerDead()
 		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
@@ -621,6 +694,7 @@ func NewHandleAbility(player):
 			print(tier)
 			p1launcher.Freeze(freezetime,tier)
 			sfx.play("winter wind - White ability used")
+			charp2anim.play("attack")
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.YELLOW):
 			p2launcher.Charge()
@@ -924,6 +998,8 @@ func Restart():
 	abilitycombop2 = 0
 	p1panel.set_texture(null)
 	p2panel.set_texture(null)
+	charp1anim.play("idle")
+	charp2anim.play("idle")
 	animenap1.play("ena idle")
 	animenap2.play("enap2 idle")
 	animdeathlinep1.play("rest")
@@ -947,15 +1023,21 @@ func UpdateHealthLabels():
 func GameOver(gameoverstring,winner):
 	if(winner == PLAYER.PLAYER1):
 		print("one win")
+		charp1anim.play("win")
 		animenap1.play("ena win")
+		charp2anim.play("lose")
 		animenap2.play("enap2 lose")
 	elif(winner == PLAYER.PLAYER2):
 		print("2 win")
+		charp1anim.play("lose")
 		animenap1.play("ena lose")
+		charp2anim.play("win")
 		animenap2.play("enap2 win")
 	else:
+		charp1anim.play("lose")
 		animenap1.play("ena lose")
 		animenap2.play("enap2 lose")
+		charp2anim.play("lose")
 	get_node("screendim").set_hidden(false)
 	get_node("replaybutton").set_hidden(false)
 	get_node("gameoverlabel").set_text(gameoverstring)

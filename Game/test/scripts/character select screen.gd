@@ -95,8 +95,16 @@ func _fixed_process(delta):
 #	print(str(get_progress(player1currentpath)))
 	
 	if(Input.is_action_pressed("ui_enter")):
+		for character in range(characters.size()):
+			print(str(character) + str(characters[character]))
 		get_node("AnimationPlayer").play("mirrors")
-	
+		for char in characters:
+			if(char.get_child(0).position == player1hover):
+				print("player 1")
+				print(str(char.get_child(0).character))
+				global.pickedcharp1 = char.get_child(0).character
+			if(char.get_child(0).position == player2hover):
+				global.pickedcharp2 = char.get_child(0).character
 	
 	if(Input.is_action_pressed("ui_select")):
 		if(!holding):
@@ -134,7 +142,7 @@ func _fixed_process(delta):
 					player2name.set_text(char.get_child(0).name)
 					found = true
 					break
-			if(!found):
+			if(!found): 
 				player2hover[0] += 1
 	elif(Input.is_action_pressed("ui_right")):
 		#go right
@@ -287,4 +295,4 @@ func _fixed_process(delta):
 		player1pressing = false
 
 func SmokeAndMirrors():
-	
+	pass

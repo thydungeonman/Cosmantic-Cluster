@@ -109,6 +109,9 @@ func _ready():
 	p2launcher.set_name("p2launcher")
 	p2launcher.player = p2launcher.PLAYER.PLAYER2
 	
+	get_node("ena").show()
+	get_node("enaP2").show()
+	
 	GenerateBoardP1()
 	GenerateBoardP2()
 	GeneratePlayer1Flag()

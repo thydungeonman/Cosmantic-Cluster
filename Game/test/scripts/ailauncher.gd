@@ -686,10 +686,12 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 	for target in straightshottargets.keys():
 		var group = []
 		group = target.Search(1,target.colour,group)
+		#group.size?
 		if(group < 0):
 			continue
 		if(target.isflag):
 			continue
+		#change to vertical position above death line
 		if(get_pos().distance_to(target.get_pos()) < 130):
 			print("TOO CLOSE!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STRAIGHT")
 			continue
@@ -716,6 +718,7 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 			continue
 		if(target.isflag):
 			continue
+		#pointless
 		if(get_pos().distance_to(target.get_pos()) < 160):
 			print("TOO CLOSE")
 			continue

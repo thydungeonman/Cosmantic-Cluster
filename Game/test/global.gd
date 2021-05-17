@@ -1,9 +1,10 @@
 extends Node
 
+const ARNIE = "res://test/scenes/characters/arnie.tscn"
+const ENA = "res://test/scenes/characters/ena.tscn"
 
-
-
-
+var pickedcharp1 = 0
+var pickedcharp2 = 0
 
 
 func _ready():
