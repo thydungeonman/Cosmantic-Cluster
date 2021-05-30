@@ -17,6 +17,8 @@ const RED = "res://test/scenes/redorb.tscn"
 var p1flagspot
 var p2flagspot
 
+var partner = "res://test/stages/4-1-2.tscn"
+
 var genavailablecolours = [GC.RED,GC.GREEN,GC.BLUE,GC.YELLOW,GC.ORANGE]
 var launcheravailablecolours = [COLOUR.RED,COLOUR.GREEN,COLOUR.BLUE,COLOUR.YELLOW,GC.ORANGE]
 var board = [
@@ -222,5 +224,8 @@ func GeneratePlayer2Flag():
 	print(p2flag.get_pos())
 	print("flag pos")
 
+
+#maybe at first just have a button that shows up after the end of a match run this function
+#later on just run the function automatically after victory
 func Win():
-	get_tree().change_scene("res://test/stages/4-1-2.tscn")
+	get_tree().change_scene(partner)

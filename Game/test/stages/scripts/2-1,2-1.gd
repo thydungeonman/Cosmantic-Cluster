@@ -14,6 +14,7 @@ const GREEN = "res://test/scenes/greenorb.tscn"
 const WHITE = "res://test/scenes/whiteorb.tscn"
 const RED = "res://test/scenes/redorb.tscn"
 
+
 var p1flagspot
 var p2flagspot
 

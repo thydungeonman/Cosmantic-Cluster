@@ -692,9 +692,12 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 		if(target.isflag):
 			continue
 		#change to vertical position above death line
-		if(get_pos().distance_to(target.get_pos()) < 130):
-			print("TOO CLOSE!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STRAIGHT")
+		if(target.get_pos().y > 850):
+			print(" NEW TOO CLOSE")
 			continue
+#		if(get_pos().distance_to(target.get_pos()) < 130):
+#			print("TOO CLOSE!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STRAIGHT")
+#			continue
 		potentialtargets.push_back(target)
 	
 	for target in bounceshottargets.keys():
@@ -704,9 +707,12 @@ func ThrowAway2(straightshottargets,bounceshottargets,warpshottargets,emptyshots
 			continue
 		if(target.isflag):
 			continue
-		if(get_pos().distance_to(target.get_pos()) < 200):
-			print("TOO CLOSE!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! BOUNCE")
+		if(target.get_pos().y > 850):
+			print(" NEW TOO CLOSE")
 			continue
+#		if(get_pos().distance_to(target.get_pos()) < 200):
+#			print("TOO CLOSE!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! BOUNCE")
+#			continue
 		potentialtargets.push_back(target)
 	
 	
@@ -1095,6 +1101,7 @@ func FullScan2():
 	var emptyshots = [] #currentpoints that don't hit an orb, meaning a clear shot at the warp
 	var warpbouncedict = {} #currentpoints and bounced warp positions
 	var warpbouncepointdict = {} #currentpoints and orbs
+	var badtargets = []
 	
 	var lastorb = null
 	var currentorb = null
@@ -1291,7 +1298,7 @@ func FullScan2():
 					bail1 = true 
 					fulltargetlist.remove(fulltargetlist.find(borbs[0]))
 					print("removed " + str(borbs[0].get_name()) + " would have matched flag")
-					print("SUPREME ULTRA BAILINGLLLDKFJSDKFJSLDF")
+					badtargets.push_back(borbs[0])
 					continue
 			
 			#bail if matching this orb would drop the flag orb
@@ -1304,6 +1311,7 @@ func FullScan2():
 				if(get_parent().p2flag.LookForTop2(a) == false):
 					bail1 = true
 					fulltargetlist.remove(fulltargetlist.find(borbs[0]))
+					badtargets.push_back(borbs[0])
 					print("removed " + str(borbs[0].get_name()) + " would have dropped flag")
 				for corb in nearest:
 					corb.isexcluded = false
@@ -1343,6 +1351,7 @@ func FullScan2():
 						fulltargetlist.remove(fulltargetlist.find(borb))
 						print("removed " + str(borb.get_name()) + " would have matched flag")
 						bail2 = true
+						badtargets.push_back(borb)
 				if(!bail2):
 					print("bail 2 is false")
 					var nearest = []
@@ -1354,6 +1363,7 @@ func FullScan2():
 						bail2 = true
 						fulltargetlist.remove(fulltargetlist.find(borb))
 						print("removed " + str(borb.get_name()) + " would have dropped flag BIG TIMEEEEEEEEEE")
+						badtargets.push_back(borb)
 					for corb in nearest:
 						corb.isexcluded = false
 					
@@ -1411,6 +1421,19 @@ func FullScan2():
 				print("TROWING AWAY AN ORBBBBBB")
 				print("throwing away an orb")
 				print("orb is "+ orb.get_name())
+				#any target in the dicts that is not in the fulltargetlist
+				#should be removed before throwing away
+				#since they were found bad for checks.
+				#or maybe just remove from their dict in the first place?
+				
+				for target in badtargets:
+					if(pointdict.has(target)):
+						print("threw out some bad ones!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+						pointdict.erase(target)
+					if(bouncepointdict.has(target)):
+						print("threw out some bad ones!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+						bouncepointdict.erase(target)
+				
 				ThrowAway2(pointdict,bouncepointdict,warppointdict,emptyshots)
 				return
 		else:

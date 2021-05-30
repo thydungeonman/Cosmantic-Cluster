@@ -99,7 +99,7 @@ var rclick = false
 
 func _ready():
 	#music.play(0)
-	get_node("smoke").hide()
+#	get_node("smoke").hide()
 	randomize()
 	var randseed = randi()
 	seed(randseed)
@@ -227,7 +227,9 @@ func GenerateBoardP1():
 		elif(i%2 == 0):
 			GenerateEvenRow(xoffset, yoffset, orbwidth,1)
 		yoffset += orbwidth * Vector2(1.07337749,1.8417709).normalized().y;
-#		print(str(orbwidth))
+		print("yoffset")
+		print(yoffset)
+
 
 func GenerateBoardP2():
 	#generate board based off of the width of the screen and the width of an orb
@@ -993,7 +995,13 @@ func GameOver(gameoverstring,winner):
 		print("one win")
 		animenap1.play("ena win")
 		animenap2.play("enap2 lose")
-		get_node("nextroundplayer").play("win")
+		get_node("replaybutton").set_hidden(false)
+		get_node("replaybutton").set_disabled(false)
+		get_node("quitbutton").set_hidden(false)
+		get_node("quitbutton").set_disabled(false)
+		get_node("nextlevelbutton").set_disabled(false)
+		get_node("nextlevelbutton").set_hidden(false)
+#		get_node("nextroundplayer").play("win")
 	elif(winner == PLAYER.PLAYER2):
 		print("2 win")
 		animenap1.play("ena lose")
@@ -1024,6 +1032,8 @@ func _on_replaybutton_pressed():
 	get_node("replaybutton").set_disabled(true)
 	get_node("quitbutton").set_hidden(true)
 	get_node("quitbutton").set_disabled(true)
+	get_node("nextlevelbutton").set_disabled(true)
+	get_node("nextlevelbutton").set_hidden(true)
 	Restart()
 
 
@@ -1211,7 +1221,9 @@ func DeathLineWarningp2():
 	if(get_node("p2deathlineplayer").is_playing()):
 		get_node("p2deathlineplayer").play("rest")
 
+
 func Win():
+	print("no next level")
 	#override in levels
 	#load partner level
 	#in case of second level maybe play end cutscene and return to map
@@ -1233,3 +1245,11 @@ func Win():
 #,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 13
 #,[GC.BLANKROW] #12 14
 #]
+
+
+
+
+func _on_nextlevelbutton_pressed():
+	print("step one")
+	Win()
+	pass # replace with function body

@@ -779,6 +779,7 @@ func PrintNeighbors():
 
 func _on_orb_mouse_enter():
 	pass
+	print(get_pos())
 #	PrintNeighbors()
 	var ar = []
 	print(PathToTop2(ar))
