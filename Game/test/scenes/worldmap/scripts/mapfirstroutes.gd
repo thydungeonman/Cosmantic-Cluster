@@ -1,5 +1,9 @@
 extends Node2D
 
+
+#get approprate level to start at the right place
+#each level should just have a beat button for testing
+
 var day = 0
 
 
@@ -21,7 +25,14 @@ var selecting = false
 var waittimer = 0
 var selectedroute = 0
 var selectedlevel = 0
-var routes = [[0,1],[0,1,2,3,4,5],[0,1,2,3,4,5]]
+var routes = [[0,1,2],[0,1,2,3,4,5,6],[0,1,2,3,4,5,6]]
+var fountainstages = ["","res://test/stages/1-1-1.tscn","res://test/stages/2-1-1.tscn"] #maybe add black level at the start
+var mountainstages = ["","res://test/stages/3-1-1.tscn","res://test/stages/4-1-1.tscn",
+"res://test/stages/5-1-1.tscn","res://test/stages/6-1-1.tscn","res://test/stages/7-1-1.tscn",
+"res://test/stages/8-1-1.tscn"]
+var mansionstages =  ["","res://test/stages/3-2-1.tscn","res://test/stages/4-2-1.tscn",
+"res://test/stages/5-2-1.tscn","res://test/stages/6-2-1.tscn","res://test/stages/7-2-1.tscn",
+"res://test/stages/8-2-1.tscn"]
 var goaround = 0
 var pressing = false
 
@@ -30,13 +41,23 @@ get_node("ss6"),get_node("ss7"),get_node("ss8"),get_node("ss9"),get_node("ss10")
 
 
 func _ready():
-	set_fixed_process(true)
+	if(global.comingbackfromlevel):
+		BackFromLevel()
+		
+		moving = true
+		if(selectedroute == 0 and positionpath == 2):
+			moving = false
+		if(selectedroute == 1 and positionpath == 6):
+			moving = false
+		if(selectedroute == 2 and positionpath == 6):
+			moving = false
+#	set_fixed_process(true)
 	set_process(true)
 
 	pass
 
 func _process(delta):
-	
+	get_node("positionpath").text = str(positionpath)
 	if(Input.is_action_pressed("ui_select")):
 		if(!pressing):
 			pressing = true
@@ -85,12 +106,17 @@ func DoLevel():
 		s = 2
 	elif(selectedroute == 2):
 		s = 8
-	selectors[positionpath + s].get_node("AnimationPlayer").play("complete")
+#	selectors[positionpath + s].get_node("AnimationPlayer").play("complete")
+	
+	if(positionpath == 0 and selectedroute == 0): #particular exception for the first level
+#		get_tree().change_scene(fountainstages[0])
+		pass
 	positionpath += 1
 	
 	
 	print(positionpath + s)
 	if(positionpath > routes[selectedroute].size() - 1): #if you are at the end of your route
+		print("got to the enddddddddd")
 		if(selectedroute == 0 and goaround == 0):
 			#ask player to pick route
 			print("HELLLLLLLOW")
@@ -99,6 +125,7 @@ func DoLevel():
 			get_node("buttonmountain").show()
 			
 		elif(selectedroute == 0 and goaround == 1):
+			print("TIME TO GO PLACES")
 			enafountain.remove_child(player)
 			if(wentmountain):
 				selectedroute = 2
@@ -135,8 +162,19 @@ func DoLevel():
 			selectors[1].get_node("AnimationPlayer").play("rest")
 			fountainmansion.set_unit_offset(0)
 	else:
-		if positionpath == 0:
-			pass
+		print(positionpath)
+		if(selectedroute == 0):
+			GoingToLevel()
+			get_tree().change_scene(fountainstages[positionpath])
+		if(selectedroute == 1):
+			GoingToLevel()
+			get_tree().change_scene(mountainstages[positionpath])
+		if(selectedroute == 2):
+			GoingToLevel()
+			get_tree().change_scene((mansionstages[positionpath]))
+		
+#		if positionpath == 0:
+#			pass
 #			get_tree().change_scene("res://test/stages/1-1,2-1.tscn")
 		#reveal next level selector
 		#play cutscene then play level
@@ -144,7 +182,7 @@ func DoLevel():
 		s = 2
 	elif(selectedroute == 2):
 		s = 8
-	selectors[positionpath + s].get_node("AnimationPlayer").play("fadein")
+#	selectors[positionpath + s].get_node("AnimationPlayer").play("fadein")
 	if(selecting):
 		selectors[8].get_node("AnimationPlayer").play("fadein")
 	
@@ -173,3 +211,38 @@ func _on_buttonmansion_button_up():
 	get_node("buttonmansion").hide()
 	get_node("buttonmountain").hide()
 	pass # replace with function body
+
+#going to level, send positions to global
+func GoingToLevel():
+	global.positionpath = positionpath
+	global.positionroute = positionroute
+	global.goaround = goaround
+	global.selectedlevel = selectedlevel
+	global.selectedroute = selectedroute
+	global.mountainoffset = fountainmountain.get_unit_offset()
+	global.mansionoffset = fountainmansion.get_unit_offset()
+	global.fountainoffset = enafountain.get_unit_offset()
+	global.wentmountain = wentmountain
+
+#beat level, load previous positions
+func BackFromLevel():
+	positionpath = global.positionpath
+	positionroute = global.positionroute
+	goaround = global.goaround
+	selectedlevel = global.selectedlevel
+	selectedroute = global.selectedroute
+	wentmountain = global.wentmountain
+	print("Selected route")
+	print(selectedroute)
+	print("go around")
+	print(str(goaround))
+	if(selectedroute == 0):
+		enafountain.set_unit_offset(global.fountainoffset)
+	if(selectedroute == 1):
+		enafountain.remove_child(player)
+		fountainmountain.add_child(player)
+		fountainmountain.set_unit_offset(global.mountainoffset)
+	if(selectedroute == 2):
+		enafountain.remove_child(player)
+		fountainmansion.add_child(player)
+		fountainmansion.set_unit_offset(global.mansionoffset)

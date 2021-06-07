@@ -17,6 +17,8 @@ const RED = "res://test/scenes/redorb.tscn"
 var p1flagspot
 var p2flagspot
 
+var partner = "res://test/scenes/worldmap/scenes/mapfirstroutes.tscn"
+
 var genavailablecolours = [GC.RED,GC.GREEN,GC.BLUE,GC.YELLOW,GC.ORANGE,GC.PURPLE,GC.WHITE,GC.BLACK]
 var launcheravailablecolours = [COLOUR.RED,COLOUR.GREEN,COLOUR.BLUE,COLOUR.YELLOW,COLOUR.ORANGE,COLOUR.PURPLE,COLOUR.WHITE,COLOUR.BLACK]
 

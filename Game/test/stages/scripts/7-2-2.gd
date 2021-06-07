@@ -17,6 +17,8 @@ const RED = "res://test/scenes/redorb.tscn"
 var p1flagspot
 var p2flagspot
 
+var partner = "res://test/scenes/worldmap/scenes/mapfirstroutes.tscn"
+
 var genavailablecolours = [GC.RED,GC.GREEN,GC.BLUE,GC.YELLOW,GC.ORANGE,GC.PURPLE,GC.WHITE]
 var launcheravailablecolours = [COLOUR.RED,COLOUR.GREEN,COLOUR.BLUE,COLOUR.YELLOW,COLOUR.ORANGE,COLOUR.PURPLE,COLOUR.WHITE]
 var board = [
@@ -221,3 +223,7 @@ func GeneratePlayer2Flag():
 	p2flag.set_pos(p2flagspot)
 	print(p2flag.get_pos())
 	print("flag pos")
+	
+func Win():
+	global.comingbackfromlevel = true
+	get_tree().change_scene(partner)
