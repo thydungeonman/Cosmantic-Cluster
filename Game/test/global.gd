@@ -17,9 +17,16 @@ var fountainoffset = 0
 var mountainoffset = 0
 var mansionoffset = 0
 var wentmountain = false
+var selectors = []
+class selector:
+	var visible = false
+	var beaten = false
+
 
 func _ready():
 	set_fixed_process(true)
+	for i in range(14):
+		selectors.push_back(selector.new())
 	
 
 func _fixed_process(delta):

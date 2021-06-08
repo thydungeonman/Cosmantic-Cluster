@@ -155,7 +155,6 @@ lookahead = 4.0
 [node name="ss0" parent="." instance=ExtResource( 4 )]
 
 transform/pos = Vector2( 415, 550 )
-modulate = Color( 1, 1, 1, 1 )
 
 [node name="ss1" parent="." instance=ExtResource( 4 )]
 

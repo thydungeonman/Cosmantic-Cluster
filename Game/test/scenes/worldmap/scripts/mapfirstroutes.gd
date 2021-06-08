@@ -39,11 +39,29 @@ var pressing = false
 onready var selectors = [get_node("ss0"),get_node("ss1"),get_node("ss2"),get_node("ss3"),get_node("ss4"),get_node("ss5"),
 get_node("ss6"),get_node("ss7"),get_node("ss8"),get_node("ss9"),get_node("ss10"),get_node("ss11"),get_node("ss12"),get_node("ss13")]
 
+onready var selectordict = {get_node("ss0"):selector.new(),get_node("ss1"):selector.new(),get_node("ss2"):selector.new(),get_node("ss3"):selector.new(),get_node("ss4"):selector.new(),get_node("ss5"):selector.new(),
+get_node("ss6"):selector.new(),get_node("ss7"):selector.new(),get_node("ss8"):selector.new(),get_node("ss9"):selector.new(),get_node("ss10"):selector.new(),get_node("ss11"):selector.new(),get_node("ss12"):selector.new(),get_node("ss13"):selector.new()}
+
+
+
+class selector:
+	var visible = false
+	var beaten = false
 
 func _ready():
 	if(global.comingbackfromlevel):
 		BackFromLevel()
-		
+		var s = 0
+		if(selectedroute == 1):
+			s = 2
+		elif(selectedroute == 2):
+			s = 8
+		selectors[positionpath + s - 1].get_node("AnimationPlayer").play("complete")
+		selectors[positionpath + s - 1].visible = true
+		selectors[positionpath + s - 1].beaten = true
+		if(positionpath + s < selectors.size()):
+			selectors[positionpath + s].get_node("AnimationPlayer").play("fadein")
+			selectors[positionpath + s].visible = true
 		moving = true
 		if(selectedroute == 0 and positionpath == 2):
 			moving = false
@@ -106,7 +124,7 @@ func DoLevel():
 		s = 2
 	elif(selectedroute == 2):
 		s = 8
-#	selectors[positionpath + s].get_node("AnimationPlayer").play("complete")
+	selectors[positionpath + s - 1].get_node("AnimationPlayer").play("complete")
 	
 	if(positionpath == 0 and selectedroute == 0): #particular exception for the first level
 #		get_tree().change_scene(fountainstages[0])
@@ -182,7 +200,7 @@ func DoLevel():
 		s = 2
 	elif(selectedroute == 2):
 		s = 8
-#	selectors[positionpath + s].get_node("AnimationPlayer").play("fadein")
+	selectors[positionpath + s - 1].get_node("AnimationPlayer").play("fadein")
 	if(selecting):
 		selectors[8].get_node("AnimationPlayer").play("fadein")
 	
@@ -223,6 +241,10 @@ func GoingToLevel():
 	global.mansionoffset = fountainmansion.get_unit_offset()
 	global.fountainoffset = enafountain.get_unit_offset()
 	global.wentmountain = wentmountain
+	
+	for i in range(selectors.size()):
+		global.selectors[i].beaten = selectors[i].beaten
+		global.selectors[i].visible = selectors[i].visible
 
 #beat level, load previous positions
 func BackFromLevel():
@@ -246,3 +268,11 @@ func BackFromLevel():
 		enafountain.remove_child(player)
 		fountainmansion.add_child(player)
 		fountainmansion.set_unit_offset(global.mansionoffset)
+	
+	for i in range(selectors.size()):
+		if(global.selectors[i].visible):
+			selectors[i].visible = true
+			selectors[i].get_node("AnimationPlayer").play("fadein")
+		if(global.selectors[i].beaten):
+			selectors[i].beaten = true
+			selectors[i].get_node("AnimationPlayer").play("complete")
