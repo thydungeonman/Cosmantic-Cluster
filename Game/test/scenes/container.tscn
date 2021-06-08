@@ -10,14 +10,20 @@ script/script = ExtResource( 1 )
 
 transform/pos = Vector2( 0, -50 )
 transform/scale = Vector2( 0.1, 0.1 )
+vframes = 7
+hframes = 3
 
 [node name="orb2" type="Sprite" parent="."]
 
 transform/scale = Vector2( 0.1, 0.1 )
+vframes = 7
+hframes = 3
 
 [node name="orb1" type="Sprite" parent="."]
 
 transform/pos = Vector2( 0, 50 )
 transform/scale = Vector2( 0.1, 0.1 )
+vframes = 7
+hframes = 3
 
 

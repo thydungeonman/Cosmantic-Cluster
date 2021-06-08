@@ -582,6 +582,8 @@ default/chorus_send = 0.0
 transform/pos = Vector2( -100, 0 )
 transform/scale = Vector2( 0.11, 0.11 )
 z/z = -1
+vframes = 7
+hframes = 3
 
 [node name="LauncherAnimationPlayer" type="AnimationPlayer" parent="."]
 

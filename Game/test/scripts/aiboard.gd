@@ -9,14 +9,14 @@ enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
 
 enum FLAGS {YELLOW = 0,BLUE,RED,ORAGNE,PURPLE,GREEN,BLACK,WHITE}
 
-const YELLOWFLAG = "res://test/sprites/yellow star.png"
-const BLUEFLAG = "res://test/sprites/blue star.png"
-const REDFLAG = "res://test/sprites/red star.png"
-const ORANGEFLAG = "res://test/sprites/orange star.png"
-const PURPLEFLAG = "res://test/sprites/purple star.png"
-const GREENFLAG = "res://test/sprites/green star.png"
-const BLACKFLAG = "res://test/sprites/black star.png"
-const WHITEFLAG = "res://test/sprites/white star.png"
+const YELLOWFLAG = "res://test/sprites/orbs/Yellow Star Orb/Yellow Star.png"
+const BLUEFLAG = "res://test/sprites/orbs/Blue Star Orb/Blue Star.png"
+const REDFLAG = "res://test/sprites/orbs/Red Star Star/Red Star.png"
+const ORANGEFLAG = "res://test/sprites/orbs/Orange Star Orb/Orange Star.png"
+const PURPLEFLAG = "res://test/sprites/orbs/Purple Star Orb/Purple Star.png"
+const GREENFLAG = "res://test/sprites/orbs/Green Star Orb/Green Star.png"
+const BLACKFLAG = "res://test/sprites/orbs/Black Star Orb/Black Star NoShining.pngg"
+const WHITEFLAG = "res://test/sprites/orbs/White Star Orb/White Star (2).png"
 
 const NONE = "res://test/scenes/orb.tscn"
 const YELLOW = "res://test/scenes/yelloworb.tscn"
@@ -119,7 +119,9 @@ func _ready():
 	HelpAI()
 	set_fixed_process(true)
 	
-	
+	for orb in orbsonboard:
+		if orb.get_node("orbanim") != null:
+			orb.get_node("orbanim").advance(randf() * 1.5)
 
 func _fixed_process(delta):
 	
@@ -897,7 +899,7 @@ func GeneratePlayer1Flag():
 		s.load(WHITEFLAG)
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
-	p1flag.get_node("Sprite").get_texture().create_from_image(s)
+	p1flag.get_node("Sprite").get_texture().create_from_image(s,0)
 #	randomize()
 	var p = randi() % 11
 	add_child(p1flag)
@@ -937,7 +939,8 @@ func GeneratePlayer2Flag():
 		s.load(WHITEFLAG)
 		p2flag.colour = COLOUR.WHITE
 	print("flag2 colour: " + str(p2flag.colour))
-	p2flag.get_node("Sprite").get_texture().create_from_image(s)
+	var tex = p2flag.get_node("Sprite").get_texture().create_from_image(s,0)
+	p2flag.get_node("Sprite").set_texture(tex)
 #	randomize()
 	var p = randi() % 11
 	add_child(p2flag)

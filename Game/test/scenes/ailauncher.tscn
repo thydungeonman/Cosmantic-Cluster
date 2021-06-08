@@ -12,6 +12,11 @@ script/script = ExtResource( 2 )
 
 margin/right = 280.0
 
+[node name="nextorb" parent="."]
+
+vframes = 7
+hframes = 3
+
 [node name="ice" parent="."]
 
 texture = ExtResource( 3 )

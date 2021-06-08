@@ -10,7 +10,7 @@ enum PLAYER {PLAYER1 = 0,PLAYER2 = 1,AI = 2}
 export(Vector2) var trajectory = Vector2(0,0)
 export(bool) var ismoving = false
 var inlauncher = false #if an orb is neither in the launcher nor moving then it is on the board
-onready var width = get_node("Sprite").get_texture().get_width() * get_node("Sprite").get_scale().x #maybe should be renamed to diameter
+onready var width = 70#get_node("Sprite").get_texture().get_width() * get_node("Sprite").get_scale().x #maybe should be renamed to diameter
 onready var ray = get_node("RayCast2D")
 var matchingorbs = []
 var leftoverorbs = [] #these orbs are the ones that were touching the orbs that were just matched
