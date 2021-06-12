@@ -2,6 +2,8 @@ extends Node2D
 
 #bugs
 #dropping your enemies entire board will result in them winning from a board clear
+enum CHAR {ENA,ETHAN,ARNIE,MILISSA,TAMBRE,KOTA,GRUMPLE,CHROSNOW,ALISIA,MACCUS,KURTIS,
+JOKER,JASPER,CARL,GRIFFENHOOD,OSCAR,LUCY,CRANIAL,DAEGEL,SEILITH}
 
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
@@ -42,6 +44,9 @@ onready var sfx = get_node("SamplePlayer2D")
 onready var anim = get_node("AnimationPlayer")
 onready var animenap1 = get_node("enaplayer")
 onready var animenap2 = get_node("enaP2player")
+
+var charp2
+var charp2anim
 
 var numthatfit = 13 #((get_viewport_rect().size.x)/2) / startorb.width
 
@@ -97,6 +102,17 @@ var purple = preload(PURPLEP)
 onready var ray = get_node("RayCast2D")
 var rclick = false
 
+const ENA = "res://test/scenes/characters/ena.tscn"
+const ARNIE = "res://test/scenes/characters/arnie.tscn"
+const ETHAN = "res://test/scenes/characters/ethan.tscn"
+const KOTA = "res://test/scenes/characters/kota.tscn"
+const GRUMPLE = "res://test/scenes/characters/grumple.tscn"
+const TAMBRE = "res://test/scenes/characters/tambre.tscn"
+const MILISSA = "res://test/scenes/characters/milissa.tscn"
+const CRANIAL = "res://test/scenes/characters/cranial.tscn"
+const CHROSNOW = "res://test/scenes/characters/chrosnow.tscn"
+
+
 func _ready():
 	#music.play(0)
 #	get_node("smoke").hide()
@@ -110,8 +126,9 @@ func _ready():
 	p2launcher.player = p2launcher.PLAYER.PLAYER2
 	
 	get_node("ena").show()
-	get_node("enaP2").show()
-	
+#	get_node("enaP2").show()
+#	
+#	SetUpOpponent(CHAR.CRANIAL)
 	GenerateBoardP1()
 	GenerateBoardP2()
 	GeneratePlayer1Flag()
@@ -121,7 +138,7 @@ func _ready():
 	
 	for orb in orbsonboard:
 		if orb.get_node("orbanim") != null:
-			orb.get_node("orbanim").advance(randf() * 1.5)
+			orb.get_node("orbanim").advance(randf())
 
 func _fixed_process(delta):
 	
@@ -540,7 +557,7 @@ func NewHandleAbility(player):
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 			p2launcher.DamageAnim()
 			animenap1.play("ena attack")
-			animenap2.play("enap2 damage")
+			charp2anim.play("damage")
 			print(increase)
 			IsPlayerDead()
 		elif(lastusedcolourp1 == COLOUR.WHITE): #comboable
@@ -585,7 +602,7 @@ func NewHandleAbility(player):
 				p1darktime += (abilitycombop2 - 2)
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
-			animenap2.play("enap2 attack")
+			charp2anim.play("attack")
 		elif(lastusedcolourp2 == COLOUR.BLUE): #comboable
 			if(abilitycombop2 > 8):
 				abilitycombop2 = 8
@@ -600,7 +617,7 @@ func NewHandleAbility(player):
 			p2blue = true
 #			for i in range(times):
 #				P2BlueAbility()
-			animenap2.play("enap2 attack")
+			charp2anim.play("attack")
 		elif(lastusedcolourp2 == COLOUR.GREEN): #comboable
 			
 			if(abilitycombop2 > 8):
@@ -629,7 +646,7 @@ func NewHandleAbility(player):
 			get_node("p1combo").set_text("")
 			sfx.play("moved-02-dark - Purple ability used")
 			anim.play("p2purpleability")
-			animenap2.play("enap2 attack")
+			charp2anim.play("attack")
 		elif(lastusedcolourp2 == COLOUR.RED): #comboable
 			print("red combo activated")
 			
@@ -647,7 +664,7 @@ func NewHandleAbility(player):
 			sfx.play("fireworks-mortar - Red ability used Hp loss")
 			p1launcher.DamageAnim()
 			animenap1.play("ena damage")
-			animenap2.play("enap2 attack")
+			charp2anim.play("attack")
 			IsPlayerDead()
 		elif(lastusedcolourp2 == COLOUR.WHITE): #comboable
 			if(abilitycombop2 > 8):
@@ -669,7 +686,7 @@ func NewHandleAbility(player):
 			#print(tier)
 			p1launcher.Freeze(freezetime,tier)
 			sfx.play("winter wind - White ability used")
-			animenap2.play("enap2 attack")
+			charp2anim.play("attack")
 		elif(lastusedcolourp2 == COLOUR.YELLOW):
 			p2panel.set_texture(preload(YELLOWP))
 			p2launcher.Charge()
@@ -975,7 +992,7 @@ func Restart():
 	p1panel.set_texture(null)
 	p2panel.set_texture(null)
 	animenap1.play("ena idle")
-	animenap2.play("enap2 idle")
+	charp2anim.play("idle")
 	get_node("Timer").set_wait_time(300)
 	get_node("Timer").set_active(true)
 	get_node("Timer").start()
@@ -997,7 +1014,7 @@ func GameOver(gameoverstring,winner):
 	if(winner == PLAYER.PLAYER1):
 		print("one win")
 		animenap1.play("ena win")
-		animenap2.play("enap2 lose")
+		charp2anim.play("lose")
 		get_node("replaybutton").set_hidden(false)
 		get_node("replaybutton").set_disabled(false)
 		get_node("quitbutton").set_hidden(false)
@@ -1008,7 +1025,7 @@ func GameOver(gameoverstring,winner):
 	elif(winner == PLAYER.PLAYER2):
 		print("2 win")
 		animenap1.play("ena lose")
-		animenap2.play("enap2 win")
+		charp2anim.play("win")
 		get_node("replaybutton").set_hidden(false)
 		get_node("replaybutton").set_disabled(false)
 		get_node("quitbutton").set_hidden(false)
@@ -1016,7 +1033,7 @@ func GameOver(gameoverstring,winner):
 		
 	else:
 		animenap1.play("ena lose")
-		animenap2.play("enap2 lose")
+		charp2anim.play("lose")
 	get_node("screendim").set_hidden(false)
 	
 	get_node("gameoverlabel").set_text(gameoverstring)
@@ -1232,27 +1249,35 @@ func Win():
 	#in case of second level maybe play end cutscene and return to map
 	pass
 
-#var board = [
-#[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE], #13 1
-#[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE], #12 2
-#[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE], #13 3
-#[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #12 4
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 5
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #12 6
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 7
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #12 8
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 9
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #12 10
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 11
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #12 12
-#,[GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE,GC.NONE] #13 13
-#,[GC.BLANKROW] #12 14
-#]
-
-
 
 
 func _on_nextlevelbutton_pressed():
 	print("step one")
 	Win()
 	pass # replace with function body
+
+
+func SetUpOpponent(pickedcharp2):
+	
+	if(pickedcharp2 == CHAR.ENA):
+		charp2 = load(ENA).instance()
+	elif(pickedcharp2 == CHAR.ETHAN):
+		charp2 = load(ETHAN).instance()
+	elif(pickedcharp2 == CHAR.ARNIE):
+		charp2 = load(ARNIE).instance()
+	elif(pickedcharp2 == CHAR.KOTA):
+		charp2 = load(KOTA).instance()
+	elif(pickedcharp2 == CHAR.GRUMPLE):
+		charp2 = load(GRUMPLE).instance()
+	elif(pickedcharp2 == CHAR.TAMBRE):
+		charp2 = load(TAMBRE).instance()
+	elif(pickedcharp2 == CHAR.MILISSA):
+		charp2 = load(MILISSA).instance()
+	elif(pickedcharp2 == CHAR.CRANIAL):
+		charp2 = load(CRANIAL).instance()
+	elif(pickedcharp2 == CHAR.CHROSNOW):
+		charp2 = load(CHROSNOW).instance()
+	
+	charp2.set_pos(Vector2(1240,960))
+	add_child(charp2)
+	charp2anim = charp2.get_node("AnimationPlayer")

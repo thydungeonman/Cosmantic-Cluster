@@ -1,9 +1,9 @@
 [gd_scene load_steps=11 format=1]
 
-[ext_resource path="res://test/sprites/Ethan/spritesheet ethan lose 600x328.png" type="Texture" id=1]
+[ext_resource path="res://test/sprites/Ethan/spritesheet ethan idle 600x328.png" type="Texture" id=1]
 [ext_resource path="res://test/sprites/Ethan/spritesheet ethan attack 600x328.png" type="Texture" id=2]
 [ext_resource path="res://test/sprites/Ethan/spritesheet ethan damage 600x328.png" type="Texture" id=3]
-[ext_resource path="res://test/sprites/Ethan/spritesheet ethan idle 600x328.png" type="Texture" id=4]
+[ext_resource path="res://test/sprites/Ethan/spritesheet ethan lose 600x328.png" type="Texture" id=4]
 [ext_resource path="res://test/sprites/Ethan/spritesheet ethan win 600x328.png" type="Texture" id=5]
 
 [sub_resource type="Animation" id=1]
@@ -103,7 +103,7 @@ tracks/3/keys = {
 [sub_resource type="Animation" id=3]
 
 resource/name = "idle"
-length = 1.2
+length = 3.0
 loop = true
 step = 0.1
 tracks/0/type = "value"
@@ -114,7 +114,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 4 ) ]
+"values": [ ExtResource( 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath(".:vframes")
@@ -141,10 +141,10 @@ tracks/3/path = NodePath(".:frame")
 tracks/3/interp = 1
 tracks/3/imported = false
 tracks/3/keys = {
-"times": FloatArray( 0, 1.2 ),
-"transitions": FloatArray( 1, 1 ),
-"update": 0,
-"values": [ 0, 12 ]
+"times": FloatArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3 ),
+"transitions": FloatArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0 ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -161,7 +161,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 1 ) ]
+"values": [ ExtResource( 4 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath(".:vframes")
@@ -245,7 +245,8 @@ tracks/3/keys = {
 
 transform/scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 1 )
-hframes = 20
+hframes = 13
+frame = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 

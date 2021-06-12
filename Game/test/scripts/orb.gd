@@ -20,6 +20,7 @@ onready var pos = get_pos()
 onready var inversescale = 1/get_scale().x
 onready var anim = get_node("AnimationPlayer")
 onready var sfx = get_node("SamplePlayer2D")
+onready var orbanim = get_node("orbanim")
 
 var onboard #whos side of the board the orb is on
 
@@ -223,7 +224,8 @@ func Move(delta):
 					
 					for orb in matchingorbs:
 						#print(orb.get_name())
-						orb.anim.play("blink")
+#						orb.anim.play("blink")
+						orb.orbanim.play("destroy")
 						if(orb.isflag):
 							if(orb.player == PLAYER.PLAYER1):
 								get_parent().GameOver("Player 1 flag orb destroyed!",PLAYER.PLAYER2)

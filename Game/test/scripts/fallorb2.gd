@@ -3,15 +3,25 @@ extends Node2D
 enum COLOUR {NONE = 0,BLACK = 1,BLUE = 2,GREEN = 3,GREY = 4,
 	ORANGE = 5,PURPLE = 6,RED = 7,WHITE = 8,YELLOW = 9}
 
-const YELLOW = "res://test/sprites/yellow orb.png"
-const BLUE = "res://test/sprites/blue orb.png"
-const ORANGE = "res://test/sprites/orange orb.png"
-const PURPLE = "res://test/sprites/purple orb.png"
-const BLACK = "res://test/sprites/black orb.png"
-const GREEN = "res://test/sprites/green orb.png"
-const WHITE = "res://test/sprites/white orb.png"
-const RED = "res://test/sprites/red orb.png"
+const YELLOW = "res://test/sprites/orbs/Yellow Orb/Yellow Orb Spritesheet.png"
+const BLUE = "res://test/sprites/orbs/Blue Orb/Blue Orb.png"
+const ORANGE = "res://test/sprites/orbs/Orange Orb/Orange Orb.png"
+const PURPLE = "res://test/sprites/orbs/Purple Orb/Purple Orb.png"
+const BLACK = "res://test/sprites/orbs/Black Orb/New Piskel (1).png"
+const GREEN = "res://test/sprites/orbs/Green Orb/Green Orb.png"
+const WHITE = "res://test/sprites/orbs/White Orb/WhiteOrb.png"
+const RED = "res://test/sprites/orbs/Red Orb/Fire Orb.png"
 const GREY = "res://test/sprites/grey orb new.png"
+
+const OYELLOW = "res://test/sprites/yellow orb.png"
+const OBLUE = "res://test/sprites/blue orb.png"
+const OORANGE = "res://test/sprites/orange orb.png"
+const OPURPLE = "res://test/sprites/purple orb.png"
+const OBLACK = "res://test/sprites/black orb.png"
+const OGREEN = "res://test/sprites/green orb.png"
+const OWHITE = "res://test/sprites/white orb.png"
+const ORED = "res://test/sprites/red orb.png"
+const OGREY = "res://test/sprites/grey orb new.png"
 
 var colour
 var right = 0
@@ -44,6 +54,8 @@ func changeColour(colour):
 	elif(colour == COLOUR.WHITE):
 		sprite.set_texture(preload(WHITE))
 	elif(colour == COLOUR.GREY):
+		get_node("Sprite").set_vframes(1)
+		get_node("Sprite").set_hframes(1)
 		sprite.set_texture(preload(GREY))
 
 func setRot(rotation):
