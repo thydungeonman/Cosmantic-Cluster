@@ -1132,6 +1132,10 @@ func FullScan2():
 		var remainder = scanner.move(currentpoint)
 		if(scanner.is_colliding()):
 			if(scanner.get_collider().is_in_group("orb")):
+				var b = preload("res://test/scenes/godot.tscn").instance()
+				add_child(b)
+				rgodots.push_back(b)
+				b.set_global_pos(scanner.get_global_pos())
 				currentorb = scanner.get_collider()
 				if currentorb != lastorb:
 					var average = Vector2()
@@ -1153,8 +1157,18 @@ func FullScan2():
 				var spot = scanner.get_global_pos()
 			
 			if(scanner.get_collider().is_in_group("wall")):
+				if(hits.size() > 1):
+					var average = Vector2()
+					for hit in hits:
+						average += hit
+					pointdict[lastorb] = average / hits.size()
 				bouncedict[scanner.get_global_pos()] = remainder
 		else:
+			if(hits.size() > 1):
+				var average = Vector2()
+				for hit in hits:
+					average += hit
+				pointdict[lastorb] = average / hits.size()
 			emptyshots.push_back(currentpoint)
 		scanner.set_pos(Vector2())
 		currentpoint = currentpoint.rotated(-.025)
