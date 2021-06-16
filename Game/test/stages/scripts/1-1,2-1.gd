@@ -170,7 +170,7 @@ func GeneratePlayer1Flag():
 		s.load(WHITEFLAG)
 		p1flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p1flag.colour))
-	p1flag.get_node("Sprite").get_texture().create_from_image(s)
+	p1flag.get_node("Sprite").get_texture().create_from_image(s,0)
 	randomize()
 	var p = randi() % 11
 	add_child(p1flag)
@@ -213,7 +213,7 @@ func GeneratePlayer2Flag():
 		s.load(WHITEFLAG)
 		p2flag.colour = COLOUR.WHITE
 	print("flag1 colour: " + str(p2flag.colour))
-	p2flag.get_node("Sprite").get_texture().create_from_image(s)
+	p2flag.get_node("Sprite").get_texture().create_from_image(s,0)
 	randomize()
 	var p = randi() % 11
 	add_child(p2flag)

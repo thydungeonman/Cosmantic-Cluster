@@ -19,7 +19,7 @@ const REDFLAG = "res://test/sprites/orbs/Red Star Star/Red Star.png"
 const ORANGEFLAG = "res://test/sprites/orbs/Orange Star Orb/Orange Star.png"
 const PURPLEFLAG = "res://test/sprites/orbs/Purple Star Orb/Purple Star.png"
 const GREENFLAG = "res://test/sprites/orbs/Green Star Orb/Green Star.png"
-const BLACKFLAG = "res://test/sprites/orbs/Black Star Orb/Black Star NoShining.pngg"
+const BLACKFLAG = "res://test/sprites/orbs/Black Star Orb/Black Star NoShining.png"
 const WHITEFLAG = "res://test/sprites/orbs/White Star Orb/White Star (2).png"
 
 const NONE = "res://test/scenes/orb.tscn"
@@ -866,6 +866,8 @@ func P2BlueAbility():
 func RClick():
 	print("rclick")
 #	FindGap()
+	var t = load(BLACKFLAG)
+	p2flag.get_node("Sprite").set_texture(t)
 	FindPeninsula2(COLOUR.RED)
 #	print(p2launcher.lchecker.get_overlapping_bodies())
 
