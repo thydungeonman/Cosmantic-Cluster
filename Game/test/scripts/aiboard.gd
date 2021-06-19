@@ -130,7 +130,7 @@ func _ready():
 	get_node("ena").show()
 #	get_node("enaP2").show()
 #	
-#	SetUpOpponent(CHAR.CRANIAL)
+	SetUpOpponent(CHAR.CRANIAL)
 	GenerateBoardP1()
 	GenerateBoardP2()
 	GeneratePlayer1Flag()
@@ -960,8 +960,7 @@ func GeneratePlayer2Flag():
 		s.load(WHITEFLAG)
 		p2flag.colour = COLOUR.WHITE
 	print("flag2 colour: " + str(p2flag.colour))
-	var tex = p2flag.get_node("Sprite").get_texture().create_from_image(s,0)
-	p2flag.get_node("Sprite").set_texture(tex)
+	p2flag.get_node("Sprite").get_texture().create_from_image(s,0)
 #	randomize()
 	var p = randi() % 11
 	add_child(p2flag)
@@ -1263,6 +1262,10 @@ func _on_nextlevelbutton_pressed():
 
 func SetUpOpponent(pickedcharp2):
 	
+	if(charp2 != null):
+		charp2.queue_free()
+		charp2anim = null
+	
 	if(pickedcharp2 == CHAR.ENA):
 		charp2 = load(ENA).instance()
 	elif(pickedcharp2 == CHAR.ETHAN):
@@ -1281,6 +1284,8 @@ func SetUpOpponent(pickedcharp2):
 		charp2 = load(CRANIAL).instance()
 	elif(pickedcharp2 == CHAR.CHROSNOW):
 		charp2 = load(CHROSNOW).instance()
+	else:
+		charp2 = load(CHAR.ETHAN)
 	
 	charp2.set_pos(Vector2(1240,960))
 	add_child(charp2)

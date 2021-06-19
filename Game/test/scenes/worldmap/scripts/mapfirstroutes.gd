@@ -163,7 +163,10 @@ func DoLevel():
 			fountainmountain.remove_child(player)
 			enafountain.add_child(player)
 			selectors[0].get_node("AnimationPlayer").play("rest")
+			
 			selectors[1].get_node("AnimationPlayer").play("rest")
+			selectors[0].beaten = false
+			selectors[1].beaten = false
 			player.set_pos(Vector2())
 			pass
 			#end day do next path
@@ -178,6 +181,8 @@ func DoLevel():
 			player.set_pos(Vector2())
 			selectors[0].get_node("AnimationPlayer").play("rest")
 			selectors[1].get_node("AnimationPlayer").play("rest")
+			selectors[0].beaten = false
+			selectors[1].beaten = false
 			fountainmansion.set_unit_offset(0)
 	else:
 		print(positionpath)
@@ -202,7 +207,9 @@ func DoLevel():
 		s = 8
 	selectors[positionpath + s - 1].get_node("AnimationPlayer").play("fadein")
 	if(selecting):
+		
 		selectors[8].get_node("AnimationPlayer").play("fadein")
+		selectors[8].visible = true
 	
 
 func _on_buttonmountain_button_up():
