@@ -14,7 +14,7 @@ const REDFLAG = "res://test/sprites/orbs/Red Star Star/Red Star.png"
 const ORANGEFLAG = "res://test/sprites/orbs/Orange Star Orb/Orange Star.png"
 const PURPLEFLAG = "res://test/sprites/orbs/Purple Star Orb/Purple Star.png"
 const GREENFLAG = "res://test/sprites/orbs/Green Star Orb/Green Star.png"
-const BLACKFLAG = "res://test/sprites/orbs/Black Star Orb/Black Star NoShining.pngg"
+const BLACKFLAG = "res://test/sprites/orbs/Black Star Orb/Black Star NoShining.png"
 const WHITEFLAG = "res://test/sprites/orbs/White Star Orb/White Star (2).png"
 
 const NONE = "res://test/scenes/orb.tscn"
@@ -110,6 +110,7 @@ const TAMBRE = "res://test/scenes/characters/tambre.tscn"
 const MILISSA = "res://test/scenes/characters/milissa.tscn"
 const CRANIAL = "res://test/scenes/characters/cranial.tscn"
 const CHROSNOW = "res://test/scenes/characters/chrosnow.tscn"
+const JASPER = "res://test/scenes/characters/jasper.tscn"
 
 func _ready():
 #	music.play(0)
@@ -133,6 +134,8 @@ func _ready():
 		charp1 = load(CRANIAL).instance()
 	elif(global.pickedcharp1 == CHAR.CHROSNOW):
 		charp1 = load(CHROSNOW).instance()
+	elif(global.pickedcharp1 == CHAR.JASPER):
+		charp1 = load(JASPER).instance()
 	
 	charp1.set_pos(Vector2(270,960))
 	add_child(charp1)
@@ -156,6 +159,8 @@ func _ready():
 		charp2 = load(CRANIAL).instance()
 	elif(global.pickedcharp2 == CHAR.CHROSNOW):
 		charp2 = load(CHROSNOW).instance()
+	elif(global.pickedcharp2 == CHAR.JASPER):
+		charp2 = load(JASPER).instance()
 	
 	charp2.set_pos(Vector2(1240,960))
 	add_child(charp2)
@@ -524,7 +529,7 @@ func NewHandleAbility(player):
 			player1health += increase
 			print("Player 1 health: " + str(player1health))
 			UpdateHealthLabels()
-			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+			sfx.play("Green ability activates")
 			p1launcher.HealAnim()
 		elif(lastusedcolourp1 == COLOUR.ORANGE):
 			p1launcher.ActivateLaser()
@@ -535,7 +540,7 @@ func NewHandleAbility(player):
 			abilitycombop2 = 0
 			p1panel.set_texture(preload(PURPLEP))
 			get_node("p2combo").set_text("")
-			sfx.play("moved-02-dark - Purple ability used")
+			sfx.play("Purple ability activates 01")
 			anim.play("p1purpleability")
 			charp1anim.play("attack")
 			animenap1.play("ena attack")
@@ -554,7 +559,7 @@ func NewHandleAbility(player):
 			player2health -= increase
 			
 			UpdateHealthLabels()
-			sfx.play("fireworks-mortar - Red ability used Hp loss")
+			sfx.play("Red orb ability fire attack")
 			p2launcher.DamageAnim()
 			charp1anim.play("attack")
 			animenap1.play("ena attack")
@@ -582,7 +587,7 @@ func NewHandleAbility(player):
 			print(tier)
 			p2launcher.Freeze(freezetime,tier)
 			
-			sfx.play("winter wind - White ability used")
+			sfx.play("White orb ability ice attack")
 			charp1anim.play("attack")
 			animenap1.play("ena attack")
 		elif(lastusedcolourp1 == COLOUR.YELLOW):
@@ -591,7 +596,7 @@ func NewHandleAbility(player):
 			if(p1isdark):
 				p1darktimer = p1darktime
 				#p1isdark = false
-				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
+				sfx.play("Light")
 		if(lastusedcolourp1 != COLOUR.ORANGE and lastusedcolourp1 != COLOUR.YELLOW and lastusedcolourp1 != COLOUR.PURPLE):
 			p1panel.set_texture(null)
 		get_node("p1combo").set_text("")
@@ -640,7 +645,7 @@ func NewHandleAbility(player):
 			player2health += increase
 			print("Player 2 health: " + str(player2health))
 			UpdateHealthLabels()
-			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+			sfx.play("Green ability activates")
 			p2launcher.HealAnim()
 		elif(lastusedcolourp2 == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()
@@ -649,7 +654,7 @@ func NewHandleAbility(player):
 			lastusedcolourp1 = COLOUR.NONE
 			abilitycombop1 = 0
 			get_node("p1combo").set_text("NONE ABILITY X0")
-			sfx.play("moved-02-dark - Purple ability used")
+			sfx.play("Purple ability activates 01")
 			anim.play("p2purpleability")
 			charp2anim.play("attack")
 			animenap2.play("enap2 attack")
@@ -667,7 +672,7 @@ func NewHandleAbility(player):
 				increase -= 4
 			player1health -= increase
 			UpdateHealthLabels()
-			sfx.play("fireworks-mortar - Red ability used Hp loss")
+			sfx.play("Red orb ability fire attack")
 			p1launcher.DamageAnim()
 			charp1anim.play("damage")
 			animenap1.play("ena damage")
@@ -693,7 +698,7 @@ func NewHandleAbility(player):
 				tier = 1.0
 			print(tier)
 			p1launcher.Freeze(freezetime,tier)
-			sfx.play("winter wind - White ability used")
+			sfx.play("White orb ability ice attack")
 			charp2anim.play("attack")
 			animenap2.play("enap2 attack")
 		elif(lastusedcolourp2 == COLOUR.YELLOW):
@@ -702,7 +707,7 @@ func NewHandleAbility(player):
 			if(p2isdark):
 				p2darktimer = p2darktime
 				#p2isdark = false
-				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
+				sfx.play("Light")
 		if(lastusedcolourp2 != COLOUR.ORANGE and lastusedcolourp2 != COLOUR.YELLOW and lastusedcolourp2 != COLOUR.PURPLE):
 			p2panel.set_texture(null)
 		lastusedcolourp2 = COLOUR.NONE
@@ -720,36 +725,37 @@ func HandleAbility(colour,player):
 		if(colour == COLOUR.RED):
 			player2health -= 1
 			p2launcher.get_node("health").set_text("Health " + str(player2health))
-			sfx.play("fireworks-mortar - Red ability used Hp loss")
+			sfx.play("Red orb ability fire attack")
 			p1abilitylabel.set_text("RED ABILITY")
 		if(colour == COLOUR.GREEN):
 			player1health += 1
 			print("Player 1 health: " + str(player1health))
 			p1launcher.get_node("health").set_text("Health " + str(player1health))
-			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+			sfx.play("Green ability activates")
 			p1abilitylabel.set_text("GREEN ABILITY")
 		if(colour == COLOUR.BLACK):
 			get_node("p2darkness").set_hidden(false)
 			p2isdark = true
-			sfx.play("dark magic loop - Black ability used")
+			sfx.play("Black orb ability attack 02")
 			p1abilitylabel.set_text("BLACK ABILITY")
 		if(colour == COLOUR.WHITE):
 			p2launcher.Freeze()
-			sfx.play("winter wind - White ability used")
+			sfx.play("White orb ability ice attack")
 			p1abilitylabel.set_text("WHITE ABILITY")
 		if(colour == COLOUR.YELLOW):
 			p1launcher.Charge()
 			if(p1isdark):
 				p1darktimer = p1darktime
 				#p1isdark = false
-				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
+				sfx.play("Light")
 		if(colour == COLOUR.BLUE):
 			P1BlueAbility()
-			sfx.play("billiard-balls-single-hit-dry - Grey orbs spawn")
+			#maybe this should be played for each orb
+			sfx.play("Blue orb ability summon 01_revision")
 		if(colour == COLOUR.PURPLE):
 			p2isnegated = true
 			get_node("p2combo").set_text("NONE ABILITY X0")
-			sfx.play("moved-02-dark - Purple ability used")
+			sfx.play("Purple ability activates 01")
 		if(colour == COLOUR.ORANGE):
 			p1launcher.ActivateLaser()
 	elif(player == PLAYER.PLAYER1 and p1isnegated):
@@ -759,31 +765,31 @@ func HandleAbility(colour,player):
 			player1health -= 1
 			print("Player 1 health " + str(player1health))
 			p1launcher.get_node("health").set_text("Health " + str(player1health))
-			sfx.play("fireworks-mortar - Red ability used Hp loss")
+			sfx.play("Red orb ability fire attack")
 		if(colour == COLOUR.GREEN):
 			player2health += 1
 			print("Player 2 health: " + str(player2health))
 			p2launcher.get_node("health").set_text("Health " + str(player2health))
-			sfx.play("another-magic-wand-spell-tinkle - Green ability used Hp Gain")
+			sfx.play("Green ability activates")
 		if(colour == COLOUR.BLACK):
 			get_node("p1darkness").set_hidden(false)
 			p1isdark = true
-			sfx.play("dark magic loop - Black ability used")
+			sfx.play("Black orb ability attack 02")
 		if(colour == COLOUR.WHITE):
 			p1launcher.Freeze(1.0)
-			sfx.play("winter wind - White ability used")
+			sfx.play("White orb ability ice attack")
 		if(colour == COLOUR.YELLOW):
 			p2launcher.Charge()
 			if(p2isdark):
 				p2darktimer = p2darktime
 				#p2isdark = false
-				sfx.play("008-mercury-sparkle - yellow ability clearing darkness")
+				sfx.play("Light")
 		if(colour == COLOUR.BLUE):
 			P2BlueAbility()
-			sfx.play("billiard-balls-single-hit-dry - Grey orbs spawn")
+			sfx.play("Blue orb ability summon 01_revision")
 		if(colour == COLOUR.PURPLE):
 			p1isnegated = true
-			sfx.play("moved-02-dark - Purple ability used")
+			sfx.play("Purple ability activates 01")
 			get_node("p1combo").set_text("")
 		if(colour == COLOUR.ORANGE):
 			p2launcher.ActivateLaser()

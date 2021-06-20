@@ -47,6 +47,7 @@ func _ready():
 	print(orbsonboardp2.size())
 	get_node("p1deathline").translate(Vector2(0,-15))
 	get_node("p2deathline").translate(Vector2(0,-15))
+	SetUpOpponent(CHAR.JASPER)
 
 func GenerateBoardP1():
 	var startorb = preload("res://test/scenes/orb.tscn").instance()

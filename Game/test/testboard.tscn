@@ -2,27 +2,27 @@
 
 [ext_resource path="res://test/testboard.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/a71c466e2535309b4849dda26c8beb1d.jpg" type="Texture" id=2]
-[ext_resource path="res://test/scenes/launcher.tscn" type="PackedScene" id=3]
-[ext_resource path="res://test/scenes/wall.tscn" type="PackedScene" id=4]
-[ext_resource path="res://test/scenes/top.tscn" type="PackedScene" id=5]
-[ext_resource path="res://test/scenes/middlewall.tscn" type="PackedScene" id=6]
-[ext_resource path="res://test/sprites/black.png" type="Texture" id=7]
-[ext_resource path="res://test/scenes/warpgate.tscn" type="PackedScene" id=8]
-[ext_resource path="res://test/music/Electrodoodle.ogg" type="AudioStream" id=9]
-[ext_resource path="res://test/sfx/008-mercury-sparkle - yellow ability clearing darkness.smp" type="Sample" id=10]
-[ext_resource path="res://test/sfx/another-magic-wand-spell-tinkle - Green ability used Hp Gain.smp" type="Sample" id=11]
-[ext_resource path="res://test/sfx/billiard-balls-single-hit-dry - Grey orbs spawn.smp" type="Sample" id=12]
-[ext_resource path="res://test/sfx/dark magic loop - Black ability used.smp" type="Sample" id=13]
-[ext_resource path="res://test/sfx/fireworks-mortar - Red ability used Hp loss.smp" type="Sample" id=14]
-[ext_resource path="res://test/sfx/gameaudio__spacey-1up-power-up - Ability has been comboed 2x 3x etc.smp" type="Sample" id=15]
-[ext_resource path="res://test/sfx/moved-02-dark - Purple ability used.smp" type="Sample" id=16]
+[ext_resource path="res://test/scenes/wall.tscn" type="PackedScene" id=3]
+[ext_resource path="res://test/scenes/top.tscn" type="PackedScene" id=4]
+[ext_resource path="res://test/scenes/middlewall.tscn" type="PackedScene" id=5]
+[ext_resource path="res://test/sprites/black.png" type="Texture" id=6]
+[ext_resource path="res://test/scenes/warpgate.tscn" type="PackedScene" id=7]
+[ext_resource path="res://test/music/Electrodoodle.ogg" type="AudioStream" id=8]
+[ext_resource path="res://test/sfx/new/Black orb ability attack 02.wav" type="Sample" id=9]
+[ext_resource path="res://test/sfx/new/Blue orb ability summon 01_revision.wav" type="Sample" id=10]
+[ext_resource path="res://test/sfx/new/Breaking Star orb.wav" type="Sample" id=11]
+[ext_resource path="res://test/sfx/new/Green ability activates.wav" type="Sample" id=12]
+[ext_resource path="res://test/sfx/new/Light.wav" type="Sample" id=13]
+[ext_resource path="res://test/sfx/new/Purple ability activates 01.wav" type="Sample" id=14]
+[ext_resource path="res://test/sfx/new/Red orb ability fire attack.wav" type="Sample" id=15]
+[ext_resource path="res://test/sfx/new/White orb ability ice attack .wav" type="Sample" id=16]
 [ext_resource path="res://test/sfx/punch sound - falling orbs.smp" type="Sample" id=17]
-[ext_resource path="res://test/sfx/winter wind - White ability used.smp" type="Sample" id=18]
-[ext_resource path="res://test/sprites/Ability panels/Red panel.png" type="Texture" id=19]
-[ext_resource path="res://test/fonts/orbit.fnt" type="BitmapFont" id=20]
-[ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=21]
-[ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=22]
-[ext_resource path="res://test/sprites/board/grass ground test.png" type="Texture" id=23]
+[ext_resource path="res://test/sprites/Ability panels/Red panel.png" type="Texture" id=18]
+[ext_resource path="res://test/fonts/orbit.fnt" type="BitmapFont" id=19]
+[ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=20]
+[ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=21]
+[ext_resource path="res://test/sprites/board/grass ground test.png" type="Texture" id=22]
+[ext_resource path="res://test/scenes/launcher.tscn" type="PackedScene" id=23]
 [ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA attack 600x328 - 2rows.png" type="Texture" id=24]
 [ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA damage 600x328.png" type="Texture" id=25]
 [ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA idle 600x328.png" type="Texture" id=26]
@@ -52,45 +52,51 @@ _code = {
 shader/shader = SubResource( 1 )
 shader/shading_mode = 0
 
-[sub_resource type="SampleLibrary" id=3]
+[sub_resource type="SampleLibrary" id=25]
 
-"samples/008-mercury-sparkle - yellow ability clearing darkness" = {
+"samples/Black orb ability attack 02" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 9 )
+}
+"samples/Blue orb ability summon 01_revision" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 10 )
 }
-"samples/another-magic-wand-spell-tinkle - Green ability used Hp Gain" = {
+"samples/Breaking Star orb" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 11 )
 }
-"samples/billiard-balls-single-hit-dry - Grey orbs spawn" = {
+"samples/Green ability activates" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 12 )
 }
-"samples/dark magic loop - Black ability used" = {
+samples/Light = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 13 )
 }
-"samples/fireworks-mortar - Red ability used Hp loss" = {
+"samples/Purple ability activates 01" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 14 )
 }
-"samples/gameaudio__spacey-1up-power-up - Ability has been comboed 2x 3x etc" = {
+"samples/Red orb ability fire attack" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 15 )
 }
-"samples/moved-02-dark - Purple ability used" = {
+"samples/White orb ability ice attack" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
@@ -101,12 +107,6 @@ shader/shading_mode = 0
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 17 )
-}
-"samples/winter wind - White ability used" = {
-"db": 0.0,
-"pitch": 1.0,
-"priority": 0,
-"sample": ExtResource( 18 )
 }
 
 [sub_resource type="GDScript" id=4]
@@ -773,12 +773,22 @@ tracks/1/path = NodePath("..")
 tracks/1/interp = 1
 tracks/1/imported = false
 tracks/1/keys = {
-"times": FloatArray( 1 ),
+"times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "values": [ {
 "args": [  ],
 "method": "Start"
 } ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:visibility/visible")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"update": 1,
+"values": [ true ]
 }
 
 [node name="testboard" type="Node2D"]
@@ -793,11 +803,7 @@ z/z = -2
 texture = ExtResource( 2 )
 centered = false
 
-[node name="p1launcher" parent="." instance=ExtResource( 3 )]
-
-transform/pos = Vector2( 473, 980 )
-
-[node name="wall" parent="." instance=ExtResource( 4 )]
+[node name="wall" parent="." instance=ExtResource( 3 )]
 
 editor/display_folded = true
 transform/pos = Vector2( 8, 560.84 )
@@ -806,15 +812,15 @@ transform/pos = Vector2( 8, 560.84 )
 
 transform/pos = Vector2( 0, -0.36908 )
 
-[node name="wall 2" parent="." instance=ExtResource( 4 )]
+[node name="wall 2" parent="." instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 1912, 579.434 )
 
-[node name="top" parent="." instance=ExtResource( 5 )]
+[node name="top" parent="." instance=ExtResource( 4 )]
 
 transform/pos = Vector2( 975.121, 60 )
 
-[node name="middlewall" parent="." instance=ExtResource( 6 )]
+[node name="middlewall" parent="." instance=ExtResource( 5 )]
 
 transform/pos = Vector2( 960, 515 )
 
@@ -825,7 +831,7 @@ material/material = SubResource( 2 )
 transform/pos = Vector2( 992.167, -6.18176 )
 transform/scale = Vector2( 927.311, 795.641 )
 z/z = 1
-texture = ExtResource( 7 )
+texture = ExtResource( 6 )
 centered = false
 
 [node name="p1darkness" type="Sprite" parent="."]
@@ -833,7 +839,7 @@ centered = false
 visibility/visible = false
 transform/scale = Vector2( 930.402, 792.551 )
 z/z = 1
-texture = ExtResource( 7 )
+texture = ExtResource( 6 )
 centered = false
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
@@ -844,17 +850,17 @@ cast_to = Vector2( 0, 0 )
 layer_mask = 1
 type_mask = 15
 
-[node name="warpgate" parent="." instance=ExtResource( 8 )]
+[node name="warpgate" parent="." instance=ExtResource( 7 )]
 
 transform/pos = Vector2( 470.057, -170 )
 
-[node name="warpgate 2" parent="." instance=ExtResource( 8 )]
+[node name="warpgate 2" parent="." instance=ExtResource( 7 )]
 
 transform/pos = Vector2( 1449.58, -170 )
 
 [node name="backgroundmusic" type="StreamPlayer" parent="."]
 
-stream/stream = ExtResource( 9 )
+stream/stream = ExtResource( 8 )
 stream/play = false
 stream/loop = true
 stream/volume_db = -3.0
@@ -871,7 +877,7 @@ params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 3
-config/samples = SubResource( 3 )
+config/samples = SubResource( 25 )
 config/pitch_random = 0.0
 
 [node name="p1combo" type="Label" parent="."]
@@ -892,7 +898,7 @@ max_lines_visible = -1
 
 transform/pos = Vector2( 70, 970 )
 transform/scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 19 )
+texture = ExtResource( 18 )
 
 [node name="p2combo" type="Label" parent="."]
 
@@ -919,7 +925,7 @@ transform/scale = Vector2( 0.3, 0.3 )
 visibility/visible = false
 visibility/opacity = 0.76
 transform/scale = Vector2( 1911.55, 1080.89 )
-texture = ExtResource( 7 )
+texture = ExtResource( 6 )
 centered = false
 
 [node name="gameoverlabel" type="Label" parent="."]
@@ -933,7 +939,7 @@ margin/left = 320.0
 margin/top = 276.0
 margin/right = 1600.0
 margin/bottom = 316.0
-custom_fonts/font = ExtResource( 20 )
+custom_fonts/font = ExtResource( 19 )
 text = "Game Over"
 align = 1
 percent_visible = 1.0
@@ -982,14 +988,14 @@ script/script = SubResource( 4 )
 visibility/opacity = 0.0
 transform/pos = Vector2( 1046.79, 976.445 )
 transform/scale = Vector2( 4, 4 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 
 [node name="p2purpleability" type="Sprite" parent="."]
 
 visibility/opacity = 0.0
 transform/pos = Vector2( 56.3401, 975.243 )
 transform/scale = Vector2( 4, 4 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
@@ -1010,13 +1016,17 @@ autoplay = "rest"
 visibility/opacity = 0.0
 transform/pos = Vector2( 510.686, 309.008 )
 transform/scale = Vector2( 14, 14 )
-texture = ExtResource( 22 )
+texture = ExtResource( 21 )
 
 [node name="ground" type="Sprite" parent="."]
 
 transform/pos = Vector2( 960.469, 1070 )
 z/z = -1
-texture = ExtResource( 23 )
+texture = ExtResource( 22 )
+
+[node name="p1launcher" parent="." instance=ExtResource( 23 )]
+
+transform/pos = Vector2( 473, 980 )
 
 [node name="ena" type="Sprite" parent="."]
 
@@ -1089,7 +1099,7 @@ margin/left = 890.0
 margin/top = -25.0
 margin/right = 979.0
 margin/bottom = 30.0
-custom_fonts/font = ExtResource( 20 )
+custom_fonts/font = ExtResource( 19 )
 text = "0 00"
 percent_visible = 1.0
 lines_skipped = 0

@@ -10,6 +10,7 @@ var day = 0
 var pastfountain = false
 var atfountain = false
 var wentmountain = false #false means went mansion
+onready var label = get_node("positionpath")
 onready var enafountain = get_node("ena to fountain/PathFollow2D")
 onready var fountainmountain = get_node("fountain to mountain/PathFollow2D")
 onready var fountainmansion = get_node("fountain to mansion/PathFollow2D")
@@ -60,8 +61,9 @@ func _ready():
 		selectors[positionpath + s - 1].visible = true
 		selectors[positionpath + s - 1].beaten = true
 		if(positionpath + s < selectors.size()):
-			selectors[positionpath + s].get_node("AnimationPlayer").play("fadein")
-			selectors[positionpath + s].visible = true
+			if(!selectors[positionpath + s].visible):
+				selectors[positionpath + s].get_node("AnimationPlayer").play("fadein")
+				selectors[positionpath + s].visible = true
 		moving = true
 		if(selectedroute == 0 and positionpath == 2):
 			moving = false
@@ -75,7 +77,10 @@ func _ready():
 	pass
 
 func _process(delta):
-	get_node("positionpath").text = str(positionpath)
+#	get_node("positionpath").text = str(positionpath)
+	label.text = ""
+	for i in selectors:
+		label.text += " " + str(i.beaten)
 	if(Input.is_action_pressed("ui_select")):
 		if(!pressing):
 			pressing = true
@@ -163,7 +168,6 @@ func DoLevel():
 			fountainmountain.remove_child(player)
 			enafountain.add_child(player)
 			selectors[0].get_node("AnimationPlayer").play("rest")
-			
 			selectors[1].get_node("AnimationPlayer").play("rest")
 			selectors[0].beaten = false
 			selectors[1].beaten = false
@@ -205,7 +209,9 @@ func DoLevel():
 		s = 2
 	elif(selectedroute == 2):
 		s = 8
-	selectors[positionpath + s - 1].get_node("AnimationPlayer").play("fadein")
+	if(!selectors[positionpath + s - 1].visible):
+		selectors[positionpath + s - 1].get_node("AnimationPlayer").play("fadein")
+	
 	if(selecting):
 		
 		selectors[8].get_node("AnimationPlayer").play("fadein")

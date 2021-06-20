@@ -17,20 +17,37 @@ var player
 var leftovers = []
 
 var greyorbs = []
+var oldposition
+var position
+var numfollowers = 5
+var followers = []
 
 
 func _ready():
 	set_fixed_process(true)
+	for i in range(numfollowers):
+		followers.push_back(preload("res://test/scenes/laserfollower.tscn").instance())
+		get_parent().add_child(followers[i])
+	for i in range(0,numfollowers-1):
+		followers[i].after = followers[i+1]
 	
 
 func _fixed_process(delta):
 	if(moving):
 		#print(str(get_pos()) + " " + str(y) + " " + str(get_rot()))
+		oldposition = position
 		Move(delta)
-		Bounce()
+		Bounce2()
+		position = get_global_pos()
+		followers[0].oldposition = followers[0].position
+		if(oldposition != null):
+			followers[0].set_global_pos(oldposition)
+		followers[0].position = followers[0].get_global_pos()
+		for i in followers:
+			i.Move()
 
 func Move(delta):
-	set_pos(get_pos() + (trajectory * 1.5 * delta))
+	set_pos(get_pos() + (trajectory * 1.5 * delta) * .5)
 	if(get_overlapping_bodies().size() > 0):
 		var d = get_overlapping_bodies()
 		for orb in d:
@@ -53,10 +70,63 @@ func Bounce():
 			bouncing = true
 	if(get_pos().y < 0):
 		EnableLauncher()
+		for i in followers:
+			i.queue_free()
 		queue_free()
 	if(bounced and get_pos().y < newy):
 		EnableLauncher()
+		for i in followers:
+			i.queue_free()
 		queue_free()
+
+func Bounce2():
+	var pos = get_global_pos()
+	if(player == PLAYER.PLAYER1):
+		if!bounced:
+			if(pos.x < 8):
+				pos.x = 8
+				set_global_pos(pos)
+				bounced = true
+				trajectory.x *= -1
+				set_rot(get_rot() * -1)
+			if(pos.x > 920):
+				pos.x = 920
+				set_global_pos(pos)
+				bounced = true
+				trajectory.x *= -1
+				set_rot(get_rot() * -1)
+		else:
+			if(pos.x < 8 or pos.x > 920):
+				EnableLauncher()
+				for i in followers:
+					i.queue_free()
+				queue_free()
+	elif(player == PLAYER.PLAYER2):
+		if!bounced:
+			if(pos.x < 1000):
+				pos.x = 1000
+				set_global_pos(pos)
+				bounced = true
+				trajectory.x *= -1
+				set_rot(get_rot() * -1)
+			if(pos.x > 1912):
+				pos.x = 1912
+				set_global_pos(pos)
+				bounced = true
+				trajectory.x *= -1
+				set_rot(get_rot() * -1)
+		else:
+			if(pos.x < 8 or pos.x > 1912):
+				EnableLauncher()
+				for i in followers:
+					i.queue_free()
+				queue_free()
+	if(pos.y < 0):
+		EnableLauncher()
+		for i in followers:
+			i.queue_free()
+		queue_free()
+	
 
 
 func Fire():

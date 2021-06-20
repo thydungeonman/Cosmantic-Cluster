@@ -86,12 +86,14 @@ func _fixed_process(delta):
 	#LASER =========================================================>O
 	if(Input.is_action_pressed("laser")):
 		if(!lasing):
-			var las = preload("res://test/scenes/laser.tscn").instance()
-			get_parent().add_child(las)
-			las.set_pos(get_pos())
-			las.Charge(trajectory,x)
-			las.Fire()
-			lasing = true
+			if(player == PLAYER.PLAYER1):
+				var las = preload("res://test/scenes/laser.tscn").instance()
+				get_parent().add_child(las)
+				las.set_pos(get_pos())
+				las.Charge(trajectory,x)
+				las.Fire()
+				lasing = true
+				las.player = player
 	else:
 		lasing = false
 	
