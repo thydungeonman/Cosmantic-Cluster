@@ -19,6 +19,7 @@ const RED = "res://test/scenes/redorb.tscn"
 
 var player = PLAYER.PLAYER1
 onready var sfx = get_node("SamplePlayer")
+onready var aimsfx = get_node("aimsfx")
 onready var anim = get_node("LauncherAnimationPlayer")
 onready var abilityanim = get_node("AbilityAnimationPlayer")
 onready var nextorb = get_node("nextorb") # the sprite of the upcoming orb
@@ -145,7 +146,7 @@ func LoadOrb(delta):
 			upcomingorb = null
 			print(orb)
 			nextorb.set_texture(null)
-			
+			orb.inlauncher = true
 			get_parent().add_child(orb)
 			orb.set_pos(get_global_pos())#set the orb to launcher position
 			
@@ -156,7 +157,7 @@ func LoadOrb(delta):
 				orb.player = orb.PLAYER.PLAYER2
 				orb.onboard = orb.PLAYER.PLAYER2
 			loaded = true
-			orb.inlauncher = true
+			
 			print("loaded new orb")
 
 func GetAimControlsP1(delta):
@@ -172,7 +173,8 @@ func GetAimControlsP1(delta):
 		#print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
 		#print(get_global_mouse_pos())
 		#print(get_local_mouse_pos())
-		sfx.play("mrown1__tick launcher aiming left or right")
+		if(!aimsfx.is_active()):
+			aimsfx.play("Launcher aiming 03_revision3")
 	elif(Input.is_action_pressed("p1_aim_right")):
 		#print(speed)
 		speed += PI/1500
@@ -186,9 +188,11 @@ func GetAimControlsP1(delta):
 		#print(str(-Vector2(-1500,0).angle_to(get_local_mouse_pos())))
 		#print(get_global_mouse_pos())
 		#print(get_local_mouse_pos())
-		sfx.play("mrown1__tick launcher aiming left or right")
+		if(!aimsfx.is_active()):
+			aimsfx.play("Launcher aiming 03_revision3")
 	else:
 		speed = minspeed
+#		aimsfx.stop_all()
 
 func GetAimControlsP2(delta):
 	if(Input.is_action_pressed("p2_aim_left")):
@@ -200,7 +204,8 @@ func GetAimControlsP2(delta):
 		aim.set_param(0,270 - rad2deg(x))
 		AdjustReticule()
 		#print(str(x) + " " + str(tan(x)))
-		sfx.play("mrown1__tick launcher aiming left or right")
+		if(!aimsfx.is_active()):
+			aimsfx.play("Launcher aiming 03_revision3")
 	elif(Input.is_action_pressed("p2_aim_right")):
 		#print(speed)
 		speed += PI/1500
@@ -210,7 +215,8 @@ func GetAimControlsP2(delta):
 		aim.set_param(0,270 - rad2deg(x))
 		AdjustReticule()
 		#print(str(x) + " " + str(tan(x)))
-		sfx.play("mrown1__tick launcher aiming left or right")
+		if(!aimsfx.is_active()):
+			aimsfx.play("Launcher aiming 03_revision3")
 	else:
 		speed = minspeed
 
@@ -236,7 +242,7 @@ func GetFireControlsP1(delta):
 			container.TakeOrb(orb)
 			loaded = false
 			storing = true
-			sfx.play("bump - orb saved for later")
+			sfx.play("Saving Orb")
 	else:
 		storing = false
 	
@@ -252,7 +258,7 @@ func GetFireControlsP1(delta):
 			#get_parent().orbsonboard.push_front(orb)
 			swapping = true
 			swapped = true
-			sfx.play("hurt-c-02 - orb switch")
+			sfx.play("Switching Orb")
 			print(str(orb))
 	else:
 		swapping = false
@@ -278,7 +284,7 @@ func GetFireControlsP2(delta):
 			container.TakeOrb(orb)
 			loaded = false
 			storing = true
-			sfx.play("bump - orb saved for later")
+			sfx.play("Saving Orb")
 	else:
 		storing = false
 	
@@ -295,7 +301,7 @@ func GetFireControlsP2(delta):
 			swapping = true
 			swapped = true
 			print(str(orb))
-			sfx.play("hurt-c-02 - orb switch")
+			sfx.play("Switching Orb")
 	else:
 		swapping = false
 
@@ -320,7 +326,7 @@ func Fire():
 		laser.Charge(trajectory,x)
 		laser.Fire()
 		laserisactive = false
-		sfx.play("laser-shot-silenced - orange ability launched")
+		sfx.play("Orange ability launch")
 		abilityanim.play("rest")
 	else:
 		if(player == PLAYER.PLAYER1):
@@ -344,10 +350,13 @@ func Fire():
 				get_parent().p2panel.set_texture(null)
 			orb.Charge()
 			ischarged = false
-			sfx.play("electric-zap-001 - Yellow ability launched")
+			sfx.play("Yellow ability launch 01")
 			abilityanim.play("rest")
 		swapped = false
-		sfx.play("jump-c-05 - orb launched")
+		if(randi() % 2 == 1):
+			sfx.play("Launching Orb 01")
+		else:
+			sfx.play("Launching Orb 02")
 
 func Freeze(duration,tier):
 	maxspeed = ((4.0-tier)/4.0) * standardmaxspeed
@@ -365,7 +374,7 @@ func Defrost(delta):
 		isfrozen = false
 		frozentimer = 0.00
 		frozentime = 1.0
-		sfx.play("ice-cracking - laucher unfreezing")
+		sfx.play("Ice break")
 		anim.play("crack")
 
 func Charge(): #yellow abilty

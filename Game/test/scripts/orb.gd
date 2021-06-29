@@ -114,7 +114,7 @@ func Move(delta):
 		if(collider.is_in_group("wall")):
 			trajectory.x *= -1
 			get_node("sparkles").set_rotd(get_node("sparkles").get_rotd() *- -1)
-			sfx.play("retro-video-game-sfx-bounce - orb bouncing off wall")
+			sfx.play("Orb bounce wall 02")
 		elif(collider.is_in_group("roof")):
 			trajectory.y *= -1
 		elif(collider.is_in_group("orb")):
@@ -123,10 +123,14 @@ func Move(delta):
 				EnableLauncher()
 				queue_free()
 				print("hit launcher orb")
+			elif(collider.ismoving):
+				EnableLauncher()
+				queue_free()
+				print("orbs hit each other")
 			if(!collider.ismoving and !collider.inlauncher):
 				StopSparkle()
 				AddToPlayer()
-				sfx.play("beer-bottles - orbs collide together")
+				sfx.play("Connecting with another orb")
 				ismoving = false
 				#print("playing sfx")
 				var positiondifference = get_pos() - collider.get_pos()
@@ -177,18 +181,19 @@ func Move(delta):
 				var foundmatch = CheckMatch(matchingorbs,leftoverorbs);
 				
 				if(foundmatch):
-					sfx.play("glass-shatter-3 - Group of orbs removed")
+					sfx.play("Orb break 05_revision")
 					for orb in leftoverorbs:
 						if(orb.colour == COLOUR.GREY):
 							orb.TakeDamage()
 					if(charged):
 						get_parent().get_node("lightningarea").set_pos(get_global_pos())
 						get_parent().anim.play("yellowability")
-						sfx.play("electric-zap - Yellow abilty used removed orbs")
+						sfx.play("Yellow ability impact_revision")
 						var killorbs = []
 						var greyorbs = []
 						for orb in matchingorbs:  #get all of the orbs with the same colour as the match 2 orbs out
 							killorbs = orb.Search(2,colour,killorbs)
+							
 						for orb in matchingorbs:
 							greyorbs = orb.Search(2,COLOUR.GREY,greyorbs)
 							
@@ -201,6 +206,7 @@ func Move(delta):
 							orb.TakeDamage()
 						var extraleftovers = []
 						for orb in killorbs:
+							orb.sfx.play("Yellow ability orb destroyed")
 							extraleftovers = orb.Search(1,COLOUR.NONE,extraleftovers)
 							orb.Unhook()
 							get_parent().orbsonboard.remove(get_parent().orbsonboard.find(orb))

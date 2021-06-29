@@ -52,7 +52,7 @@ _code = {
 shader/shader = SubResource( 1 )
 shader/shading_mode = 0
 
-[sub_resource type="SampleLibrary" id=25]
+[sub_resource type="SampleLibrary" id=3]
 
 "samples/Black orb ability attack 02" = {
 "db": 0.0,
@@ -871,13 +871,13 @@ stream/buffering_ms = 500
 
 [node name="SamplePlayer2D" type="SamplePlayer2D" parent="."]
 
-params/volume_db = -20.0
+params/volume_db = -1.78814e-06
 params/pitch_scale = 1.0
 params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 3
-config/samples = SubResource( 25 )
+config/samples = SubResource( 3 )
 config/pitch_random = 0.0
 
 [node name="p1combo" type="Label" parent="."]
@@ -1164,7 +1164,6 @@ autoplay = ""
 
 [node name="smoke" type="Sprite" parent="."]
 
-visibility/visible = false
 transform/pos = Vector2( 960, 540 )
 z/z = 4
 texture = ExtResource( 35 )
