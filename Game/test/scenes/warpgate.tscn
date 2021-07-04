@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=8 format=1]
 
 [ext_resource path="res://test/scripts/warpgate.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
-[ext_resource path="res://test/sfx/teleport-morphy - Orb entering warpgate.smp" type="Sample" id=3]
-[ext_resource path="res://test/scenes/checker.tscn" type="PackedScene" id=4]
+[ext_resource path="res://test/sfx/new/Orb warping.wav" type="Sample" id=3]
+[ext_resource path="res://test/sfx/teleport-morphy - Orb entering warpgate.smp" type="Sample" id=4]
+[ext_resource path="res://test/scenes/checker.tscn" type="PackedScene" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -12,11 +13,17 @@ extents = Vector2( 475.708, 35 )
 
 [sub_resource type="SampleLibrary" id=2]
 
-"samples/teleport-morphy - Orb entering warpgate" = {
+"samples/Orb warping" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 3 )
+}
+"samples/teleport-morphy - Orb entering warpgate" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 4 )
 }
 
 [node name="warpgate" type="Area2D"]
@@ -91,7 +98,7 @@ config/polyphony = 1
 config/samples = SubResource( 2 )
 config/pitch_random = 0.0
 
-[node name="checker1" parent="." instance=ExtResource( 4 )]
+[node name="checker1" parent="." instance=ExtResource( 5 )]
 
 priority = 1.0
 monitorable = false

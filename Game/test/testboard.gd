@@ -44,6 +44,13 @@ onready var animenap2 = get_node("enaP2player")
 onready var animdeathlinep1 = get_node("p1deathlineplayer")
 onready var animdeathlinep2 = get_node("p2deathlineplayer")
 
+var playedwarninghealthp1 = false
+var playedwarninglinep1 = false
+var playedwarninghealthp2 = false
+var playedwarninglinep2 = false
+var playedwarningtime = false
+
+
 var charp1
 var charp1anim
 
@@ -177,6 +184,10 @@ func Start():
 	set_fixed_process(true)
 
 func _fixed_process(delta):
+	if(get_node("Timer").get_time_left() < 60):
+		if(!playedwarningtime):
+			sfx.play("Warning sound 02")
+			playedwarningtime = true
 	
 	if(p1panel.get_texture() == purple):
 		p1purpletimer += delta
@@ -299,7 +310,7 @@ func CheckFall(): #will most likely take one or more kinematic bodies that are t
 					badorb.get_node("AnimationPlayer").play("fall")
 			crossreforbs.clear()
 	if(orbfell):
-		sfx.play("punch sound - falling orbs")
+#		sfx.play("punch sound - falling orbs")
 		print("sfx played")
 	
 
@@ -394,6 +405,7 @@ func HandleAbilityCombo(colour,player):
 		if(lastusedcolourp1 == colour or lastusedcolourp1 == COLOUR.BLUE):
 			print("same colour or blue")
 			abilitycombop1 += 1
+			sfx.play("Combo indication")
 		else:
 			if(lastusedcolourp1 != COLOUR.NONE):
 				NewHandleAbility(player)
@@ -441,6 +453,7 @@ func HandleAbilityCombo(colour,player):
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == colour or lastusedcolourp2 == COLOUR.BLUE):
 			abilitycombop2 += 1
+			sfx.play("Combo indication")
 		else:
 			if(lastusedcolourp2 != COLOUR.NONE):
 				NewHandleAbility(player)
@@ -1013,18 +1026,31 @@ func Restart():
 	get_node("Timer").set_wait_time(300)
 	get_node("Timer").set_active(true)
 	get_node("Timer").start()
+	playedwarninghealthp1 = false
+	playedwarninglinep1 = false
+	playedwarninghealthp2 = false
+	playedwarninglinep2 = false
+	playedwarningtime = false
 	
 func UpdateHealthLabels():
 	p1launcher.get_node("health").set_text("Health " + str(player1health))
 	p2launcher.get_node("health").set_text("Health " + str(player2health))
 	if(player1health < 4):
 		p1launcher.get_node("HealthAnimationPlayer").play("blink")
+		if(!playedwarninghealthp1):
+			sfx.play("Warning sound 02")
+			playedwarninghealthp1
 	else:
 		p1launcher.get_node("HealthAnimationPlayer").play("rest")
+		playedwarninghealthp2 = false
 	if(player2health < 4):
 		p2launcher.get_node("HealthAnimationPlayer").play("blink")
+		if(!playedwarninghealthp2):
+			sfx.play("Warning sound 02")
+			playedwarninghealthp2
 	else:
 		p2launcher.get_node("HealthAnimationPlayer").play("rest")
+		playedwarninghealthp2 = false
 
 func GameOver(gameoverstring,winner):
 	if(winner == PLAYER.PLAYER1):
@@ -1101,17 +1127,25 @@ func DeathLineWarningp1():
 		if orb.get_pos().y > 900:
 			if(!get_node("p1deathlineplayer").is_playing()):
 				get_node("p1deathlineplayer").play("blink")
+				if(!playedwarninglinep1):
+					sfx.play("Warning sound 02")
+					playedwarninglinep1 = true
 			return
 	
 	if(get_node("p1deathlineplayer").is_playing()):
 		get_node("p1deathlineplayer").play("rest")
+		playedwarninglinep1 = false
 
 func DeathLineWarningp2():
 	for orb in orbsonboardp2:
 		if orb.get_pos().y > 900:
 			if(!get_node("p2deathlineplayer").is_playing()):
 				get_node("p2deathlineplayer").play("blink")
+				if(!playedwarninglinep2):
+					sfx.play("Warning sound 02")
+					playedwarninglinep2 = true
 			return
 	
 	if(get_node("p2deathlineplayer").is_playing()):
 		get_node("p2deathlineplayer").play("rest")
+		playedwarninglinep2 = false

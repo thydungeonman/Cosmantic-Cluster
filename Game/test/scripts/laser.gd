@@ -9,6 +9,7 @@ var angle = 0
 var bounced = false
 var bouncing = false
 onready var x = 0
+onready var sfx = get_node("SamplePlayer")
 var y = 0
 var newy = 0
 var recalculated = false
@@ -54,9 +55,11 @@ func Move(delta):
 			if(orb.is_in_group("orb")):
 				if(orb.colour == colour):
 					orb.spawnBurnOrb()
+					sfx.play("Orange ability impact")
 				if(orb.colour == COLOUR.GREY and !greyorbs.has(orb)):
 					greyorbs.push_back(orb)
 					orb.TakeDamage()
+					sfx.play("Orange ability impact")
 
 func Bounce():
 	if(get_pos().y <= y):
@@ -89,12 +92,14 @@ func Bounce2():
 				bounced = true
 				trajectory.x *= -1
 				set_rot(get_rot() * -1)
+				sfx.play("Orange ability bounce")
 			if(pos.x > 920):
 				pos.x = 920
 				set_global_pos(pos)
 				bounced = true
 				trajectory.x *= -1
 				set_rot(get_rot() * -1)
+				sfx.play("Orange ability bounce")
 		else:
 			if(pos.x < 8 or pos.x > 920):
 				EnableLauncher()
@@ -109,14 +114,16 @@ func Bounce2():
 				bounced = true
 				trajectory.x *= -1
 				set_rot(get_rot() * -1)
+				sfx.play("Orange ability bounce")
 			if(pos.x > 1912):
 				pos.x = 1912
 				set_global_pos(pos)
 				bounced = true
 				trajectory.x *= -1
 				set_rot(get_rot() * -1)
+				sfx.play("Orange ability bounce")
 		else:
-			if(pos.x < 8 or pos.x > 1912):
+			if(pos.x < 1000 or pos.x > 1912):
 				EnableLauncher()
 				for i in followers:
 					i.queue_free()

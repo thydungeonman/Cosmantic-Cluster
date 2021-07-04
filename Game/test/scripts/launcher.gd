@@ -87,14 +87,14 @@ func _fixed_process(delta):
 	#LASER =========================================================>O
 	if(Input.is_action_pressed("laser")):
 		if(!lasing):
-			if(player == PLAYER.PLAYER1):
-				var las = preload("res://test/scenes/laser.tscn").instance()
-				get_parent().add_child(las)
-				las.set_pos(get_pos())
-				las.Charge(trajectory,x)
-				las.Fire()
-				lasing = true
-				las.player = player
+		
+			var las = preload("res://test/scenes/laser.tscn").instance()
+			get_parent().add_child(las)
+			las.set_pos(get_pos())
+			las.Charge(trajectory,x)
+			las.Fire()
+			lasing = true
+			las.player = player
 	else:
 		lasing = false
 	
@@ -380,6 +380,7 @@ func Defrost(delta):
 func Charge(): #yellow abilty
 	ischarged = true
 	abilityanim.play("lightning")
+	sfx.play("Yellow orb ability active")
 
 func Enable():
 	canshoot = true
@@ -388,6 +389,7 @@ func Disable():
 func ActivateLaser():
 	laserisactive = true
 	abilityanim.play("laser")
+	sfx.play("Orange orb ability active")
 
 func AimReticule():
 	var reticuletrajectory = Vector2((trajectory.x * cos(x))/100,(trajectory.y * sin(x))/100)

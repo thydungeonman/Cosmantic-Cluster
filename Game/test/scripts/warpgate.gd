@@ -46,7 +46,7 @@ func _fixed_process(delta):
 		else:
 			exit.y = 0
 			warpedorb.Warp(exit)
-			sfx.play("teleport-morphy - Orb entering warpgate")
+			sfx.play("Orb warping")
 		inposition = false
 	
 #	checker.set_pos(Vector2())

@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=1]
+[gd_scene load_steps=66 format=1]
 
 [ext_resource path="res://test/testboard.gd" type="Script" id=1]
 [ext_resource path="res://test/sprites/a71c466e2535309b4849dda26c8beb1d.jpg" type="Texture" id=2]
@@ -11,30 +11,36 @@
 [ext_resource path="res://test/sfx/new/Black orb ability attack 02.wav" type="Sample" id=9]
 [ext_resource path="res://test/sfx/new/Blue orb ability summon 01_revision.wav" type="Sample" id=10]
 [ext_resource path="res://test/sfx/new/Breaking Star orb.wav" type="Sample" id=11]
-[ext_resource path="res://test/sfx/new/Green ability activates.wav" type="Sample" id=12]
-[ext_resource path="res://test/sfx/new/Light.wav" type="Sample" id=13]
-[ext_resource path="res://test/sfx/new/Purple ability activates 01.wav" type="Sample" id=14]
-[ext_resource path="res://test/sfx/new/Red orb ability fire attack.wav" type="Sample" id=15]
-[ext_resource path="res://test/sfx/new/White orb ability ice attack .wav" type="Sample" id=16]
-[ext_resource path="res://test/sfx/punch sound - falling orbs.smp" type="Sample" id=17]
-[ext_resource path="res://test/sprites/Ability panels/Red panel.png" type="Texture" id=18]
-[ext_resource path="res://test/fonts/orbit.fnt" type="BitmapFont" id=19]
-[ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=20]
-[ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=21]
-[ext_resource path="res://test/sprites/board/grass ground test.png" type="Texture" id=22]
-[ext_resource path="res://test/scenes/launcher.tscn" type="PackedScene" id=23]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA attack 600x328 - 2rows.png" type="Texture" id=24]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA damage 600x328.png" type="Texture" id=25]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA idle 600x328.png" type="Texture" id=26]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA lose 600x328.png" type="Texture" id=27]
-[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA win 600x328.png" type="Texture" id=28]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Ena Idle Temp sprite sheet2.png" type="Texture" id=29]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Attack sprite sheet2.png" type="Texture" id=30]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/damage sprite sheet2.png" type="Texture" id=31]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/lose sprite sheet2.png" type="Texture" id=32]
-[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/win sprite sheet2.png" type="Texture" id=33]
-[ext_resource path="res://test/sprites/warning line.png" type="Texture" id=34]
-[ext_resource path="res://misc/fgdfg.png" type="Texture" id=35]
+[ext_resource path="res://test/sfx/new/Combo indication.wav" type="Sample" id=12]
+[ext_resource path="res://test/sfx/new/Green ability activates.wav" type="Sample" id=13]
+[ext_resource path="res://test/sfx/new/Light.wav" type="Sample" id=14]
+[ext_resource path="res://test/sfx/new/Losing match! 02_revision .wav" type="Sample" id=15]
+[ext_resource path="res://test/sfx/new/Losing round! 02.wav" type="Sample" id=16]
+[ext_resource path="res://test/sfx/new/Purple ability activates 01.wav" type="Sample" id=17]
+[ext_resource path="res://test/sfx/new/Red orb ability fire attack.wav" type="Sample" id=18]
+[ext_resource path="res://test/sfx/new/Warning sound 02.wav" type="Sample" id=19]
+[ext_resource path="res://test/sfx/new/White orb ability ice attack .wav" type="Sample" id=20]
+[ext_resource path="res://test/sfx/new/Winning match 01_revision.wav" type="Sample" id=21]
+[ext_resource path="res://test/sfx/new/Winning round 02_revision.wav" type="Sample" id=22]
+[ext_resource path="res://test/sfx/punch sound - falling orbs.smp" type="Sample" id=23]
+[ext_resource path="res://test/sprites/Ability panels/Red panel.png" type="Texture" id=24]
+[ext_resource path="res://test/fonts/orbit.fnt" type="BitmapFont" id=25]
+[ext_resource path="res://test/sprites/ability effects/purple mist temp.png" type="Texture" id=26]
+[ext_resource path="res://test/sprites/ability effects/yellow ability ring temp.png" type="Texture" id=27]
+[ext_resource path="res://test/sprites/board/grass ground test.png" type="Texture" id=28]
+[ext_resource path="res://test/scenes/launcher.tscn" type="PackedScene" id=29]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA attack 600x328 - 2rows.png" type="Texture" id=30]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA damage 600x328.png" type="Texture" id=31]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA idle 600x328.png" type="Texture" id=32]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA lose 600x328.png" type="Texture" id=33]
+[ext_resource path="res://test/sprites/Ena Sprite Sheet/ENA win 600x328.png" type="Texture" id=34]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Ena Idle Temp sprite sheet2.png" type="Texture" id=35]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/Attack sprite sheet2.png" type="Texture" id=36]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/damage sprite sheet2.png" type="Texture" id=37]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/lose sprite sheet2.png" type="Texture" id=38]
+[ext_resource path="res://test/sprites/enaP2 Sprite Sheet/win sprite sheet2.png" type="Texture" id=39]
+[ext_resource path="res://test/sprites/warning line.png" type="Texture" id=40]
+[ext_resource path="res://misc/fgdfg.png" type="Texture" id=41]
 
 [sub_resource type="CanvasItemShader" id=1]
 
@@ -72,41 +78,77 @@ shader/shading_mode = 0
 "priority": 0,
 "sample": ExtResource( 11 )
 }
-"samples/Green ability activates" = {
+"samples/Combo indication" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 12 )
 }
-samples/Light = {
+"samples/Green ability activates" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 13 )
 }
-"samples/Purple ability activates 01" = {
+samples/Light = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 14 )
 }
-"samples/Red orb ability fire attack" = {
+"samples/Losing match! 02_revision " = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 15 )
 }
-"samples/White orb ability ice attack" = {
+"samples/Losing round! 02" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 16 )
 }
-"samples/punch sound - falling orbs" = {
+"samples/Purple ability activates 01" = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 17 )
+}
+"samples/Red orb ability fire attack" = {
+"db": -3.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 18 )
+}
+"samples/Warning sound 02" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 19 )
+}
+"samples/White orb ability ice attack" = {
+"db": 2.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 20 )
+}
+"samples/Winning match 01_revision" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 21 )
+}
+"samples/Winning round 02_revision" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 22 )
+}
+"samples/punch sound - falling orbs" = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 23 )
 }
 
 [sub_resource type="GDScript" id=4]
@@ -244,7 +286,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 24 ) ]
+"values": [ ExtResource( 30 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("ena:hframes")
@@ -290,7 +332,7 @@ tracks/0/keys = {
 "times": FloatArray( 0, 1.7 ),
 "transitions": FloatArray( 1, 1 ),
 "update": 1,
-"values": [ ExtResource( 25 ), ExtResource( 25 ) ]
+"values": [ ExtResource( 31 ), ExtResource( 31 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("ena:frame")
@@ -346,7 +388,7 @@ tracks/1/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 26 ) ]
+"values": [ ExtResource( 32 ) ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("ena:hframes")
@@ -382,7 +424,7 @@ tracks/0/keys = {
 "times": FloatArray( 0, 1.3 ),
 "transitions": FloatArray( 1, 1 ),
 "update": 1,
-"values": [ ExtResource( 27 ), ExtResource( 27 ) ]
+"values": [ ExtResource( 33 ), ExtResource( 33 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("ena:hframes")
@@ -428,7 +470,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 28 ) ]
+"values": [ ExtResource( 34 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("ena:frame")
@@ -474,7 +516,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 30 ) ]
+"values": [ ExtResource( 36 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -510,7 +552,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 31 ) ]
+"values": [ ExtResource( 37 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -546,7 +588,7 @@ tracks/0/keys = {
 "times": FloatArray( 0.1 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 29 ) ]
+"values": [ ExtResource( 35 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -582,7 +624,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 32 ) ]
+"values": [ ExtResource( 38 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -618,7 +660,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 33 ) ]
+"values": [ ExtResource( 39 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("enaP2:hframes")
@@ -869,16 +911,22 @@ stream/paused = false
 stream/loop_restart_time = 0.0
 stream/buffering_ms = 500
 
-[node name="SamplePlayer2D" type="SamplePlayer2D" parent="."]
+[node name="SamplePlayer2D" type="SamplePlayer" parent="."]
 
-params/volume_db = -1.78814e-06
-params/pitch_scale = 1.0
-params/attenuation/min_distance = 1.0
-params/attenuation/max_distance = 2048.0
-params/attenuation/distance_exp = 1.0
 config/polyphony = 3
 config/samples = SubResource( 3 )
-config/pitch_random = 0.0
+default/volume_db = 0.0
+default/pitch_scale = 1.0
+default/pan = 0.0
+default/depth = 0.0
+default/height = 0.0
+default/filter/type = 0
+default/filter/cutoff = 5000.0
+default/filter/resonance = 1.0
+default/filter/gain = 1.0
+default/reverb_room = 2
+default/reverb_send = 0.0
+default/chorus_send = 0.0
 
 [node name="p1combo" type="Label" parent="."]
 
@@ -898,7 +946,7 @@ max_lines_visible = -1
 
 transform/pos = Vector2( 70, 970 )
 transform/scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 18 )
+texture = ExtResource( 24 )
 
 [node name="p2combo" type="Label" parent="."]
 
@@ -939,7 +987,7 @@ margin/left = 320.0
 margin/top = 276.0
 margin/right = 1600.0
 margin/bottom = 316.0
-custom_fonts/font = ExtResource( 19 )
+custom_fonts/font = ExtResource( 25 )
 text = "Game Over"
 align = 1
 percent_visible = 1.0
@@ -988,14 +1036,14 @@ script/script = SubResource( 4 )
 visibility/opacity = 0.0
 transform/pos = Vector2( 1046.79, 976.445 )
 transform/scale = Vector2( 4, 4 )
-texture = ExtResource( 20 )
+texture = ExtResource( 26 )
 
 [node name="p2purpleability" type="Sprite" parent="."]
 
 visibility/opacity = 0.0
 transform/pos = Vector2( 56.3401, 975.243 )
 transform/scale = Vector2( 4, 4 )
-texture = ExtResource( 20 )
+texture = ExtResource( 26 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
@@ -1016,15 +1064,15 @@ autoplay = "rest"
 visibility/opacity = 0.0
 transform/pos = Vector2( 510.686, 309.008 )
 transform/scale = Vector2( 14, 14 )
-texture = ExtResource( 21 )
+texture = ExtResource( 27 )
 
 [node name="ground" type="Sprite" parent="."]
 
 transform/pos = Vector2( 960.469, 1070 )
 z/z = -1
-texture = ExtResource( 22 )
+texture = ExtResource( 28 )
 
-[node name="p1launcher" parent="." instance=ExtResource( 23 )]
+[node name="p1launcher" parent="." instance=ExtResource( 29 )]
 
 transform/pos = Vector2( 473, 980 )
 
@@ -1033,7 +1081,7 @@ transform/pos = Vector2( 473, 980 )
 visibility/visible = false
 transform/pos = Vector2( 270, 950 )
 transform/scale = Vector2( 0.7, 0.7 )
-texture = ExtResource( 24 )
+texture = ExtResource( 30 )
 vframes = 2
 hframes = 14
 
@@ -1059,7 +1107,7 @@ autoplay = "ena idle"
 visibility/visible = false
 transform/pos = Vector2( 1240, 985 )
 transform/scale = Vector2( 1.5, 1.5 )
-texture = ExtResource( 29 )
+texture = ExtResource( 35 )
 hframes = 4
 frame = 3
 
@@ -1099,7 +1147,7 @@ margin/left = 890.0
 margin/top = -25.0
 margin/right = 979.0
 margin/bottom = 30.0
-custom_fonts/font = ExtResource( 19 )
+custom_fonts/font = ExtResource( 25 )
 text = "0 00"
 percent_visible = 1.0
 lines_skipped = 0
@@ -1128,7 +1176,7 @@ visibility/opacity = 0.0
 transform/pos = Vector2( 475, 930 )
 transform/scale = Vector2( 2.3, 1 )
 z/z = -2
-texture = ExtResource( 34 )
+texture = ExtResource( 40 )
 
 [node name="p2deathline" type="Sprite" parent="."]
 
@@ -1136,7 +1184,7 @@ visibility/opacity = 0.0
 transform/pos = Vector2( 1445, 930 )
 transform/scale = Vector2( 2.3, 1 )
 z/z = -2
-texture = ExtResource( 34 )
+texture = ExtResource( 40 )
 
 [node name="p1deathlineplayer" type="AnimationPlayer" parent="."]
 
@@ -1166,7 +1214,7 @@ autoplay = ""
 
 transform/pos = Vector2( 960, 540 )
 z/z = 4
-texture = ExtResource( 35 )
+texture = ExtResource( 41 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="smoke"]
 

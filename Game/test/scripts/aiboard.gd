@@ -394,6 +394,7 @@ func HandleAbilityCombo(colour,player):
 		if(lastusedcolourp1 == colour or lastusedcolourp1 == COLOUR.BLUE):
 			print("same colour or blue")
 			abilitycombop1 += 1
+			sfx.play("Combo indication")
 		else:
 			if(lastusedcolourp1 != COLOUR.NONE):
 				NewHandleAbility(player)
@@ -440,6 +441,7 @@ func HandleAbilityCombo(colour,player):
 	elif(player == PLAYER.PLAYER2):
 		if(lastusedcolourp2 == colour or lastusedcolourp2 == COLOUR.BLUE):
 			abilitycombop2 += 1
+			sfx.play("Combo indication")
 		else:
 			if(lastusedcolourp2 != COLOUR.NONE):
 				NewHandleAbility(player)

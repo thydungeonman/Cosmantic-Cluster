@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=1]
 
-[ext_resource path="res://test/sprites/Jasper/spritesheet Jasper win 600x350_2rows.png" type="Texture" id=1]
+[ext_resource path="res://test/sprites/Jasper/spritesheet Jasper idle 600x350.png" type="Texture" id=1]
 [ext_resource path="res://test/sprites/Jasper/spritesheet Jasper attack 600x350.png" type="Texture" id=2]
 [ext_resource path="res://test/sprites/Jasper/spritesheet Jasper damage 600x350.png" type="Texture" id=3]
-[ext_resource path="res://test/sprites/Jasper/spritesheet Jasper idle 600x350.png" type="Texture" id=4]
-[ext_resource path="res://test/sprites/Jasper/spritesheet Jasper lose 600x350.png" type="Texture" id=5]
+[ext_resource path="res://test/sprites/Jasper/spritesheet Jasper lose 600x350.png" type="Texture" id=4]
+[ext_resource path="res://test/sprites/Jasper/spritesheet Jasper win 600x350_2rows.png" type="Texture" id=5]
 
 [sub_resource type="Animation" id=1]
 
@@ -41,6 +41,16 @@ tracks/2/keys = {
 "transitions": FloatArray( 1 ),
 "update": 1,
 "values": [ 1 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:hframes")
+tracks/3/interp = 1
+tracks/3/imported = false
+tracks/3/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"update": 1,
+"values": [ 23 ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -93,7 +103,7 @@ tracks/0/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 4 ) ]
+"values": [ ExtResource( 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath(".:frame")
@@ -104,6 +114,16 @@ tracks/1/keys = {
 "transitions": FloatArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:hframes")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"update": 1,
+"values": [ 16 ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -140,7 +160,7 @@ tracks/2/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 5 ) ]
+"values": [ ExtResource( 4 ) ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath(".:frame")
@@ -197,15 +217,14 @@ tracks/3/keys = {
 "times": FloatArray( 0 ),
 "transitions": FloatArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 1 ) ]
+"values": [ ExtResource( 5 ) ]
 }
 
 [node name="jasper" type="Sprite"]
 
 transform/scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 1 )
-vframes = 2
-hframes = 14
+hframes = 16
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 

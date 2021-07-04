@@ -33,7 +33,9 @@ var Clock = false
 var waittime = 0.0
 var waittimer = 0.0
 var falling = false
+var played = false
 
+onready var sfx = get_node("SamplePlayer")
 onready var sprite = get_node("Sprite")
 
 func changeColour(colour):
@@ -86,6 +88,9 @@ func _fixed_process(delta):
 #		get_node("AnimationPlayer").play("fall")
 #		falling = true
 	if(falling):
+		if(!played):
+			sfx.play("Orb falling 02_revision")
+			played = true
 		if(Right):
 			fallRight(delta)
 		else:

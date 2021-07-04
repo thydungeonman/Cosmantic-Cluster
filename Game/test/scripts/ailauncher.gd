@@ -562,7 +562,10 @@ func Fire():
 			sfx.play("electric-zap-001 - Yellow ability launched")
 			abilityanim.play("rest")
 		swapped = false
-		sfx.play("jump-c-05 - orb launched")
+		if(randi() % 2 == 1):
+			sfx.play("Launching Orb 01")
+		else:
+			sfx.play("Launching Orb 02")
 	print("fired " + orb.get_name() + " with colour " + str(orb.colour))
 
 func Freeze(duration,tier):
@@ -587,6 +590,8 @@ func Defrost(delta):
 func Charge(): #yellow abilty
 	ischarged = true
 	abilityanim.play("lightning")
+	sfx.play("Yellow orb ability active")
+
 
 func Enable():
 	canshoot = true
@@ -595,6 +600,7 @@ func Disable():
 func ActivateLaser():
 	laserisactive = true
 	abilityanim.play("laser")
+	sfx.play("Orange orb ability active")
 
 func AimReticule():
 	var reticuletrajectory = Vector2((trajectory.x * cos(x))/100,(trajectory.y * sin(x))/100)
